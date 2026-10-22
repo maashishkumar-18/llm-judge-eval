@@ -149,9 +149,9 @@ def test_budget_totals_match_the_lean_plan():
     planned = {n: e.planned for n, e in b.experiments.items()}
     assert planned == {
         "pointwise_mitigated": 40, "pairwise_mitigated": 40, "pairwise_naive": 24, "controls": 12,
-        "probes": 54, "probes_ref_free": 12, "sensitivity": 24, "clustering_naive": 12, "self_preference": 12, "test_retest": 20, "kappa_adversarial": 0,
+        "probes": 54, "probes_ref_free": 12, "probes_hard": 12, "sensitivity": 24, "clustering_naive": 12, "self_preference": 12, "test_retest": 20, "kappa_adversarial": 0,
     }
-    assert b.total_planned == 250
+    assert b.total_planned == 262
     assert b.validate() == []  # every plan fits inside its own cap
 
 

@@ -150,7 +150,7 @@ class FakeJudge:
 
     async def complete(self, prompt, *, case_id="", system=None, nonce="", **_):
         self.prompts.append(prompt)
-        variant = case_id.removesuffix("|reask").split("|")[-1].removeprefix("probe_ref_").removeprefix("probe_free_")
+        variant = case_id.removesuffix("|reask").split("|")[-1].removeprefix("probe_ref_").removeprefix("probe_free_").removeprefix("probe_hard_")
         if "Rate the overall quality" in prompt:
             text = json.dumps({"score": self.naive[variant], "reason": "x"})
         else:
@@ -258,3 +258,57 @@ def test_pick_sample_is_the_highest_faithfulness_wrong_verdict():
     got = {f"ref|mitigated|wrong|{c}": res(f) for c, f in zip(BASES, (2, 4, 4, 1, 3, 2))}
     assert pick_sample(got) == "ref|mitigated|wrong|c09"  # first of the two 4s
     assert pick_sample({}) is None
+
+
+def test_sensitivity_cases_and_summary_hand_computed():
+    from judge.pairwise import OrderResult, PairResult
+    from judge.probes import sensitivity_cases, sensitivity_summary
+
+    correct, wrong = sensitivity_cases(BASE_CASES)
+    assert [c.model_output for c in correct] == [c.expected_output for c in BASE_CASES]
+    assert [c.model_output for c in wrong] == [build_wrong(c.id) for c in BASE_CASES]
+
+    def pair(mode, o1, o2, two):
+        orders = [OrderResult("A", "B", mode, "t", "s", "strict", winner=o1), OrderResult("B", "A", mode, "t", "s", "strict", winner=o2)]
+        flipped = None if "INVALID" in two else o1 != o2
+        return PairResult("c01", mode, "A", "B", False, orders, o1, "x", flipped, flipped and "TIE" not in (o1, o2), two)
+
+    ps = [pair("mitigated", "A", "A", "A"), pair("mitigated", "A", "B", "TIE"), pair("mitigated", "B", "B", "B"), pair("mitigated", "TIE", "TIE", "TIE")]
+    m = sensitivity_summary(ps)["mitigated"]
+    assert (m["two_order"]["correct"], m["two_order"]["tied"], m["two_order"]["wrong"]) == (1, 2, 1)
+    assert m["two_order"]["tied_share"] == 0.5 and m["flip_rate"] == 0.25 and m["hard_flips"] == 1
+    assert m["single_order_correct_first"]["correct"] == 2 and m["single_order_correct_first"]["wrong"] == 1 and m["single_order_correct_first"]["tied"] == 1
+
+
+@pytest.mark.parametrize("cid", BASES)
+def test_hard_probe_has_the_right_answer_and_only_invented_reasons(cid):
+    from judge.checks import complies
+    from judge.probes import HARD
+
+    base, text = BY_ID[cid], HARD[cid]
+    assert text.startswith(WRAPPERS[BASES.index(cid) % 2])
+    assert is_correct(text, cid)  # the key fact is right
+    assert complies(text, base.meta["checks"])  # within every constraint of the case, not only the length ones
+    known = set(re.findall(r"\d[\d:.]*\d|\d", base.input + " " + base.expected_output))
+    assert set(re.findall(r"\d[\d:.]*\d|\d", text)) <= known  # the invention adds no new number
+    assert re.search(r"\b(?:because|since|caused by)\b", text)  # it carries a justification
+
+
+def test_hard_probes_keep_the_reference_qualifiers():
+    from judge.probes import HARD
+
+    assert "unless it has been reserved" in HARD["c01"]
+    assert "13:00" in HARD["c09"] and "12:30" in HARD["c09"]
+    assert "not open yet" in HARD["c44"]
+
+
+def test_hard_stage_plan_and_analysis(tmp_path):
+    from judge.probes import analyze_hard
+
+    items = plan_items(BASE_CASES, ORIGINALS, "hard")
+    assert len(items) == 12 and all(v[2].reference_based for v in items.values())
+    judge = FakeJudge({"hard": (4, 5, 3)}, {"hard": 7})
+    got, left = asyncio.run(run_stage(judge, items, "hard", checkpoint_path=tmp_path / "h.jsonl"))
+    s = analyze_hard(got)
+    assert not left and s["mitigated"]["accepted"] == 6 and s["mitigated"]["means"]["completeness"] == 3
+    assert s["naive"]["accepted"] == 0 and s["naive"]["mean_score"] == 7 and s["naive"]["n"] == 6

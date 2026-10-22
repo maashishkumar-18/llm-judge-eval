@@ -398,6 +398,87 @@ def cmd_probes(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_sensitivity(args: argparse.Namespace) -> int:
+    from dataclasses import asdict
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.pairwise import judge_pairs
+    from judge.probes import BASES, sensitivity_cases, sensitivity_summary, write_document
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    base = [c for c in _load_cases("data/outputs/A.json") if c.id in BASES]
+    correct, wrong = sensitivity_cases(base)
+    ids = [c.id for c in base]
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    try:
+        budget.check_run("sensitivity", 2 * 2 * len(ids), spent=ledger.used_experiment("sensitivity"))
+    except BudgetExceeded as e:
+        print(e)
+        return 1
+    pairs, stopped = [], []
+
+    async def run():
+        async with LLMClient(s, "judge", log_name="sensitivity_main.jsonl", experiment="sensitivity") as client:
+            for mode in ("mitigated", "naive"):
+                got, left = await judge_pairs(client, correct, wrong, ids, mode=mode, nonce=args.nonce, fresh=args.fresh,
+                                              checkpoint_path=Path(".cache/checkpoints") / f"sensitivity_{mode}.jsonl")
+                pairs.extend(got)
+                stopped.extend(f"{mode}:{i}" for i in left)
+            return client.model, client.json_mode
+
+    model, json_mode = asyncio.run(run())
+    doc = {"judge_model": model, "json_mode": json_mode, "n_pairs": len(ids), "exploratory": True, "bases": ids,
+           "design": "A = correct answer (the expected_output text), B = its confidently-wrong version; both orders; reference shown",
+           "summary": sensitivity_summary(pairs), "pairs": [asdict(p) for p in pairs]}
+    write_document(doc, args.out)
+    for mode, r in doc["summary"].items():
+        for rule in ("two_order", "single_order_correct_first"):
+            x = r[rule]
+            print(f"{mode:9s} {rule:27s} n={x['n']} correct {x['correct']} tied {x['tied']} wrong {x['wrong']} invalid {x['n_invalid']}")
+        print(f"{mode:9s} flip rate {r['flip_rate']} ({r['flips']}/{r['n_flippable']}, hard {r['hard_flips']}) reasks {r['reasks']}")
+    print(f"wrote {args.out}")
+    return 2 if stopped else 0
+
+
+def cmd_hard(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.probes import BASES, HARD, NAIVE_FOOLED_MIN, analyze_hard, plan_items, run_stage, write_document
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    originals = [c for c in _load_cases("data/outputs/A.json") if c.id in BASES]
+    bases = [c.model_copy(update={"model_output": c.expected_output}) for c in originals]
+    items = plan_items(bases, originals, "hard")
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    try:
+        budget.check_run("probes_hard", len(items), spent=ledger.used_experiment("probes_hard"))
+    except BudgetExceeded as e:
+        print(e)
+        return 1
+
+    async def run():
+        async with LLMClient(s, "judge", log_name="probes_hard_main.jsonl", experiment="probes_hard") as client:
+            got, left = await run_stage(client, items, "hard", checkpoint_path=Path(".cache/checkpoints") / "probes_hard_main.jsonl",
+                                        nonce=args.nonce, fresh=args.fresh)
+            return got, left, client.model, client.json_mode
+
+    results, left, model, json_mode = asyncio.run(run())
+    doc = {"judge_model": model, "json_mode": json_mode, "exploratory": True, "n_bases": len(BASES), "mode": "reference",
+           "texts": HARD, "naive_accepted_min": NAIVE_FOOLED_MIN, "summary": analyze_hard(results), "complete": not left,
+           "remaining": left, "results": results}
+    write_document(doc, args.out)
+    print(json.dumps(doc["summary"], indent=1))
+    print(f"wrote {args.out}")
+    return 2 if left else 0
+
+
 def cmd_replay(args: argparse.Namespace) -> int:
     import json
     from pathlib import Path
@@ -482,6 +563,16 @@ def main(argv: list[str] | None = None) -> None:
     pr.add_argument("--nonce", default="")
     pr.add_argument("--fresh", action="store_true")
     pr.set_defaults(fn=cmd_probes)
+    se = sub.add_parser("sensitivity", help="correct vs confidently-wrong pairs, both orders, naive + mitigated (live judge calls)")
+    se.add_argument("--out", default="results/sensitivity.json")
+    se.add_argument("--nonce", default="")
+    se.add_argument("--fresh", action="store_true")
+    se.set_defaults(fn=cmd_sensitivity)
+    ha = sub.add_parser("hard", help="hard probes: right answer + fabricated reasoning, naive + mitigated pointwise (live judge calls)")
+    ha.add_argument("--out", default="results/probes_hard.json")
+    ha.add_argument("--nonce", default="")
+    ha.add_argument("--fresh", action="store_true")
+    ha.set_defaults(fn=cmd_hard)
     rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
     rp.add_argument("--results", default="results/pointwise_A.json")
     rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")

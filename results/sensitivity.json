@@ -1,0 +1,929 @@
+{
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "n_pairs": 6,
+  "exploratory": true,
+  "bases": [
+    "c01",
+    "c09",
+    "c16",
+    "c19",
+    "c24",
+    "c44"
+  ],
+  "design": "A = correct answer (the expected_output text), B = its confidently-wrong version; both orders; reference shown",
+  "summary": {
+    "naive": {
+      "two_order": {
+        "n": 6,
+        "n_invalid": 0,
+        "correct": 6,
+        "tied": 0,
+        "wrong": 0,
+        "correct_share": 1.0,
+        "tied_share": 0.0,
+        "wrong_share": 0.0
+      },
+      "single_order_correct_first": {
+        "n": 6,
+        "n_invalid": 0,
+        "correct": 6,
+        "tied": 0,
+        "wrong": 0,
+        "correct_share": 1.0,
+        "tied_share": 0.0,
+        "wrong_share": 0.0
+      },
+      "flips": 0,
+      "n_flippable": 6,
+      "flip_rate": 0.0,
+      "hard_flips": 0,
+      "per_case": {
+        "c01": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c09": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c16": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c19": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c24": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c44": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        }
+      },
+      "reasks": 0
+    },
+    "mitigated": {
+      "two_order": {
+        "n": 6,
+        "n_invalid": 0,
+        "correct": 6,
+        "tied": 0,
+        "wrong": 0,
+        "correct_share": 1.0,
+        "tied_share": 0.0,
+        "wrong_share": 0.0
+      },
+      "single_order_correct_first": {
+        "n": 6,
+        "n_invalid": 0,
+        "correct": 6,
+        "tied": 0,
+        "wrong": 0,
+        "correct_share": 1.0,
+        "tied_share": 0.0,
+        "wrong_share": 0.0
+      },
+      "flips": 0,
+      "n_flippable": 6,
+      "flip_rate": 0.0,
+      "hard_flips": 0,
+      "per_case": {
+        "c01": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c09": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c16": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c19": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c24": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        },
+        "c44": {
+          "order_correct_first": "A",
+          "order_wrong_first": "A",
+          "two_order": "A"
+        }
+      },
+      "reasks": 0
+    }
+  },
+  "pairs": [
+    {
+      "case_id": "c01",
+      "mode": "mitigated",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer A is accurate, faithful to the source text, and follows all instructions, whereas Answer B contains a factual error regarding the number of renewals.",
+          "calls": [
+            {
+              "tag": "c01|mitigated|A>B",
+              "prompt_hash": "7f73d02af8dd761f",
+              "cached": false,
+              "tokens_in": 1512,
+              "tokens_out": 449
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer B is faithful to the source text and correctly answers all parts of the user's question within the sentence limit.",
+          "calls": [
+            {
+              "tag": "c01|mitigated|B>A",
+              "prompt_hash": "1c12329abf076418",
+              "cached": false,
+              "tokens_in": 1512,
+              "tokens_out": 413
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c09",
+      "mode": "mitigated",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "TIE",
+            "completeness": "A"
+          },
+          "rationale": "Answer A is faithful to the notice and correctly answers the question within the word limit, while Answer B provides incorrect information.",
+          "calls": [
+            {
+              "tag": "c09|mitigated|A>B",
+              "prompt_hash": "3573026dd87cbb36",
+              "cached": false,
+              "tokens_in": 1479,
+              "tokens_out": 453
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer B correctly answers the question based on the text and follows all constraints, while Answer A contains factual inaccuracies.",
+          "calls": [
+            {
+              "tag": "c09|mitigated|B>A",
+              "prompt_hash": "acad0fc9b9f6315a",
+              "cached": false,
+              "tokens_in": 1479,
+              "tokens_out": 394
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c16",
+      "mode": "mitigated",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer A is fully faithful to the notice and correctly answers the question, while Answer B contradicts the source text.",
+          "calls": [
+            {
+              "tag": "c16|mitigated|A>B",
+              "prompt_hash": "40b97a922b504f56",
+              "cached": false,
+              "tokens_in": 1458,
+              "tokens_out": 348
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer B correctly answers the question based on the notice, while Answer A contradicts the source text.",
+          "calls": [
+            {
+              "tag": "c16|mitigated|B>A",
+              "prompt_hash": "dd33dc5f9fee5b48",
+              "cached": false,
+              "tokens_in": 1458,
+              "tokens_out": 355
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c19",
+      "mode": "mitigated",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer A is faithful to the source notice and correctly answers the question in a single sentence, whereas Answer B provides incorrect information.",
+          "calls": [
+            {
+              "tag": "c19|mitigated|A>B",
+              "prompt_hash": "45ed39ad735adfb7",
+              "cached": false,
+              "tokens_in": 1387,
+              "tokens_out": 320
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer B is completely faithful to the notice and correctly answers the question in a single sentence, whereas Answer A provides factually incorrect information.",
+          "calls": [
+            {
+              "tag": "c19|mitigated|B>A",
+              "prompt_hash": "b7aef5f2beb59238",
+              "cached": false,
+              "tokens_in": 1387,
+              "tokens_out": 306
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c24",
+      "mode": "mitigated",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer A is completely faithful to the text, follows all constraints, and fully answers the question, while Answer B contains a factual error.",
+          "calls": [
+            {
+              "tag": "c24|mitigated|A>B",
+              "prompt_hash": "30ef93d264f5fd09",
+              "cached": false,
+              "tokens_in": 1439,
+              "tokens_out": 365
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "TIE",
+            "completeness": "A"
+          },
+          "rationale": "Answer B wins because it is faithful to the passage, whereas Answer A contains an incorrect fact.",
+          "calls": [
+            {
+              "tag": "c24|mitigated|B>A",
+              "prompt_hash": "8bb2adbe4d5a4582",
+              "cached": false,
+              "tokens_in": 1439,
+              "tokens_out": 334
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c44",
+      "mode": "mitigated",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "TIE",
+            "completeness": "A"
+          },
+          "rationale": "Answer A is chosen as the overall winner because it is faithful to the source text and correctly states the current number of seats.",
+          "calls": [
+            {
+              "tag": "c44|mitigated|A>B",
+              "prompt_hash": "e57baa00eae5b001",
+              "cached": false,
+              "tokens_in": 1480,
+              "tokens_out": 472
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": {
+            "faithfulness": "A",
+            "instruction_following": "A",
+            "completeness": "A"
+          },
+          "rationale": "Answer B is faithful to the text and correctly answers the question, while Answer A provides incorrect factual claims.",
+          "calls": [
+            {
+              "tag": "c44|mitigated|B>A",
+              "prompt_hash": "5f5e43246bfc92fc",
+              "cached": false,
+              "tokens_in": 1480,
+              "tokens_out": 469
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c01",
+      "mode": "naive",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer A correctly follows the constraints and the provided notice by stating the renewal limit is 2 times. Answer B incorrectly states the renewal limit is 3 times and includes unnecessary conversational filler.",
+          "calls": [
+            {
+              "tag": "c01|naive|A>B",
+              "prompt_hash": "4631328b4eb7796f",
+              "cached": false,
+              "tokens_in": 301,
+              "tokens_out": 53
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer B correctly states that books can be renewed up to 2 times, matching the notice, whereas Answer A incorrectly states 3 times.",
+          "calls": [
+            {
+              "tag": "c01|naive|B>A",
+              "prompt_hash": "cc06550b66b41e3c",
+              "cached": false,
+              "tokens_in": 301,
+              "tokens_out": 44
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "first_order_only",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c09",
+      "mode": "naive",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer A correctly follows the notice that walk-ins stop 30 minutes before closing (12:30 on Saturdays) and matches the reference answer. Answer B is factually incorrect based on the notice.",
+          "calls": [
+            {
+              "tag": "c09|naive|A>B",
+              "prompt_hash": "eb4384c8ada5fe3b",
+              "cached": false,
+              "tokens_in": 268,
+              "tokens_out": 59
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer B correctly states 'No' and matches the reference answer, whereas Answer A is factually incorrect according to the notice (walk-ins are accepted until 30 minutes before closing, which is 12:30 on Saturdays).",
+          "calls": [
+            {
+              "tag": "c09|naive|B>A",
+              "prompt_hash": "59846fcf405f67d9",
+              "cached": false,
+              "tokens_in": 268,
+              "tokens_out": 65
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "first_order_only",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c16",
+      "mode": "naive",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer A correctly follows the notice which states that lane swimming is reserved for members until 09:00, making 08:30 unavailable for non-members. Answer B contradicts the notice by claiming it is only reserved until 08:00.",
+          "calls": [
+            {
+              "tag": "c16|naive|A>B",
+              "prompt_hash": "1dc3002300a840e9",
+              "cached": false,
+              "tokens_in": 247,
+              "tokens_out": 71
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer B accurately reflects the notice, which states lane swimming is reserved for members until 09:00. Answer A incorrectly changes the time to 08:00 and contradicts the notice.",
+          "calls": [
+            {
+              "tag": "c16|naive|B>A",
+              "prompt_hash": "b8050a4f269a482e",
+              "cached": false,
+              "tokens_in": 247,
+              "tokens_out": 52
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "first_order_only",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c19",
+      "mode": "naive",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer A correctly follows the instruction to answer in one sentence using the notice and gets the correct fee for 12 June, whereas Answer B gives the incorrect fee.",
+          "calls": [
+            {
+              "tag": "c19|naive|A>B",
+              "prompt_hash": "bbe424bdc56250bf",
+              "cached": false,
+              "tokens_in": 176,
+              "tokens_out": 49
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer B correctly states the fee of 45 based on the notice for dates after 1 June, whereas Answer A incorrectly states the fee is 30.",
+          "calls": [
+            {
+              "tag": "c19|naive|B>A",
+              "prompt_hash": "6bd57390a65e186f",
+              "cached": false,
+              "tokens_in": 176,
+              "tokens_out": 49
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "first_order_only",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c24",
+      "mode": "naive",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer A accurately reflects the passage and follows all constraints, whereas Answer B introduces incorrect information (September instead of August) and unnecessary introductory text.",
+          "calls": [
+            {
+              "tag": "c24|naive|A>B",
+              "prompt_hash": "748472e1a071c73d",
+              "cached": false,
+              "tokens_in": 225,
+              "tokens_out": 44
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer B accurately reflects the passage by stating the bridge reopens in August, whereas Answer A incorrectly states September.",
+          "calls": [
+            {
+              "tag": "c24|naive|B>A",
+              "prompt_hash": "a3ddd0ac9349e6ab",
+              "cached": false,
+              "tokens_in": 225,
+              "tokens_out": 38
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "first_order_only",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    },
+    {
+      "case_id": "c44",
+      "mode": "naive",
+      "x": "A",
+      "y": "B",
+      "identical": false,
+      "orders": [
+        {
+          "first": "A",
+          "second": "B",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer A correctly calculates the current seats (60 + 24 = 84) while excluding the future annex, whereas Answer B incorrectly includes the annex which is not open yet.",
+          "calls": [
+            {
+              "tag": "c44|naive|A>B",
+              "prompt_hash": "ef32b49131f9de10",
+              "cached": false,
+              "tokens_in": 268,
+              "tokens_out": 54
+            }
+          ]
+        },
+        {
+          "first": "B",
+          "second": "A",
+          "mode": "naive",
+          "template_id": "naive_pairwise.v1",
+          "template_sha": "bf5dcb5f05e6",
+          "parse_status": "extract",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "A",
+          "criteria_winners": null,
+          "rationale": "Answer B correctly calculates the current seats (60 + 24 = 84) while excluding the annex that opens in March. Answer A incorrectly includes the annex seats in the current total.",
+          "calls": [
+            {
+              "tag": "c44|naive|B>A",
+              "prompt_hash": "74cb35cc2bbc7a4a",
+              "cached": false,
+              "tokens_in": 268,
+              "tokens_out": 56
+            }
+          ]
+        }
+      ],
+      "verdict": "A",
+      "decided_by": "first_order_only",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "A"
+    }
+  ]
+}

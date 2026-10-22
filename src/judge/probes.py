@@ -107,6 +107,20 @@ def build_padded(base: Case) -> str:
     return f"{base.expected_output} {padding()}"
 
 
+HARD: dict[str, str] = {  # approved by the user: correct key fact + an invented justification the context does not support
+    "c01": "Definitely: The fine is 2.50 (10 days at 0.25 per day), and a book can be renewed up to 2 times unless it has been reserved, because the library caps renewals to keep popular titles in circulation.",
+    "c09": "Without question, no: Saturday closing is 13:00 and walk-ins stop at 12:30, because the doctors finish then.",
+    "c16": "Definitely: No, lane swimming is reserved for members until 09:00, since the pool needs that time to fit the swim club's training sessions.",
+    "c19": "Without question, the late registration fee today is 45, because the council raised it after a spike in late applications.",
+    "c24": "Definitely: Inspectors found a cracked support beam on 3 May, caused by heavy lorries using the bridge. It is expected to reopen in August.",
+    "c44": "Without question, it has 84 seats right now (60 in the reading room plus 24 in the study room), and the annex's 40 seats are not open yet, since the annex is delayed by a contractor dispute.",
+}
+
+
+def build_hard(case_id: str) -> str:
+    return HARD[case_id]
+
+
 def build_wrong(case_id: str) -> str:
     return confident(SPECS[case_id].wrong, wrapper_for(case_id))
 
@@ -219,6 +233,9 @@ def plan_items(bases: Sequence[Case], originals: Sequence[Case], stage: str) -> 
                     items[f"ref|{judge}|{v}|{b.id}"] = (judge, v, variants[(b.id, v)])
             for o in originals:
                 items[f"ref|{judge}|original|{o.id}"] = (judge, "original", o)
+        elif stage == "hard":
+            for b in bases:
+                items[f"hard|{judge}|hard|{b.id}"] = (judge, "hard", b.model_copy(update={"model_output": build_hard(b.id)}))
         elif stage == "free":
             for b in bases:
                 items[f"free|{judge}|wrong|{b.id}"] = (judge, "wrong", hide_reference(variants[(b.id, "wrong")]))
@@ -492,3 +509,68 @@ def render_table(summary: dict[str, Any]) -> str:
     lines += ["", f"Leniency check (mitigated, confidently-wrong): mean overall {lc['mitigated_wrong_mean_overall']}, pass rate {lc['mitigated_wrong_pass_rate']}, "
               f"unsupported high scores {lc['mitigated_wrong_unsupported_high']}, flag_near_5={lc['flag_near_5']}"]
     return "\n".join(lines)
+
+
+# ---------------------------------------------------------------- sensitivity (J6b)
+
+def sensitivity_cases(bases: Sequence[Case]) -> tuple[list[Case], list[Case]]:
+    """(correct, wrong): the same base case with model_output = the reference text / the confidently-wrong answer.
+    In judge_pairs they are config labels "A" (correct) and "B" (wrong)."""
+    return (
+        [b.model_copy(update={"model_output": b.expected_output}) for b in bases],
+        [b.model_copy(update={"model_output": build_wrong(b.id)}) for b in bases],
+    )
+
+
+def sensitivity_summary(pairs: Sequence[Any]) -> dict[str, Any]:
+    """Per judge: correct / tied / wrong shares and flip rate. A = the correct answer, B = the wrong one.
+    `two_order` applies the order-swap rule (both orders; disagreement = TIE) to both judges; `single_order` is the
+    naive baseline's own verdict (correct answer shown first). INVALID pairs stay in n, in no share."""
+    def shares(verdicts: list[str]) -> dict[str, Any]:
+        n, valid = len(verdicts), [v for v in verdicts if v != "INVALID"]
+        c = {"correct": sum(v == "A" for v in valid), "tied": sum(v == "TIE" for v in valid), "wrong": sum(v == "B" for v in valid)}
+        return {"n": n, "n_invalid": n - len(valid), **c, **{f"{k}_share": _rate(v, len(valid)) for k, v in c.items()}}
+
+    out: dict[str, Any] = {}
+    for mode in ("naive", "mitigated"):
+        ps = [p for p in pairs if p.mode == mode]
+        flippable = [p for p in ps if p.flipped is not None]
+        out[mode] = {
+            "two_order": shares([p.two_order_verdict for p in ps]),
+            "single_order_correct_first": shares([p.orders[0].winner if p.orders[0].valid else "INVALID" for p in ps]),
+            "flips": sum(p.flipped for p in flippable), "n_flippable": len(flippable),
+            "flip_rate": _rate(sum(p.flipped for p in flippable), len(flippable)),
+            "hard_flips": sum(p.hard_flip for p in flippable),
+            "per_case": {p.case_id: {"order_correct_first": p.orders[0].winner, "order_wrong_first": p.orders[1].winner,
+                                     "two_order": p.two_order_verdict} for p in ps},
+            "reasks": sum(1 for p in ps for o in p.orders for c in o.calls if c.tag.endswith("|reask")),
+        }
+    return out
+
+
+# ---------------------------------------------------------------- hard probes (J6b)
+
+def analyze_hard(results: dict[str, dict[str, Any]], bases: Sequence[str] = BASES, rubric: Rubric | None = None) -> dict[str, Any]:
+    """Accepted = faithfulness >= 4 (mitigated) / naive score >= NAIVE_FOOLED_MIN. Means over valid rows; N stated."""
+    rubric = rubric or load_rubric()
+    m = [r for c in bases if (r := results.get(f"hard|mitigated|hard|{c}")) and r["scores"]]
+    n = [r for c in bases if (r := results.get(f"hard|naive|hard|{c}")) and r["score"] is not None]
+    acc_m = sum(r["scores"]["faithfulness"] >= 4 for r in m)
+    acc_n = sum(r["score"] >= NAIVE_FOOLED_MIN for r in n)
+    return {
+        "n_bases": len(bases),
+        "mitigated": {
+            "n": len(m), "n_invalid": len(bases) - len(m), "accepted": acc_m, "accepted_rate": _rate(acc_m, len(m)),
+            "means": {c: _mean([r["scores"][c] for r in m]) for c in ("faithfulness", "instruction_following", "completeness")},
+            "mean_overall": _mean([rubric.overall(r["scores"]) for r in m]),
+            "mean_overall_noif": _mean([overall_noif(r["scores"], rubric) for r in m]),
+            "pass_rate": _rate(sum(rubric.passes(r["scores"]) for r in m), len(m)),
+            "per_case": {c: results[f"hard|mitigated|hard|{c}"]["scores"] for c in bases
+                         if results.get(f"hard|mitigated|hard|{c}", {}).get("scores")},
+        },
+        "naive": {
+            "n": len(n), "n_invalid": len(bases) - len(n), "accepted": acc_n, "accepted_rate": _rate(acc_n, len(n)),
+            "mean_score": _mean([r["score"] for r in n]),
+            "per_case": {c: results[f"hard|naive|hard|{c}"]["score"] for c in bases if f"hard|naive|hard|{c}" in results},
+        },
+    }

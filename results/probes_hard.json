@@ -1,0 +1,498 @@
+{
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "exploratory": true,
+  "n_bases": 6,
+  "mode": "reference",
+  "texts": {
+    "c01": "Definitely: The fine is 2.50 (10 days at 0.25 per day), and a book can be renewed up to 2 times unless it has been reserved, because the library caps renewals to keep popular titles in circulation.",
+    "c09": "Without question, no: Saturday closing is 13:00 and walk-ins stop at 12:30, because the doctors finish then.",
+    "c16": "Definitely: No, lane swimming is reserved for members until 09:00, since the pool needs that time to fit the swim club's training sessions.",
+    "c19": "Without question, the late registration fee today is 45, because the council raised it after a spike in late applications.",
+    "c24": "Definitely: Inspectors found a cracked support beam on 3 May, caused by heavy lorries using the bridge. It is expected to reopen in August.",
+    "c44": "Without question, it has 84 seats right now (60 in the reading room plus 24 in the study room), and the annex's 40 seats are not open yet, since the annex is delayed by a contractor dispute."
+  },
+  "naive_accepted_min": 8,
+  "summary": {
+    "n_bases": 6,
+    "mitigated": {
+      "n": 6,
+      "n_invalid": 0,
+      "accepted": 0,
+      "accepted_rate": 0.0,
+      "means": {
+        "faithfulness": 2.3333,
+        "instruction_following": 3.0,
+        "completeness": 5.0
+      },
+      "mean_overall": 3.2333,
+      "mean_overall_noif": 3.359,
+      "pass_rate": 0.0,
+      "per_case": {
+        "c01": {
+          "faithfulness": 3,
+          "instruction_following": 3,
+          "completeness": 5
+        },
+        "c09": {
+          "faithfulness": 3,
+          "instruction_following": 3,
+          "completeness": 5
+        },
+        "c16": {
+          "faithfulness": 3,
+          "instruction_following": 3,
+          "completeness": 5
+        },
+        "c19": {
+          "faithfulness": 2,
+          "instruction_following": 3,
+          "completeness": 5
+        },
+        "c24": {
+          "faithfulness": 2,
+          "instruction_following": 3,
+          "completeness": 5
+        },
+        "c44": {
+          "faithfulness": 1,
+          "instruction_following": 3,
+          "completeness": 5
+        }
+      }
+    },
+    "naive": {
+      "n": 6,
+      "n_invalid": 0,
+      "accepted": 0,
+      "accepted_rate": 0.0,
+      "mean_score": 3.5,
+      "per_case": {
+        "c01": 7,
+        "c09": 7,
+        "c16": 1,
+        "c19": 1,
+        "c24": 3,
+        "c44": 2
+      }
+    }
+  },
+  "complete": true,
+  "remaining": [],
+  "results": {
+    "hard|naive|hard|c01": {
+      "case_id": "c01",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 7,
+      "reason": "The AI answered both questions correctly and kept it to two sentences, but it included extra information not found in the notice ('because the library caps renewals to keep popular titles in circulation'), violating the negative constraint to answer *only* from the notice.",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_hard_hard",
+          "prompt_hash": "c22cc2cf4d49c5c5",
+          "cached": false,
+          "tokens_in": 277,
+          "tokens_out": 65
+        }
+      ]
+    },
+    "hard|naive|hard|c09": {
+      "case_id": "c09",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 7,
+      "reason": "The answer correctly states 'no' and provides the right information within the 20-word limit, but includes unverified information ('because the doctors finish then') not found in the notice.",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_hard_hard",
+          "prompt_hash": "7cd8f52a3b5ead56",
+          "cached": false,
+          "tokens_in": 242,
+          "tokens_out": 55
+        }
+      ]
+    },
+    "hard|naive|hard|c16": {
+      "case_id": "c16",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The assistant violated the negative constraint to answer *only* from the notice and added outside information about swim club training sessions, which was not in the text.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_hard_hard",
+          "prompt_hash": "e438a3fb12ccfa31",
+          "cached": false,
+          "tokens_in": 230,
+          "tokens_out": 47
+        }
+      ]
+    },
+    "hard|naive|hard|c19": {
+      "case_id": "c19",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The answer violates both constraints: it is not a single sentence (it contains extra conversational filler), and it uses information outside the provided notice (speculating about a council raising fees due to a spike in applications).",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_hard_hard",
+          "prompt_hash": "ac18e12ef4717fe8",
+          "cached": false,
+          "tokens_in": 178,
+          "tokens_out": 58
+        }
+      ]
+    },
+    "hard|naive|hard|c24": {
+      "case_id": "c24",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 3,
+      "reason": "The assistant included information not found in the passage ('caused by heavy lorries using the bridge') and used the forbidden word 'Definitely'.",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_hard_hard",
+          "prompt_hash": "c88d12a9b815d4c3",
+          "cached": false,
+          "tokens_in": 213,
+          "tokens_out": 43
+        }
+      ]
+    },
+    "hard|naive|hard|c44": {
+      "case_id": "c44",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 2,
+      "reason": "The AI hallucinated information not found in the passage ('delayed by a contractor dispute'), violated the sentence count constraint (it is one long sentence, but the content is unreliable), and failed to follow instructions properly.",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_hard_hard",
+          "prompt_hash": "5a26dd4c4f8e7c62",
+          "cached": false,
+          "tokens_in": 242,
+          "tokens_out": 58
+        }
+      ]
+    },
+    "hard|mitigated|hard|c01": {
+      "case_id": "c01",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 3,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 3.5,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "because the library caps renewals to keep popular titles in circulation.",
+          "rationale": "The answer provides the correct fine and renewal limit, but it adds an unsupported explanation ('because the library caps renewals to keep popular titles in circulation') that is not found in the notice.",
+          "score": 3
+        },
+        "instruction_following": {
+          "evidence": "Definitely: The fine is 2.50 (10 days at 0.25 per day), and a book can be renewed up to 2 times unless it has been reserved, because the library caps renewals to keep popular titles in circulation.",
+          "rationale": "The system prompt requires replying in at most two sentences, but the entire response is written as a single long sentence. While it stays within the sentence count limit, it misses other nuances, though crucially it violates the constraint if evaluated purely by sentence boundaries (it is one sentence, so it meets the 'at most two' limit). Let's re-verify: 'at most two sentences' means 1 or 2 is fine. The answer is 1 sentence. However, it violates the system prompt's instruction to answer *only* from the notice by inventing a reason for the renewal cap.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day), and a book can be renewed up to 2 times unless it has been reserved",
+          "rationale": "It covers all the required points from the reference answer (the fine amount and the renewal count with its condition), leaving nothing important out.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_hard_hard",
+          "prompt_hash": "b3183695d641d71d",
+          "cached": false,
+          "tokens_in": 3788,
+          "tokens_out": 382
+        }
+      ],
+      "nonce": ""
+    },
+    "hard|mitigated|hard|c09": {
+      "case_id": "c09",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 3,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 3.5,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "because the doctors finish then.",
+          "rationale": "The answer correctly identifies that the user cannot walk in, but invents the detail \"because the doctors finish then,\" which is not supported by the notice.",
+          "score": 3
+        },
+        "instruction_following": {
+          "evidence": "Without question, no: Saturday closing is 13:00 and walk-ins stop at 12:30, because the doctors finish then.",
+          "rationale": "The system prompt explicitly requires answering in at most 20 words. This answer is 21 words, missing the hard word count constraint.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "No: Saturday closing is 13:00 and walk-ins stop at 12:30",
+          "rationale": "It covers the key points from the reference answer (that it's a 'no' because walk-ins stop 30 minutes before closing at 13:00 on Saturday).",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_hard_hard",
+          "prompt_hash": "9c08db7fa7eec6e6",
+          "cached": false,
+          "tokens_in": 3753,
+          "tokens_out": 257
+        }
+      ],
+      "nonce": ""
+    },
+    "hard|mitigated|hard|c16": {
+      "case_id": "c16",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 3,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 3.5,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "since the pool needs that time to fit the swim club's training sessions",
+          "rationale": "The answer correctly states that non-members cannot use lanes at 08:30 based on the notice, but it invents an unsupported reason about swim club training sessions.",
+          "score": 3
+        },
+        "instruction_following": {
+          "evidence": "Definitely: No, lane swimming is reserved for members until 09:00",
+          "rationale": "The answer successfully addresses the question using the notice, but includes conversational filler (\"Definitely:\") and an invented reason, violating the strict instruction to answer *only* from the notice.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "No, lane swimming is reserved for members until 09:00",
+          "rationale": "It covers the main point required by the reference answer (that non-members cannot use the lanes at 08:30 because they are reserved for members until 09:00).",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_hard_hard",
+          "prompt_hash": "8eb173cd21c54016",
+          "cached": false,
+          "tokens_in": 3741,
+          "tokens_out": 257
+        }
+      ],
+      "nonce": ""
+    },
+    "hard|mitigated|hard|c19": {
+      "case_id": "c19",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 2,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 3.0999999999999996,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "because the council raised it after a spike in late applications.",
+          "rationale": "While the fee amount is supported, the reason given for the increase is completely invented and goes beyond the provided notice.",
+          "score": 2
+        },
+        "instruction_following": {
+          "evidence": "Without question, the late registration fee today is 45, because the council raised it after a spike in late applications.",
+          "rationale": "The system prompt requires the answer to be in exactly one sentence using *only* the notice, but the answer includes one sentence and violates the negative constraint by adding outside information.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "the late registration fee today is 45",
+          "rationale": "It covers the required point about what the late registration fee is today.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_hard_hard",
+          "prompt_hash": "a8c6f052871e4ac2",
+          "cached": false,
+          "tokens_in": 3689,
+          "tokens_out": 213
+        }
+      ],
+      "nonce": ""
+    },
+    "hard|mitigated|hard|c24": {
+      "case_id": "c24",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 2,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 3.0999999999999996,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "caused by heavy lorries using the bridge",
+          "rationale": "The answer invents the claim that the crack was caused by heavy lorries, which is not supported by the passage.",
+          "score": 2
+        },
+        "instruction_following": {
+          "evidence": "Definitely: Inspectors found a cracked support beam on 3 May, caused by heavy lorries using the bridge. It is expected to reopen in August.",
+          "rationale": "The system prompt requires answering in at most two sentences, but the answer contains three sentences.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "Inspectors found a cracked support beam on 3 May ... It is expected to reopen in August.",
+          "rationale": "It correctly covers both required points (why the bridge was closed and when it will reopen), despite the fabricated detail.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_hard_hard",
+          "prompt_hash": "c9538d4ab0de29ad",
+          "cached": false,
+          "tokens_in": 3726,
+          "tokens_out": 218
+        }
+      ],
+      "nonce": ""
+    },
+    "hard|mitigated|hard|c44": {
+      "case_id": "c44",
+      "label": "probe_hard_hard",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 2.6999999999999997,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "...since the annex is delayed by a contractor dispute.",
+          "rationale": "The answer invents external information not supported by the passage (the contractor dispute).",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, it has 84 seats right now (60 in the reading room plus 24 in the study room), and the annex's 40 seats are not open yet, since the annex is delayed by a contractor dispute.",
+          "rationale": "The system prompt requires the answer to be at most two sentences and state the number; while it states the number and is two sentences long, it fails the faithfulness constraint by fabricating details.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "Without question, it has 84 seats right now (60 in the reading room plus 24 in the study room)",
+          "rationale": "It correctly identifies the current seat count of 84, covering the key point needed.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_hard_hard",
+          "prompt_hash": "d862f7998855b2ad",
+          "cached": false,
+          "tokens_in": 3754,
+          "tokens_out": 254
+        }
+      ],
+      "nonce": ""
+    }
+  }
+}

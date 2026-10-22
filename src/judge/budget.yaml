@@ -30,6 +30,10 @@ experiments:
     desc: J6 reference-free re-judging of the 6 confidently-wrong answers (expected_output hidden) x (naive, mitigated)
     terms: [[6, 2]]
     cap: 14
+  probes_hard:
+    desc: J6b hard probes, 6 right-answer-with-fabricated-reasoning answers (reference shown) x (naive, mitigated) pointwise
+    terms: [[6, 2]]
+    cap: 14
   sensitivity:
     desc: J6 sensitivity check, 6 probe bases (correct answer vs its confidently-wrong version) x both orders x (mitigated, naive); needs the J6 confidently-wrong answers
     terms: [[6, 2, 2]]
