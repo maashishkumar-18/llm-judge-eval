@@ -7,7 +7,8 @@
 | J0c models + lean call budget | done | `j0c: models and lean call budget` | ~40 min (estimate) |
 | J1 schemas, rubric, prompts, anchors | done | `j1: schemas, rubric, prompts, anchors` | (fill in real time) |
 | J2 candidate pool (40), checks, generate A/B | done, curation pending (user) | `j2: candidate pool, constraint checks, generate A/B` | (fill in real time) |
-| J3–J10 | todo | | |
+| J3 parse ladder, pointwise, replay | done (pairwise live check deferred to J5) | `j3: parse ladder, pointwise judge, replay` | (fill in real time) |
+| J4–J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -122,3 +123,32 @@
 - **Regenerated A, B, C for the 4 new cases** (generator calls only; 0 judge calls). Suite-level numbers: A constraint 20/20, B 19/20, C 19/20; exact-match 3/13 each (down from 6/13 because the swapped-out cases were the short exact-answer ones; the metric is strict). C - A = -5.0 / +0.0 pts -> rule outcome unchanged: **prompt v1 vs v2**.
 - **Observation (honest): the temptation cases did not tempt in generation.** All three configs said the fact is not provided on c41-c43 (A even without being told to; A's c41 and c43 answers also add the available part, B's are terser) and all answered 84 on c44 (C showed the sum). So A and B do NOT differ on faithfulness in these 4 cases at the generation level; any A/B difference must come from the judge's finer distinctions (completeness, how the abstention is phrased). The expected v1-vs-v2 separation did not show up. Not tuned further; changing the cases now, after seeing outputs, would be result-driven.
 - Tests: 74 passed (shape 44/31/13 pool, locked-suite probes c44, swapped ids).
+
+## J3 — parse ladder, pointwise judge, replay
+- **`judge.parse`** (explicit ladder, one function per rung): `strict` (whole reply is one object that validates) -> `extract` (strip `<think>` / gpt-oss harmony channels, ignore fences and prose, try every balanced `{...}` span string-aware, LAST valid span wins so a draft in the reasoning loses to the final answer) -> `repair` (cumulative named stages: smart_quotes, comments_trailing_commas, unquoted_keys, inner_quotes, control_chars, python_literals, truncation; syntax only, never invents a field) -> `reask` (ONE extra judge call quoting the validation error and the previous reply; its reply goes through rungs 1-3) -> `invalid`. Validation is the pydantic schema, so a score of 7 or a missing criterion is a parse failure. `ParseResult` carries status, attempts per rung, repairs applied, last error. `parse_with_ladder(raw, model, reask=cb)` is generic (pairwise reuses it in J5).
+- **`judge.pointwise`**: `judge_case(client, case, label=, anchors=, nonce=)` -> `PointwiseResult` (parse_status, error_kind `""|parse|call`, repairs, scores, **overall recomputed from the weights**, pass flag, `unsupported_high_scores` = score >= 4 without a verbatim quote, per-call records incl. the re-ask). INVALID results are kept: `summarize_pointwise` counts them in n and in `parse_status`, reports means over scored cases, and gives the pass rate both over scored cases and with INVALID as fail. A judge call that fails after retries is `invalid` + `error_kind=call` and is NOT checkpointed (a resume retries it); an unparseable reply IS checkpointed (its replies are cached, a retry would repeat it). `judge_suite` is checkpointed (`.cache/checkpoints/pointwise_<label>.jsonl`, `--fresh` drops it) and writes `results/pointwise_<label>.json`; `checkpoint.run_checkpointed` gained a `persist` predicate for this.
+- **Replay** (`judge.replay`, `judge replay --results results/pointwise_<label>.json`): `ReplayClient` serves raw responses from the JSONL call log keyed by (system, prompt, nonce); it has no HTTP client and no keys. `replay_suite` re-runs the SAME `judge_case` code over it (so parse ladder, re-ask and overall recomputation are replayed, not stored) and diffs parse_status / scores / overall / pass / repairs against the saved results. A changed prompt shows up as `no-log`, an edited verdict as a diff; exit code 1 on any difference.
+- **Corpus:** `tests/corpus.py`, 46 replies, each pinned to the rung it must reach (6 strict, 12 extract incl. gpt-oss reasoning prose, `<think>`, harmony leak, draft-then-final; 12 repair; 16 that no local repair may rescue and must go to the re-ask).
+- **Tests: 145 passed** (was 74): corpus parametrised per sample, rung order, error messages, re-ask called once and quotes the error, re-ask failure -> INVALID counted, summary hand-computed (overall mean 11/3, pass rates 1/3 and 1/4), flagged paraphrase evidence, suite replay of strict/extract/reask/invalid with 0 requests, tamper/no-log detection, call-failure resume, cache.
+- CLI: `judge pointwise --config A [--ids ...] [--label L] [--experiment pointwise_mitigated] [--nonce N] [--fresh]`, `judge replay`. Both default to the lean budget accounting (`--experiment ''` for none).
+
+### J3 live check (5 calls, label `live5`, config A, mitigated prompts, `JUDGE_JSON_MODE=0`)
+| case | mode | parse_status | f/i/c | overall | pass |
+|---|---|---|---|---|---|
+| c01 | reference | strict | 5/5/4 | 4.75 | PASS |
+| c41 | reference (temptation) | strict | 5/5/5 | 5.00 | PASS |
+| c44 | reference (temptation) | strict | 5/5/4 | 4.75 | PASS |
+| c28 | free | strict | 5/5/5 | 5.00 | PASS |
+| c31 | free | strict | 5/5/5 | 5.00 | PASS |
+- 5 network calls, 0 re-asks, 17,790 tokens in / 1,361 out (3.3-3.8K in per call because of the anchors; outputs 270-360 incl. thinking, far under `JUDGE_MAX_TOKENS`). Files: `results/pointwise_live5.json`, `logs/pointwise_live5.jsonl`. `judge replay` over it: 5/5 identical, 0 API calls.
+- Checks from the J1 TODO: (a) valid JSON out of the box: yes, 5/5 strict with prompt-only JSON; (b) `unsupported_high_scores` empty for all 5 (every quote verbatim); (c) no anchor wording seen in the rationales I read (c01, c28, c31); (d) thinking tokens fit. No prompt change needed, `VERSIONS` unchanged, so these 5 are cache hits in the full run (they stay charged to `pointwise_mitigated`: 5/46 spent).
+- **Not done:** the pairwise half of the J1 TODO (both orders) was not run; the pairwise verdict is not wired to the ladder yet (J5).
+
+## Caveats / open items (J3)
+- **The lower rungs were never exercised live**: Gemini returned bare JSON 5/5, so extract / repair / reask are proven only by the corpus and mock-transport tests. The gpt-oss "reasoning before the JSON" case is a synthetic sample, not an observed Gemini behaviour. The live strict rate says nothing about the other 15 cases.
+- **Possible leniency**: 5/5 cases PASS, 17 of 20 criterion scores are 5 (mean overall 4.90), and the cases are the generator's easy ones. This is what a score-clustering/leniency problem would look like but N=5 cannot tell it from genuinely good outputs; J4/J7 probes (confidently-wrong, padded) are the real test. Not tuned.
+- The judge counts words (c31 "44 words", c28 "13, 9, 14") from reading; counts were plausible here but LLM word counting is unreliable, and the deterministic checks in `meta.checks` are the ground truth for those constraints.
+- Evidence rule: the prompt asks for a quote of at most 40 words; c01's quote is the whole 2-sentence answer and was accepted (the code only checks verbatim, not length).
+- `repair` heuristics (inner quotes, unquoted keys) are tuned on the corpus, not on real judge failures; the status and the stages are logged per result so a repair-heavy run is visible in the summary.
+- Time spent: not recorded; fill in.
+

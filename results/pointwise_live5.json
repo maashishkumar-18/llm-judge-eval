@@ -1,0 +1,283 @@
+{
+  "label": "live5",
+  "cases_file": "data/outputs/A.json",
+  "nonce": "",
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "case_ids": [
+    "c01",
+    "c28",
+    "c31",
+    "c41",
+    "c44"
+  ],
+  "summary": {
+    "n": 5,
+    "n_scored": 5,
+    "n_invalid": 0,
+    "n_invalid_parse": 0,
+    "n_invalid_call": 0,
+    "parse_status": {
+      "strict": 5,
+      "extract": 0,
+      "repair": 0,
+      "reask": 0,
+      "invalid": 0
+    },
+    "overall": {
+      "mean": 4.9,
+      "sd": 0.1225,
+      "distinct": 2
+    },
+    "criteria_mean": {
+      "faithfulness": 5.0,
+      "instruction_following": 5.0,
+      "completeness": 4.6
+    },
+    "pass_rate_scored": 1.0,
+    "pass_rate_invalid_as_fail": 1.0,
+    "unsupported_high_score_cases": 0,
+    "judge_calls": 5,
+    "judge_calls_network": 5,
+    "reasks": 0,
+    "tokens_in": 17790,
+    "tokens_out": 1361
+  },
+  "results": [
+    {
+      "case_id": "c01",
+      "label": "live5",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 4
+      },
+      "overall": 4.75,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+          "rationale": "Every claim is supported by the notice and matches the reference answer; nothing is invented or contradicted.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+          "rationale": "The answer uses only the notice, acts as a library assistant, and is exactly two sentences, fully meeting all explicit constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "A book can be renewed up to 2 times.",
+          "rationale": "It covers the fine amount and the renewal limit, though it omits the condition about another reader reserving the book, which is a minor point compared to the reference.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|live5",
+          "prompt_hash": "d2ab6f996b78cf19",
+          "cached": false,
+          "tokens_in": 3785,
+          "tokens_out": 285
+        }
+      ],
+      "nonce": ""
+    },
+    {
+      "case_id": "c28",
+      "label": "live5",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "- Harlow introduced a kerbside recycling scheme with blue, green, and grey bins.",
+          "rationale": "Every claim in the answer (the bins, fortnightly alternating collections, and the 21% to 38% rise with cardboard contamination) is directly supported by the passage, with nothing invented or contradicted.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "- Harlow introduced a kerbside recycling scheme with blue, green, and grey bins...",
+          "rationale": "The answer provides exactly 3 bullet points, each starting with '- ', contains no other text, and all points are well under the 20-word limit (13, 9, and 14 words respectively).",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "- Recycling share rose from 21% to 38%, but food‑stained cardboard remains a contamination issue.",
+          "rationale": "The summary successfully covers the key points of the passage: the new bin scheme, the collection schedule, the increase in recycling rates, and the primary contamination issue.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c28|live5",
+          "prompt_hash": "4891aa4a11414ef6",
+          "cached": false,
+          "tokens_in": 3311,
+          "tokens_out": 273
+        }
+      ],
+      "nonce": ""
+    },
+    {
+      "case_id": "c31",
+      "label": "live5",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The Alder insulated bottle delivers 350 ml of pure refreshment in sleek stainless steel. It keeps drinks cold for 24 hours or hot for 12, and its slim design fits standard cup holders. Available in three stylish colours...",
+          "rationale": "Every claim in the answer (Alder insulated bottle, 350 ml, stainless steel, cold for 24 hours or hot for 12, fits standard cup holders, three colours) is directly supported by the input, with nothing invented.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The Alder insulated bottle delivers 350 ml of pure refreshment in sleek stainless steel. It keeps drinks cold for 24 hours or hot for 12, and its slim design fits standard cup holders. Available in three stylish colours, it’s the perfect companion for on‑the‑go hydration.",
+          "rationale": "The answer is 44 words long, which fits within the required 40 to 60 word range, and it explicitly mentions the 350 ml capacity.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The Alder insulated bottle delivers 350 ml of pure refreshment in sleek stainless steel. It keeps drinks cold for 24 hours or hot for 12, and its slim design fits standard cup holders. Available in three stylish colours...",
+          "rationale": "The product description successfully incorporates all the key features provided in the input product details.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c31|live5",
+          "prompt_hash": "1679daf4a3ebe38d",
+          "cached": false,
+          "tokens_in": 3259,
+          "tokens_out": 358
+        }
+      ],
+      "nonce": ""
+    },
+    {
+      "case_id": "c41",
+      "label": "live5",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "You can book online through the clinic’s website instead.",
+          "rationale": "Every claim made is directly supported by the notice (which states new patients can book online through the clinic website) and correctly states that no phone number is provided.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "I’m sorry, but the notice doesn’t include a phone number. You can book online through the clinic’s website instead.",
+          "rationale": "The answer adopts the requested persona, uses the provided notice, and stays within the maximum limit of two sentences.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "I’m sorry, but the notice doesn’t include a phone number. You can book online through the clinic’s website instead.",
+          "rationale": "It covers all required points from the reference answer: stating that there is no phone number and providing the alternative booking method.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c41|live5",
+          "prompt_hash": "2b21e53b11c15f81",
+          "cached": false,
+          "tokens_in": 3723,
+          "tokens_out": 240
+        }
+      ],
+      "nonce": ""
+    },
+    {
+      "case_id": "c44",
+      "label": "live5",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 4
+      },
+      "overall": 4.75,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The library currently has 84 seats.",
+          "rationale": "The claim of 84 seats is supported by the passage (60 + 24) and matches the reference answer.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The library currently has 84 seats.",
+          "rationale": "The answer is a single sentence (at most two sentences) and explicitly states the number 84, satisfying all constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The library currently has 84 seats.",
+          "rationale": "It covers the main required point (the current number of seats) though it omits the breakdown and the future annex, which are minor details given the direct question.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|live5",
+          "prompt_hash": "c6f473a9326e8f8b",
+          "cached": false,
+          "tokens_in": 3712,
+          "tokens_out": 205
+        }
+      ],
+      "nonce": ""
+    }
+  ]
+}

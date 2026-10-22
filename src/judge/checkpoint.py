@@ -31,9 +31,12 @@ async def run_checkpointed(
     path: str | Path,
     *,
     concurrency: int = 2,
+    persist: Callable[[Any], bool] = lambda result: True,
 ) -> RunStatus:
     """Run fn(key) for every key not yet in the checkpoint. fn results must be JSON-serialisable.
-    On a QuotaStop (daily/experiment cap) no new items start; the status says what is left."""
+    On a QuotaStop (daily/experiment cap) no new items start; the status says what is left.
+    A result for which persist(result) is False is returned in status.results but not checkpointed, so a
+    resumed run retries it (used for transient failures such as a judge call that kept returning 503)."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     status = RunStatus()
@@ -61,6 +64,8 @@ async def run_checkpointed(
             status.results[key] = result
             status.ran += 1
             pending.discard(key)
+            if not persist(result):
+                return
             with path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps({"key": key, "result": result}, ensure_ascii=False) + "\n")
 

@@ -1,4 +1,4 @@
-"""judge CLI: `budget` (j0c) and `generate` (j2); later sessions add run/compare/replay/probes/validate."""
+"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3); later sessions add compare/probes/validate."""
 
 from __future__ import annotations
 
@@ -93,6 +93,99 @@ def cmd_genreport(args: argparse.Namespace) -> int:
     return 0
 
 
+def _load_cases(path: str):
+    import json
+    from pathlib import Path
+
+    from judge.schemas import Case
+
+    return [Case(**d) for d in json.loads(Path(path).read_text(encoding="utf-8"))]
+
+
+def _fmt_row(r: dict) -> str:
+    sc = r["scores"]
+    scores = "/".join(str(sc[c]) for c in ("faithfulness", "instruction_following", "completeness")) if sc else "-"
+    overall = f"{r['overall']:.2f}" if r["overall"] is not None else "  - "
+    verdict = {True: "PASS", False: "fail", None: " -- "}[r["passed"]]
+    flags = ("unsupported:" + ",".join(r["unsupported_high_scores"])) if r["unsupported_high_scores"] else ""
+    if r["repairs"]:
+        flags += " repairs:" + ",".join(r["repairs"])
+    calls = f"{sum(1 for c in r['calls'] if not c['cached'])}net/{len(r['calls'])}"
+    return (f"{r['case_id']:5s} {r['mode']:9s} {r['parse_status']:8s} f/i/c={scores:6s} overall={overall} {verdict}  "
+            f"calls={calls} {flags}{('  ERROR: ' + r['error'][:120]) if r['error'] else ''}")
+
+
+def cmd_pointwise(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.pointwise import judge_suite
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    cases_file = args.cases_file or f"data/outputs/{args.config}.json"
+    cases = _load_cases(cases_file)
+    if args.ids:
+        cases = [c for c in cases if c.id in args.ids]
+        missing = set(args.ids) - {c.id for c in cases}
+        if missing:
+            print(f"unknown case ids: {sorted(missing)}")
+            return 1
+    if args.limit:
+        cases = cases[: args.limit]
+    label = args.label or args.config
+    if args.experiment:
+        budget = load_budget()
+        ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+        try:
+            budget.check_run(args.experiment, len(cases), spent=ledger.used_experiment(args.experiment))
+        except BudgetExceeded as e:
+            print(e)
+            return 1
+
+    async def run():
+        async with LLMClient(s, "judge", log_name=f"pointwise_{label}.jsonl", experiment=args.experiment or None) as client:
+            return await judge_suite(
+                client, cases, label, out_path=f"results/pointwise_{label}.json",
+                checkpoint_path=Path(".cache/checkpoints") / f"pointwise_{label}.jsonl",
+                cases_file=cases_file, nonce=args.nonce, fresh=args.fresh,
+            )
+
+    doc, remaining = asyncio.run(run())
+    print(f"judge {doc['judge_model']} (json_mode={doc['json_mode']}), {len(doc['results'])}/{len(cases)} cases, label {label}")
+    for r in doc["results"]:
+        print(_fmt_row(r))
+    sm = doc["summary"]
+    print(f"parse_status {sm['parse_status']} | invalid {sm['n_invalid']} (parse {sm['n_invalid_parse']}, call {sm['n_invalid_call']}) | "
+          f"mean overall {sm['overall']['mean']} | pass rate {sm['pass_rate_scored']} (invalid as fail: {sm['pass_rate_invalid_as_fail']}) | "
+          f"calls {sm['judge_calls']} ({sm['judge_calls_network']} network, {sm['reasks']} re-ask) | tokens {sm['tokens_in']} in / {sm['tokens_out']} out")
+    if remaining:
+        print(f"STOPPED with {len(remaining)} cases left (quota cap); re-run the same command to resume: {remaining}")
+        return 2
+    return 0
+
+
+def cmd_replay(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from judge.pointwise import replay_suite
+    from judge.replay import ReplayClient
+
+    sys.stdout.reconfigure(errors="replace")
+    doc = json.loads(Path(args.results).read_text(encoding="utf-8"))
+    log = args.log or f"logs/pointwise_{doc['label']}.jsonl"
+    cases = _load_cases(args.cases_file or doc["cases_file"])
+    client = ReplayClient(log)
+    rows = asyncio.run(replay_suite(doc, cases, client))
+    for r in rows:
+        print(f"{r['case_id']:5s} {'SAME' if r['same'] else 'DIFF'}  replayed parse_status={r['replayed_status']}"
+              + ("" if r["same"] else f"  {r['diffs']}"))
+    same = sum(r["same"] for r in rows)
+    print(f"replayed {len(rows)} verdicts from {log} with 0 API calls ({client.served} logged responses served): {same} identical, {len(rows) - same} different")
+    return 0 if same == len(rows) else 1
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="judge")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -109,6 +202,21 @@ def main(argv: list[str] | None = None) -> None:
     r = sub.add_parser("genreport", help="constraint pass rate and exact-match per generator config (no LLM calls)")
     r.add_argument("--config", nargs="+", default=["A", "B", "C"])
     r.set_defaults(fn=cmd_genreport)
+    p = sub.add_parser("pointwise", help="mitigated pointwise judging of one config's outputs (live judge calls)")
+    p.add_argument("--config", default="A", help="generator config whose outputs are judged (data/outputs/<config>.json)")
+    p.add_argument("--cases-file", default="", help="override the outputs file")
+    p.add_argument("--ids", nargs="+", help="only these case ids")
+    p.add_argument("--limit", type=int, default=0)
+    p.add_argument("--label", default="", help="names results/pointwise_<label>.json and logs/pointwise_<label>.jsonl (default: config)")
+    p.add_argument("--experiment", default="pointwise_mitigated", help="budget experiment to charge ('' = none)")
+    p.add_argument("--nonce", default="", help="bypass the cache (test-retest)")
+    p.add_argument("--fresh", action="store_true", help="discard the checkpoint and judge every case again")
+    p.set_defaults(fn=cmd_pointwise)
+    rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
+    rp.add_argument("--results", default="results/pointwise_A.json")
+    rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")
+    rp.add_argument("--cases-file", default="")
+    rp.set_defaults(fn=cmd_replay)
     args = ap.parse_args(argv)
     sys.exit(args.fn(args))
 
