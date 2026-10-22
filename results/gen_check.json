@@ -4,33 +4,33 @@
     "constraint_pass": 20,
     "constraint_pass_rate": 1.0,
     "n_ref": 13,
-    "exact_match": 6,
-    "exact_match_rate": 0.46153846153846156,
+    "exact_match": 3,
+    "exact_match_rate": 0.23076923076923078,
     "constraint_pass_ref": 13,
     "empty": 0,
-    "mean_tokens_out": 63.7
+    "mean_tokens_out": 61.3
   },
   "B": {
     "n": 20,
     "constraint_pass": 19,
     "constraint_pass_rate": 0.95,
     "n_ref": 13,
-    "exact_match": 6,
-    "exact_match_rate": 0.46153846153846156,
+    "exact_match": 3,
+    "exact_match_rate": 0.23076923076923078,
     "constraint_pass_ref": 12,
     "empty": 0,
-    "mean_tokens_out": 75.8
+    "mean_tokens_out": 69.05
   },
   "C": {
     "n": 20,
     "constraint_pass": 19,
     "constraint_pass_rate": 0.95,
     "n_ref": 13,
-    "exact_match": 6,
-    "exact_match_rate": 0.46153846153846156,
+    "exact_match": 3,
+    "exact_match_rate": 0.23076923076923078,
     "constraint_pass_ref": 12,
     "empty": 0,
-    "mean_tokens_out": 225.45
+    "mean_tokens_out": 214.1
   },
   "B_minus_A_pts": {
     "constraint": -5.000000000000004,

@@ -12,3 +12,11 @@ status and `CLAUDE.md` for the locked design decisions, metric definitions and c
   kept out of the eval suite, listed in mixed order, and the reference-free prompt only sees the five
   reference-free ones. Their effect is measured in the clustering experiment (naive vs mitigated spread), not
   assumed.
+- **The generator decision rule is a coarse screen.** Whether the main A/B contrasts models (gpt-oss-20b vs qwen) or
+  prompts (v1 vs v2) is decided by a 10-percentage-point threshold on two cheap checks (constraint pass rate over 20
+  cases, strict exact-match over 13). One case is worth 5 and 7.7 points, so two cases flip it; it is not a
+  significance test. It was fixed before any judge call (CLAUDE.md section 2b).
+- **The suite contains deliberate temptation cases (c41-c44) that favour prompt v2 by construction.** Their system
+  prompts do not tell the model to abstain, and v2's preamble does. That is a designed probe of grounding, chosen
+  before judging because A and B were both at the ceiling on hard constraints; it is not a neutral sample of tasks.
+

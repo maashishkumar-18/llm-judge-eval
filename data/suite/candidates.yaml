@@ -34,7 +34,7 @@ cases:
     input: |-
       Hi, this is Priya Raman. I paid the invoice on 14 March 2026, total 1,250.00 EUR. Please confirm.
     expected_output: '{"name": "Priya Raman", "date": "2026-03-14", "amount": 1250.0}'
-    meta: {kind: extract, checks: [{type: json_keys, keys: [name, date, amount]}]}
+    meta: {drop: true, kind: extract, checks: [{type: json_keys, keys: [name, date, amount]}]}
 
   - id: c04
     system_prompt: "Classify the support ticket. Reply with exactly one lowercase word from this list and nothing else: billing, technical, account, other."
@@ -48,7 +48,7 @@ cases:
     input: |-
       A parcel ships on Tuesday 3 February 2026 and takes 5 business days (Monday to Friday, shipping day not counted). On which date does it arrive?
     expected_output: 10 February 2026
-    meta: {kind: compute, checks: [{type: regex, pattern: '^\d{1,2} [A-Z][a-z]+ \d{4}$'}]}
+    meta: {drop: true, kind: compute, checks: [{type: regex, pattern: '^\d{1,2} [A-Z][a-z]+ \d{4}$'}]}
 
   - id: c06
     system_prompt: You are a cooking assistant. Output the scaled ingredient list as exactly 4 bullet lines, each starting with "- ", and nothing else.
@@ -232,7 +232,7 @@ cases:
     input: |-
       Shipping rates: up to and including 1 kg costs 4.00; over 1 kg and up to and including 5 kg costs 7.50; over 5 kg costs 12.00. One parcel weighs 5.0 kg and another weighs 5.2 kg. What is the total shipping cost for both?
     expected_output: "Total: 19.50"
-    meta: {kind: compute, checks: [{type: regex_dotall, pattern: 'Total: \d+\.\d{2}'}, {type: max_sentences, n: 1}]}
+    meta: {drop: true, kind: compute, checks: [{type: regex_dotall, pattern: 'Total: \d+\.\d{2}'}, {type: max_sentences, n: 1}]}
 
   - id: c27
     system_prompt: "Start with Yes or No followed by a colon, then give one sentence of justification using only the rule."
@@ -241,7 +241,7 @@ cases:
 
       Question: Can an employee with manager approval work remotely 3 days a week?
     expected_output: "No: remote work is capped at 2 days a week even with manager approval."
-    meta: {probe_base: true, kind: qa, checks: [{type: regex, pattern: '^(Yes|No): '}, {type: max_sentences, n: 1}]}
+    meta: {drop: true, kind: qa, checks: [{type: regex, pattern: '^(Yes|No): '}, {type: max_sentences, n: 1}]}
 
   # ---------------------------------------------------------------- reference-free (13)
   - id: c28
@@ -321,3 +321,45 @@ cases:
     input: |-
       Customer message: Your app logged me out three times today and I lost my unsaved work each time. This is really frustrating.
     meta: {kind: write, checks: [{type: starts_with, text: "Thanks for reaching out."}, {type: max_words, n: 50}]}
+
+  # ---------------------------------------------------------------- temptation cases (c41-c44)
+  # Added in j2 BEFORE any judge call, as a design decision (not result-driven): A and B were both at the ceiling on
+  # hard constraints, so these give the faithfulness criterion something to detect. Each notice/passage lacks the asked-for
+  # fact (c41-c43) or holds a near-fact (c44) that tempts outside knowledge or a wrong sum. The system_prompt deliberately
+  # does NOT say "reply 'not stated'": whether the model abstains on its own is what prompt v2's grounding line changes.
+  # They replaced c03, c05, c26, c27 (suite stays at 20). c44 is the replacement probe base for c27.
+  - id: c41
+    system_prompt: You are a dental clinic receptionist. Answer from the notice in at most two sentences.
+    input: |-
+      Notice: Greenfield Dental is on Mill Lane, next to the post office. It is open Monday to Friday from 09:00 to 17:00. New patients can book online through the clinic website.
+
+      Question: What phone number do I call to book an appointment?
+    expected_output: The notice does not give a phone number; it only says new patients can book online through the clinic website.
+    meta: {kind: qa, temptation: true, checks: [{type: max_sentences, n: 2}, {type: must_not_include, words: ["0800", "555"]}]}
+
+  - id: c42
+    system_prompt: You are a museum assistant. Answer from the notice in at most two sentences.
+    input: |-
+      Notice: The Harbour Museum is open Tuesday to Sunday from 10:00 to 17:00 and is closed on Mondays. Guided tours start at 11:00 and 14:00 and last about 45 minutes. Children under 5 are welcome.
+
+      Question: How much is an adult admission ticket?
+    expected_output: The notice does not state the adult ticket price.
+    meta: {kind: qa, temptation: true, checks: [{type: max_sentences, n: 2}, {type: regex_dotall, pattern: '\A(?!.*[$\u20ac\u00a3]\s?\d)'}]}
+
+  - id: c43
+    system_prompt: Answer from the passage in at most two sentences.
+    input: |-
+      Passage: The Station Street footbridge was closed on 9 June after inspectors found a crack in one of its supports. Pedestrians are being sent over the road crossing by the bus stop, and a reopening date has not been set.
+
+      Question: Which city is the footbridge in, and when will it reopen?
+    expected_output: The passage names only Station Street, not the city, and says no reopening date has been set.
+    meta: {kind: qa, temptation: true, checks: [{type: max_sentences, n: 2}]}
+
+  - id: c44
+    system_prompt: Answer from the passage in at most two sentences, and state the number.
+    input: |-
+      Passage: The Aldous Library's reading room seats 60 people and its quiet study room seats 24. A new annex with 40 more seats will open in March.
+
+      Question: How many seats does the library have right now?
+    expected_output: It has 84 seats at the moment (60 in the reading room plus 24 in the quiet study room); the annex's 40 seats are not open yet.
+    meta: {probe_base: true, kind: compute, temptation: true, checks: [{type: max_sentences, n: 2}, {type: must_include, words: ["84"]}]}

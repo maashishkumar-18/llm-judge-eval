@@ -12,7 +12,7 @@ from tests.test_llm import groq_ok, make_settings
 
 def test_candidate_pool_shape():
     rows = load_candidates(CANDIDATES_PATH, include_dropped=True)  # also validates every check spec
-    assert summarize(rows) == {"cases": 40, "reference_based": 27, "reference_free": 13}
+    assert summarize(rows) == {"cases": 44, "reference_based": 31, "reference_free": 13}
     assert all(r["system_prompt"].strip() for r in rows)
     text = " ".join(r["input"] for r in rows)
     assert "Northwind" not in text and "30 days of delivery" not in text  # anchors must not leak into the suite
@@ -79,7 +79,9 @@ def test_locked_suite_matches_curation():
     assert [r["id"] for r in locked] == [r["id"] for r in pool]
     assert summarize(locked) == {"cases": 20, "reference_based": 13, "reference_free": 7}
     probes = [r["id"] for r in locked if r["meta"].get("probe_base")]
-    assert probes == ["c01", "c09", "c16", "c19", "c24", "c27"]
+    assert probes == ["c01", "c09", "c16", "c19", "c24", "c44"]
+    assert {"c03", "c05", "c26", "c27"}.isdisjoint(r["id"] for r in locked)  # swapped out for c41-c44
+    assert [r["id"] for r in locked if r["meta"].get("temptation")] == ["c41", "c42", "c43", "c44"]
     assert all(r.get("expected_output") for r in locked if r["id"] in probes)
 
 

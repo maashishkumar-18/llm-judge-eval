@@ -44,14 +44,22 @@ Scoring: pipeline 20 · judging design 20 · bias handling 25 · judge validatio
 **Family guard rationale.** Self-enhancement bias: a judge tends to prefer outputs from its own family. `Settings.enforce_family_guard()` runs at every `LLMClient` construction and refuses judge family == generator family (and any unidentifiable family) unless `ALLOW_SAME_FAMILY=1` (which logs a warning). Gemma counts as Google. With gen = gpt-oss-20b (openai) and judge = gemini-3.5-flash-lite (google) the guard passes; `openai/gpt-oss-120b` or `-safeguard` as judge, or any Gemini/Gemma as generator, is refused. It is a structural mitigation, not a measurement; J7 measures the residual preference.
 
 ## 2b. Decision rule: what the main A/B contrast is (pre-registered in j2, before any judge call)
-Suite locked in `data/suite.yaml` (20 cases: 13 reference-based, 7 reference-free; 6 probe bases). Generator configs: **A** = gpt-oss-20b + prompt v1,
+Suite locked in `data/suite.yaml` (20 cases: 13 reference-based, 7 reference-free; 6 probe bases c01 c09 c16 c19 c24 c44). Generator configs: **A** = gpt-oss-20b + prompt v1,
 **B** = gpt-oss-20b + prompt v2, **C** = qwen/qwen3.8-27b (Alibaba) + prompt v1 (same prompt as A), generated with NO judge calls.
 Checks (`judge genreport`, written to `results/gen_check.json`): (1) deterministic constraint-check pass rate over the 20 cases;
 (2) strict exact-match rate over the 13 reference-based cases (`checks.exact_match`: NFKC, whitespace, case, one trailing period; JSON compared parsed).
 - **If C differs from A by >= 10 percentage points on EITHER check, the main A/B is model A (gpt-oss-20b) vs model B (qwen), same prompt.**
 - **Otherwise the main A/B is prompt v1 vs prompt v2 on gpt-oss-20b (A vs B), and C is dropped.**
 Interpretation notes: "either check" is my reading of "those checks"; with N=20 / N=13 one case is 5 / 7.7 points, so the threshold is crossed by 2 constraint
-cases or 1-2 exact-match cases. The rule is a coarse screen, not a significance test. Result (j2): C - A = -5.0 pts constraint, +0.0 pts exact-match -> **prompt v1 vs v2 (A vs B)**.
+cases or 1-2 exact-match cases. The rule is a coarse screen, not a significance test. Result (j2, recomputed on the final suite below): C - A = -5.0 pts constraint, +0.0 pts exact-match -> **prompt v1 vs v2 (A vs B)**.
+
+**Design decision, made before any judge call (not result-driven): temptation cases.** A and B were both at the ceiling on hard constraints, so four
+low-value reference-based cases (c03 JSON extraction, c05 date arithmetic, c26 shipping sum, c27 yes/no rule) were swapped for four temptation cases
+c41-c44 (a notice lacking the phone number / the ticket price / the city, plus one near-fact whose answer is a sum from the passage), keeping the suite at
+20 and the 214-call budget unchanged. Their system prompts deliberately do NOT tell the model to say "not stated"; whether it abstains unprompted is what
+prompt v2's grounding line ("if the answer is not given, say so") is meant to change, so this slice favours B by construction and measures that effect.
+c27 was a probe base; c44 replaces it. The generation check and the rule were re-run on the final suite (same outcome). Observed: all three configs
+abstained correctly on c41-c43 and answered 84 on c44, so in generation the temptation cases did NOT separate A from B (see PROGRESS J2).
 
 ## 3. Metric definitions (lock before any experiment; thresholds pre-registered in rubric.yaml)
 | Quantity | Definition |
