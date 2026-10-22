@@ -1,4 +1,4 @@
-"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3); later sessions add compare/probes/validate."""
+"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3), `position` (j4); later sessions add compare/probes/validate."""
 
 from __future__ import annotations
 
@@ -165,6 +165,87 @@ def cmd_pointwise(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_position(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.pairwise import (
+        build_position_document, control_ids, judge_controls, judge_pairs, naive_pair_ids, write_document,
+    )
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    cx, cy = _load_cases("data/outputs/A.json"), _load_cases("data/outputs/B.json")
+    all_ids = [c.id for c in cx]
+    naive_ids, ctl_ids = naive_pair_ids(cx, cy), control_ids(cx)
+    if args.ids:
+        unknown = set(args.ids) - set(all_ids)
+        if unknown:
+            print(f"unknown case ids: {sorted(unknown)}")
+            return 1
+    pick = lambda ids: [i for i in ids if not args.ids or i in args.ids]  # noqa: E731
+    plan = {  # stage -> (budget experiment, case ids, judge calls = ids x orders)
+        "naive": ("pairwise_naive", pick(naive_ids), 2),
+        "mitigated": ("pairwise_mitigated", pick(all_ids), 2),
+        "controls_naive": ("controls", pick(ctl_ids), 1),
+        "controls_mitigated": ("controls", pick(ctl_ids), 1),
+    }
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    for exp in {plan[st][0] for st in args.stages}:
+        need = sum(len(plan[st][1]) * plan[st][2] for st in args.stages if plan[st][0] == exp)
+        try:
+            budget.check_run(exp, need, spent=ledger.used_experiment(exp))
+        except BudgetExceeded as e:
+            print(e)
+            return 1
+
+    label = args.label
+    pairs, controls, stopped = {}, {}, []
+
+    async def run():
+        for st in args.stages:
+            exp, ids, _ = plan[st]
+            mode = st.removeprefix("controls_")
+            async with LLMClient(s, "judge", log_name=f"position_{label}.jsonl", experiment=exp) as client:
+                cp = Path(".cache/checkpoints") / f"position_{label}_{st}.jsonl"
+                if st.startswith("controls"):
+                    controls[mode], left = await judge_controls(
+                        client, cx, ids, mode=mode, checkpoint_path=cp, nonce=args.nonce, fresh=args.fresh
+                    )
+                else:
+                    pairs[mode], left = await judge_pairs(
+                        client, cx, cy, ids, mode=mode, checkpoint_path=cp, nonce=args.nonce, fresh=args.fresh
+                    )
+                stopped.extend(f"{st}:{i}" for i in left)
+                if left:
+                    break
+        return client.model, client.json_mode
+
+    model, json_mode = asyncio.run(run())
+    doc = build_position_document(
+        judge_model=model, json_mode=json_mode, naive_ids=naive_ids, control_case_ids=ctl_ids,
+        pairs=pairs, controls=controls, nonce=args.nonce,
+    )
+    out = args.out or ("results/position_bias.json" if label == "main" else f"results/position_bias_{label}.json")
+    write_document(doc, out)
+    sm = doc["summary"]
+    for name in ("pairwise_naive", "pairwise_mitigated_same_pairs_as_naive", "pairwise_mitigated_differing_pairs", "pairwise_mitigated_all"):
+        r = sm[name]
+        if r["n"]:
+            print(f"{name:42s} n={r['n']:2d} flips={r['flips']}/{r['n_flippable']} (hard {r['hard_flips']}) flip_rate={r['flip_rate']} "
+                  f"first-position share={r['first_position_share']} win_rate_A={r['win_rate_x']} "
+                  f"[A {r['wins_x']} / B {r['wins_y']} / tie {r['ties']}] invalid={r['n_invalid']} reasks={r['reasks']}")
+    for m, r in sm["controls"].items():
+        print(f"controls {m:9s} n={r['n']} picked first {r['picked_first']}, second {r['picked_second']}, tie {r['tie']} "
+              f"(first_rate={r['first_rate']}) invalid={r['n_invalid']} reasks={r['reasks']}")
+    print(f"wrote {out}")
+    if stopped:
+        print(f"STOPPED at a quota cap with {len(stopped)} items left; re-run the same command to resume: {stopped}")
+        return 2
+    return 0
+
+
 def cmd_replay(args: argparse.Namespace) -> int:
     import json
     from pathlib import Path
@@ -212,6 +293,15 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--nonce", default="", help="bypass the cache (test-retest)")
     p.add_argument("--fresh", action="store_true", help="discard the checkpoint and judge every case again")
     p.set_defaults(fn=cmd_pointwise)
+    po = sub.add_parser("position", help="pairwise order-swap, flip rate and identical-answer controls (live judge calls)")
+    po.add_argument("--stages", nargs="+", default=["naive", "mitigated", "controls_naive", "controls_mitigated"],
+                    choices=["naive", "mitigated", "controls_naive", "controls_mitigated"])
+    po.add_argument("--ids", nargs="+", help="restrict every stage to these case ids (smoke)")
+    po.add_argument("--label", default="main", help="names the checkpoints and logs/position_<label>.jsonl; 'main' writes results/position_bias.json")
+    po.add_argument("--out", default="")
+    po.add_argument("--nonce", default="")
+    po.add_argument("--fresh", action="store_true")
+    po.set_defaults(fn=cmd_position)
     rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
     rp.add_argument("--results", default="results/pointwise_A.json")
     rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")

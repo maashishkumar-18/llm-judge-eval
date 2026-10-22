@@ -1,0 +1,283 @@
+{
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "nonce": "",
+  "status": "exploratory: small N, counts reported with N, no significance claimed",
+  "selection": {
+    "naive_pair_rule": "first 12 pairs in suite order whose A and B answers differ",
+    "naive_pair_ids": [
+      "c01",
+      "c02",
+      "c09",
+      "c23",
+      "c28",
+      "c31",
+      "c32",
+      "c33",
+      "c38",
+      "c39",
+      "c40",
+      "c41"
+    ],
+    "control_case_ids": [
+      "c01",
+      "c09",
+      "c16",
+      "c19",
+      "c24",
+      "c44"
+    ],
+    "control_rule": "probe base cases; config A's answer used as both answers",
+    "mitigated_identical_pair_ids": []
+  },
+  "summary": {
+    "pairwise_naive": {
+      "n": 1,
+      "n_invalid": 0,
+      "n_identical": 0,
+      "wins_x": 0,
+      "wins_y": 1,
+      "ties": 0,
+      "win_rate_x": 0.0,
+      "n_flippable": 1,
+      "flips": 0,
+      "flip_rate": 0.0,
+      "hard_flips": 0,
+      "hard_flip_rate": 0.0,
+      "single_judgements": 2,
+      "first_position_wins": 1,
+      "second_position_wins": 1,
+      "position_ties": 0,
+      "first_position_share": 0.5,
+      "parse_status": {
+        "extract": 2
+      },
+      "reasks": 0,
+      "judge_calls": 2,
+      "judge_calls_network": 2,
+      "tokens_in": 588,
+      "tokens_out": 87
+    },
+    "pairwise_mitigated_all": {
+      "n": 1,
+      "n_invalid": 0,
+      "n_identical": 0,
+      "wins_x": 0,
+      "wins_y": 0,
+      "ties": 1,
+      "win_rate_x": 0.5,
+      "n_flippable": 1,
+      "flips": 0,
+      "flip_rate": 0.0,
+      "hard_flips": 0,
+      "hard_flip_rate": 0.0,
+      "single_judgements": 2,
+      "first_position_wins": 0,
+      "second_position_wins": 0,
+      "position_ties": 2,
+      "first_position_share": null,
+      "parse_status": {
+        "strict": 2
+      },
+      "reasks": 0,
+      "judge_calls": 2,
+      "judge_calls_network": 2,
+      "tokens_in": 3010,
+      "tokens_out": 923
+    },
+    "pairwise_mitigated_same_pairs_as_naive": {
+      "n": 1,
+      "n_invalid": 0,
+      "n_identical": 0,
+      "wins_x": 0,
+      "wins_y": 0,
+      "ties": 1,
+      "win_rate_x": 0.5,
+      "n_flippable": 1,
+      "flips": 0,
+      "flip_rate": 0.0,
+      "hard_flips": 0,
+      "hard_flip_rate": 0.0,
+      "single_judgements": 2,
+      "first_position_wins": 0,
+      "second_position_wins": 0,
+      "position_ties": 2,
+      "first_position_share": null,
+      "parse_status": {
+        "strict": 2
+      },
+      "reasks": 0,
+      "judge_calls": 2,
+      "judge_calls_network": 2,
+      "tokens_in": 3010,
+      "tokens_out": 923
+    },
+    "pairwise_mitigated_differing_pairs": {
+      "n": 1,
+      "n_invalid": 0,
+      "n_identical": 0,
+      "wins_x": 0,
+      "wins_y": 0,
+      "ties": 1,
+      "win_rate_x": 0.5,
+      "n_flippable": 1,
+      "flips": 0,
+      "flip_rate": 0.0,
+      "hard_flips": 0,
+      "hard_flip_rate": 0.0,
+      "single_judgements": 2,
+      "first_position_wins": 0,
+      "second_position_wins": 0,
+      "position_ties": 2,
+      "first_position_share": null,
+      "parse_status": {
+        "strict": 2
+      },
+      "reasks": 0,
+      "judge_calls": 2,
+      "judge_calls_network": 2,
+      "tokens_in": 3010,
+      "tokens_out": 923
+    },
+    "controls": {}
+  },
+  "pairs": {
+    "naive": [
+      {
+        "case_id": "c01",
+        "mode": "naive",
+        "x": "A",
+        "y": "B",
+        "identical": false,
+        "orders": [
+          {
+            "first": "A",
+            "second": "B",
+            "mode": "naive",
+            "template_id": "naive_pairwise.v1",
+            "template_sha": "bf5dcb5f05e6",
+            "parse_status": "extract",
+            "error_kind": "",
+            "error": "",
+            "repairs": [],
+            "position_winner": "second",
+            "winner": "B",
+            "criteria_winners": null,
+            "rationale": "Answer B is more concise and directly answers both parts of the question within the two-sentence limit while staying strictly within the provided notice.",
+            "calls": [
+              {
+                "tag": "c01|naive|A>B",
+                "prompt_hash": "1d5beab016b38247",
+                "cached": false,
+                "tokens_in": 294,
+                "tokens_out": 43
+              }
+            ]
+          },
+          {
+            "first": "B",
+            "second": "A",
+            "mode": "naive",
+            "template_id": "naive_pairwise.v1",
+            "template_sha": "bf5dcb5f05e6",
+            "parse_status": "extract",
+            "error_kind": "",
+            "error": "",
+            "repairs": [],
+            "position_winner": "first",
+            "winner": "B",
+            "criteria_winners": null,
+            "rationale": "Answer A is concise and directly answers the question within the two-sentence limit, matching the reference answer's tone without unnecessary mathematical notation.",
+            "calls": [
+              {
+                "tag": "c01|naive|B>A",
+                "prompt_hash": "6472f3620d896322",
+                "cached": false,
+                "tokens_in": 294,
+                "tokens_out": 44
+              }
+            ]
+          }
+        ],
+        "verdict": "B",
+        "decided_by": "first_order_only",
+        "flipped": false,
+        "hard_flip": false,
+        "two_order_verdict": "B"
+      }
+    ],
+    "mitigated": [
+      {
+        "case_id": "c01",
+        "mode": "mitigated",
+        "x": "A",
+        "y": "B",
+        "identical": false,
+        "orders": [
+          {
+            "first": "A",
+            "second": "B",
+            "mode": "mitigated",
+            "template_id": "pairwise.v1",
+            "template_sha": "3a771bfdc38d",
+            "parse_status": "strict",
+            "error_kind": "",
+            "error": "",
+            "repairs": [],
+            "position_winner": "TIE",
+            "winner": "TIE",
+            "criteria_winners": {
+              "faithfulness": "TIE",
+              "instruction_following": "TIE",
+              "completeness": "TIE"
+            },
+            "rationale": "Both answers are identical in substance and equally satisfy all constraints and criteria.",
+            "calls": [
+              {
+                "tag": "c01|mitigated|A>B",
+                "prompt_hash": "a574a97a924702eb",
+                "cached": false,
+                "tokens_in": 1505,
+                "tokens_out": 423
+              }
+            ]
+          },
+          {
+            "first": "B",
+            "second": "A",
+            "mode": "mitigated",
+            "template_id": "pairwise.v1",
+            "template_sha": "3a771bfdc38d",
+            "parse_status": "strict",
+            "error_kind": "",
+            "error": "",
+            "repairs": [],
+            "position_winner": "TIE",
+            "winner": "TIE",
+            "criteria_winners": {
+              "faithfulness": "TIE",
+              "instruction_following": "TIE",
+              "completeness": "TIE"
+            },
+            "rationale": "Both answers are identical in substance, fully faithful, and successfully follow all instructions and completeness requirements.",
+            "calls": [
+              {
+                "tag": "c01|mitigated|B>A",
+                "prompt_hash": "15d48b5dd32697e0",
+                "cached": false,
+                "tokens_in": 1505,
+                "tokens_out": 500
+              }
+            ]
+          }
+        ],
+        "verdict": "TIE",
+        "decided_by": "both_orders",
+        "flipped": false,
+        "hard_flip": false,
+        "two_order_verdict": "TIE"
+      }
+    ]
+  },
+  "controls": {}
+}

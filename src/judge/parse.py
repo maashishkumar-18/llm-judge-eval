@@ -416,7 +416,19 @@ async def parse_with_ladder(raw: str, model: type[M], *, reask: Reask | None = N
     )
 
 
-def build_reask_prompt(original_user_prompt: str, previous_reply: str, error: str) -> str:
+REASK_CLOSING = {
+    "pointwise": (
+        "Grade the same case again and reply with ONLY the JSON object in the required format: "
+        "no markdown fences, no text before or after, every field present, scores as integers 1-5."
+    ),
+    "pairwise": (
+        "Compare the same two answers again and reply with ONLY the JSON object in the required format: "
+        "no markdown fences, no text before or after, every field present, winners as \"A\", \"B\" or \"TIE\"."
+    ),
+}
+
+
+def build_reask_prompt(original_user_prompt: str, previous_reply: str, error: str, kind: str = "pointwise") -> str:
     """The re-ask: the original task, the unusable reply (truncated), and the exact problem."""
     echoed = previous_reply.strip() or "(empty)"
     if len(echoed) > MAX_REASK_ECHO_CHARS:
@@ -427,6 +439,5 @@ def build_reask_prompt(original_user_prompt: str, previous_reply: str, error: st
         "Your previous reply could not be used.\n"
         f"Problem: {error}\n\n"
         f"Previous reply:\n<previous_reply>\n{echoed}\n</previous_reply>\n\n"
-        "Grade the same case again and reply with ONLY the JSON object in the required format: "
-        "no markdown fences, no text before or after, every field present, scores as integers 1-5."
+        f"{REASK_CLOSING[kind]}"
     )

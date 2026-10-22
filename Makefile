@@ -1,6 +1,6 @@
 PY ?= python
 
-.PHONY: install smoke test budget generate pointwise replay
+.PHONY: install smoke test budget generate pointwise replay position
 
 install:
 	$(PY) -m pip install -e ".[dev]"
@@ -19,6 +19,9 @@ generate:
 
 pointwise:
 	$(PY) -m judge.cli pointwise --config A
+
+position:
+	$(PY) -m judge.cli position
 
 replay:
 	$(PY) -m judge.cli replay --results results/pointwise_A.json
