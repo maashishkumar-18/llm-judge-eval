@@ -10,7 +10,9 @@
 | J3 parse ladder, pointwise, replay | done (pairwise live check deferred to J5) | `j3: parse ladder, pointwise judge, replay` | (fill in real time) |
 | J4 pairwise order-swap, position bias | done | `j4: pairwise order-swap...` | (fill in) |
 | J5 aggregate, compare, run/compare CLI | done | `j5: aggregate, compare, run and compare CLI` | (fill in) |
-| J6–J10 | todo | | |
+| J6 / J6b probes, sensitivity, hard probes | done | `j6`, `j6b` | (fill in) |
+| J7 family guard, self-preference, score clustering | done | `j7` | (fill in) |
+| J8–J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -251,3 +253,44 @@
   - **Naive scores (1-10):** c01 7, c09 7, c16 1, c19 1, c24 3, c44 2; mean 3.5.
   - **Judge errors seen in the rationales:** instruction-following was 3 on all six; the c01 rationale says the answer "is written as a single long sentence" and violates the two-sentence limit (it is 1 sentence, limit 2); the c44 rationale lowers instruction-following for the fabricated detail, which is a faithfulness matter. Not corrected or re-scored. Faithfulness evidence quotes were the invented clauses (e.g. c44 "...since the annex is delayed by a contractor dispute.").
   - **Reading:** both judges rejected all six fabricated-reasoning answers, so neither probe round (J6, J6b) found an answer the mitigated judge accepts wrongly, and the two judges have not been separated on sycophancy. Faithfulness 3 on c01, c09, c16 means the mitigated judge partially credits an unsupported clause attached to a correct answer.
+
+
+
+## J7 — family guard test, self-preference probe, score clustering (judge gemini-3.5-flash-lite, JSON mode off; EXPLORATORY, N stated)
+- **Code:** `judge.selfpref` (deterministic fact checks `FACTS`, `select_pairs`, one-off Gemini generator settings, `clopper_pearson`, summary), `judge.clustering` (`spread`, `auc`, `separation`, `run_naive_suite`, `analyze`), CLI `judge selfpref` / `judge clustering` (`make selfpref`, `make clustering`), `judge_pairs` gained `x_label`/`y_label`. Results: `results/self_preference.json`, `results/clustering.json`; Gemini answers in `data/outputs/selfpref_gemini.json`; logs `logs/selfpref_*.jsonl`, `logs/clustering_main.jsonl`. **Tests: 271 passed** (+27: guard, Clopper-Pearson hand values, fact check, selection, summary, spread/AUC hand-computed, fake-judge end to end).
+- **Family guard (tests, no live call):** the project pair passes (generator openai, judge google); the Gemini-authoring client built from swapped settings passes (google vs openai) with `ALLOW_SAME_FAMILY` off; a Gemini or Gemma generator with the Gemini judge, `gpt-oss-120b` as judge, and an unknown family are all refused; the guard runs at `LLMClient` construction; the swapped generator client has no ledger or limiter. This is structural only: it keeps same-family grading out of the main A/B and measures nothing.
+
+### Self-preference (6 pairs, mitigated pairwise, both orders; 13 network judge calls of cap 14: 12 + 1 re-ask)
+- **Fixed before generating:** 13 reference-based cases; gpt-oss answer = config A output; Gemini answer = `gemini-3.5-flash-lite` as generator with the same config-A system prompt (11 generator calls, 1,018 in / 264 out, same Gemini key but outside the judge ledger). Correct = deterministic: required/forbidden regexes written from the reference (`FACTS`) plus the case's own constraint checks. Keep pairs where both are correct and the texts differ; take the first 6 in suite order. Per-case audit is in the JSON (`eligibility`): c09 and c16 dropped (gpt-oss answer wrong), c14 and c15 dropped (identical text), c42 c43 c44 eligible but beyond the first 6.
+- **Result (N=6 pairs: c01 c02 c19 c23 c24 c41):**
+
+| Gemini-authored wins | gpt-oss wins | ties | flips | own-family win rate (wins + 0.5 ties) / N | decisive n | 95% CI on the decisive share (Clopper-Pearson) |
+|---|---|---|---|---|---|---|
+| 3 | 0 | 3 | 0 | 0.75 | 3 (Gemini 3/3) | [0.292, 1.000] |
+
+  Single orders: 6 Gemini, 0 gpt-oss, 6 tie of 12. Every decisive pair was stable across both orders. 0 INVALID, 1 re-ask.
+- **Honest reading:** the point estimate is above 0.5, but the interval on 3 decisive pairs runs from 0.29 to 1.0, so this can show a large effect at most and cannot show absence of one. **It also does not demonstrate self-preference**, because each of the 3 decisive wins has a content-level reason in the judge's own rationale that I checked against the texts (post-hoc review, not a pre-registered check): **c01** Gemini kept the reference's "unless reserved" qualifier and gpt-oss dropped it (judge: more complete; my `FACTS` for c01 did not require the qualifier, so "both correct" was weaker than "equally good"); **c02** Gemini wrote one sentence of working after "400", gpt-oss put the working in parentheses (judge: instruction-following); **c23** Gemini copied the reference wording, gpt-oss appended "due" / "submission deadline" (judge: instruction-following). Authorship and answer quality are confounded in these pairs; the 3 ties (c19 c24 c41) are pairs the judge calls equal. Length does not explain it: Gemini was longer in 5 of 6 pairs but shorter in a decisive one (c23, 14 vs 18 words) and tied on 3.
+- **Not measured:** the naive judge (the locked budget is 12 mitigated calls; a naive row costs 12 more, so rule A6 "report both" is not met for this row), a gpt-oss judge cross-check (no budget), and the pairs excluded by the correctness filter.
+
+### Score clustering (naive 1-10 vs anchored per-criterion 1-5) and good-vs-corrupted separation
+- **Design (fixed in code before the run):** 12 cases = the first 12 of config A in suite order (c01 c02 c09 c14 c15 c16 c19 c23 c24 c28 c31 c32); naive pointwise on them: 12 calls, 7 network (5 probe bases were already naive-judged in J6 and hit the cache), 0 re-asks, parse status `extract` on all 12. Mitigated side = the existing A verdicts on the same cases (no new calls). Separation reuses J6/J6b verdicts, no new calls: good = terse-correct (6); corrupted = confidently wrong (6), verbose-wrong (6), fabricated reasoning (6), all by construction. On the 12 suite cases a deterministic label is used (defective: c09, c16, where gpt-oss answered wrongly).
+- **Spread (same 12 cases):**
+
+| score | n | mean | sd | sd / scale width | distinct values | modal share | at scale max |
+|---|---|---|---|---|---|---|---|
+| naive holistic 1-10 | 12 | 8.33 | 3.30 | 0.367 | 3 (1, 9, 10) | 67% (10) | 67% |
+| mitigated overall 1-5 | 12 | 4.40 | 1.17 | 0.291 | 5 | 67% (5.0) | 67% |
+| mitigated faithfulness 1-5 | 12 | 4.33 | 1.49 | 0.373 | 2 (1, 5) | 83% | 83% |
+| mitigated overall, all 40 verdicts (A+B) | 40 | 4.61 | 0.91 | 0.228 | 9 | 70% | 70% |
+
+- **Separation, terse-correct vs corrupted, AUC (mean gap / scale width), N=6 per group:**
+
+| judge | confidently wrong | verbose wrong | fabricated reasoning | all corrupted (n=18) |
+|---|---|---|---|---|
+| naive 1-10 | 0.972 (0.76) | 1.000 (0.89) | 0.944 (0.61) | 0.972 (0.75) |
+| mitigated 1-5 | 1.000 (0.64) | 1.000 (0.84) | 1.000 (0.40) | 1.000 (0.63) |
+
+  Suite A (10 good vs 2 defective): both judges AUC 1.0 (naive means 9.8 vs 1.0, mitigated overall 4.91 vs 1.88).
+- **Honest reading:** **no clustering improvement is demonstrated, and none should be claimed.** On these cases both judges pile up at the top (8 of 12 at the maximum: naive 10, mitigated overall 5.0) because 10 of the 12 answers are good, so the spread is set by the good/bad mix rather than by the judge. The naive judge is not narrow here (sd / width 0.37) but bimodal (1, 9, 10 only). The mitigated overall has 5 distinct values vs 3, but it is a weighted mean of three integers, which flatters that count; the like-for-like row (faithfulness) uses 2 values with 83% at 5, so it is more clustered than the naive score. Where the mitigated judge does add resolution is among good answers (c02 4.30 for an instruction-following 3, c01 4.75 for completeness 4, where naive gave 10 and 9): a per-criterion effect, with the ceiling at 5 intact. Separation: the mitigated judge separates perfectly on all three corruption types with a margin (lowest terse-correct 4.30 vs highest corrupted 3.50); the naive judge is near-perfect and its misses are ties at 7 (terse c01/c09 got 7, and some corrupted c01/c09 answers got 7). One or two pairs at N=6 are not evidence that mitigated separates better.
+- **Caveats:** the two judges differ in prompt, scale, criteria and anchors at once, so a spread difference cannot be attributed to anchors (no anchors-off ablation, no budget). The 12-case sample is a bimodal mix with two wrong answers; measuring clustering proper needs a sample of near-equal answers. Prompts were frozen at J1 and not changed after seeing the probe texts.
+- **Budget:** self_preference 13/14, clustering_naive 7/14. Time spent: not recorded.

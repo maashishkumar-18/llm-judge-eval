@@ -1,0 +1,72 @@
+{
+  "model": "gemini-3.5-flash-lite",
+  "config": "A (system prompt only)",
+  "answers": {
+    "c01": {
+      "text": "The overdue fine for a book is 0.25 per day, which would be 2.50 for 10 days, and a book can be renewed up to 2 times unless reserved.",
+      "tokens_in": 111,
+      "tokens_out": 43,
+      "cached": false
+    },
+    "c02": {
+      "text": "400\nThe Plus membership costs $40 per month, and paying for a full year up front gives you 2 months free, meaning you only pay for 10 months ($40 x 10).",
+      "tokens_in": 96,
+      "tokens_out": 46,
+      "cached": false
+    },
+    "c14": {
+      "text": "1. Screw 4x20\n2. Washer 8mm",
+      "tokens_in": 121,
+      "tokens_out": 15,
+      "cached": false
+    },
+    "c15": {
+      "text": "Not stated in the notice.",
+      "tokens_in": 95,
+      "tokens_out": 6,
+      "cached": false
+    },
+    "c19": {
+      "text": "Based on the notice, the late registration fee today is 45.",
+      "tokens_in": 66,
+      "tokens_out": 15,
+      "cached": false
+    },
+    "c23": {
+      "text": "- 15 April: first draft\n- 30 May: final report\n- 10 June: invoice",
+      "tokens_in": 100,
+      "tokens_out": 25,
+      "cached": false
+    },
+    "c24": {
+      "text": "The Mill Road bridge was closed because inspectors found a cracked support beam, and it is expected to reopen in August.",
+      "tokens_in": 87,
+      "tokens_out": 23,
+      "cached": false
+    },
+    "c41": {
+      "text": "The notice does not list a phone number to call. Instead, new patients can book online through the clinic website.",
+      "tokens_in": 85,
+      "tokens_out": 23,
+      "cached": false
+    },
+    "c42": {
+      "text": "The notice does not mention the price of admission tickets.",
+      "tokens_in": 97,
+      "tokens_out": 11,
+      "cached": false
+    },
+    "c43": {
+      "text": "The passage does not mention the city where the footbridge is located, and a reopening date has not yet been set.",
+      "tokens_in": 84,
+      "tokens_out": 24,
+      "cached": false
+    },
+    "c44": {
+      "text": "Based on the passage, the library currently has 84 seats (60 in the reading room and 24 in the quiet study room). 84",
+      "tokens_in": 76,
+      "tokens_out": 33,
+      "cached": false
+    }
+  }
+}

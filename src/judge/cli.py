@@ -479,6 +479,129 @@ def cmd_hard(args: argparse.Namespace) -> int:
     return 2 if left else 0
 
 
+def cmd_selfpref(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.pairwise import judge_pairs
+    from judge.selfpref import (GEMINI, GPT, build_document, correct_by_reference, gemini_generator_settings,
+                                generate_gemini, render_table, select_pairs, write_document)
+    from judge.suite import load_config
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    cfg = load_config("A")
+    ref_cases = [c for c in _load_cases("data/outputs/A.json") if c.reference_based]
+    gpt_ok_ids = [c.id for c in ref_cases if correct_by_reference(c, c.model_output)]
+    gs = gemini_generator_settings(s)
+    guard = dict(zip(("generator_family", "judge_slot_family"), gs.enforce_family_guard()))
+    cp = Path(".cache/checkpoints")
+
+    async def gen():
+        async with LLMClient(gs, "generator", run_id="selfpref_gemini", log_name="selfpref_gemini_author.jsonl") as g:
+            got = await generate_gemini(g, ref_cases, cfg.system_for, gpt_ok_ids, checkpoint_path=cp / "selfpref_gemini_author.jsonl")
+            return got, g.model
+
+    gem, gen_model = asyncio.run(gen())
+    gemini_text = {i: r["text"] for i, r in gem.items()}
+    Path("data/outputs/selfpref_gemini.json").write_text(
+        json.dumps({"model": gen_model, "config": "A (system prompt only)", "answers": gem}, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8")
+    selected, audit = select_pairs(ref_cases, gemini_text)
+    gen_usage = {"model": gen_model, "calls": len(gem), "tokens_in": sum(r["tokens_in"] for r in gem.values()),
+                 "tokens_out": sum(r["tokens_out"] for r in gem.values()),
+                 "note": "generator-side Gemini calls; not in the judge ledger, but they use the same key's free-tier quota"}
+    print(f"gemini answers: {len(gem)}  selected: {selected}")
+    for a in audit:
+        print("  ", a)
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    pairs_cp = cp / "selfpref_pairs.jsonl"
+    done = 0 if args.fresh or not pairs_cp.exists() else len(pairs_cp.read_text(encoding="utf-8").splitlines())
+    try:  # upper bound: pairs not yet checkpointed (cache hits cost nothing)
+        budget.check_run("self_preference", 2 * max(len(selected) - done, 0), spent=ledger.used_experiment("self_preference"))
+    except BudgetExceeded as e:
+        print(e)
+        return 1
+    by_id = {c.id: c for c in ref_cases}
+    cases_gpt = [by_id[i] for i in selected]
+    cases_gem = [by_id[i].model_copy(update={"model_output": gemini_text[i]}) for i in selected]
+    gpt_text = {i: by_id[i].model_output for i in selected}
+
+    async def run():
+        async with LLMClient(s, "judge", log_name="selfpref_main.jsonl", experiment="self_preference") as client:
+            got, left = await judge_pairs(client, cases_gpt, cases_gem, selected, mode="mitigated", nonce=args.nonce, fresh=args.fresh,
+                                          checkpoint_path=pairs_cp, x_label=GPT, y_label=GEMINI)
+            return got, left, client.model, client.json_mode
+
+    pairs, left, model, json_mode = asyncio.run(run())
+    doc = build_document(judge_model=model, json_mode=json_mode, audit=audit, selected=[p.case_id for p in pairs], gpt_text=gpt_text,
+                         gemini_text=gemini_text, pairs=pairs, gen_usage=gen_usage, guard=guard, remaining=left, nonce=args.nonce)
+    write_document(doc, args.out)
+    print(render_table(doc))
+    print(f"wrote {args.out}")
+    return 2 if left else 0
+
+
+def cmd_clustering(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from judge.clustering import analyze, cluster_ids, render_tables, run_naive_suite, write_document
+    from judge.llm import LLMClient
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    cases = _load_cases("data/outputs/A.json")
+    ids = cluster_ids(cases)
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    try:  # upper bound: probe-base cases were already judged naive in J6 and hit the cache
+        budget.check_run("clustering_naive", len(ids), spent=ledger.used_experiment("clustering_naive"))
+    except BudgetExceeded as e:
+        print(e)
+        return 1
+
+    async def run():
+        async with LLMClient(s, "judge", log_name="clustering_main.jsonl", experiment="clustering_naive") as client:
+            got, left = await run_naive_suite(client, cases, ids, checkpoint_path=Path(".cache/checkpoints") / "clustering_naive.jsonl",
+                                              nonce=args.nonce, fresh=args.fresh)
+            return got, left, client.model, client.json_mode
+
+    naive, left, model, json_mode = asyncio.run(run())
+    load = lambda p: json.loads(Path(p).read_text(encoding="utf-8"))  # noqa: E731
+    summary = analyze(
+        cases=cases, ids=ids, naive=naive, mitigated_A=load("results/pointwise_A.json")["results"],
+        mitigated_B=load("results/pointwise_B.json")["results"], probes=load("results/probes.json")["results"],
+        hard=load("results/probes_hard.json")["results"],
+    )
+    calls = [c for r in naive.values() for c in r["calls"]]
+    doc = {
+        "judge_model": model, "json_mode": json_mode, "exploratory": True, "nonce": args.nonce,
+        "design": {
+            "cases": f"first {len(ids)} cases of config A in suite order: {ids}",
+            "naive": "holistic 1-10, no rubric / anchors / evidence / length rule, pointwise, reference shown when the case has one",
+            "mitigated": "anchored per-criterion 1-5 pointwise verdicts already on disk (results/pointwise_A.json, _B.json)",
+            "separation_sources": "results/probes.json (terse, wrong, verbose_wrong) and results/probes_hard.json, no new judge calls",
+            "caveat": "the two judges differ in prompt, scale and criteria at once, so a spread difference cannot be attributed to anchors alone",
+        },
+        "complete": not left, "remaining": left,
+        "naive_usage": {"calls": len(calls), "network": sum(1 for c in calls if not c["cached"]),
+                        "tokens_in": sum(c["tokens_in"] for c in calls), "tokens_out": sum(c["tokens_out"] for c in calls),
+                        "reasks": sum(1 for c in calls if c["tag"].endswith("|reask")),
+                        "parse_status": {k: sum(1 for r in naive.values() if r["parse_status"] == k)
+                                         for k in sorted({r["parse_status"] for r in naive.values()})}},
+        "summary": summary,
+        "naive_results": naive,
+    }
+    write_document(doc, args.out)
+    print(render_tables(summary))
+    print(f"naive usage {doc['naive_usage']}")
+    print(f"wrote {args.out}")
+    return 2 if left else 0
+
+
 def cmd_replay(args: argparse.Namespace) -> int:
     import json
     from pathlib import Path
@@ -573,6 +696,16 @@ def main(argv: list[str] | None = None) -> None:
     ha.add_argument("--nonce", default="")
     ha.add_argument("--fresh", action="store_true")
     ha.set_defaults(fn=cmd_hard)
+    sp = sub.add_parser("selfpref", help="self-preference probe: gpt-oss vs Gemini-authored correct answers, both orders (live calls)")
+    sp.add_argument("--out", default="results/self_preference.json")
+    sp.add_argument("--nonce", default="")
+    sp.add_argument("--fresh", action="store_true")
+    sp.set_defaults(fn=cmd_selfpref)
+    cl = sub.add_parser("clustering", help="score clustering: naive 1-10 vs anchored 1-5, plus good-vs-corrupted separation (live calls)")
+    cl.add_argument("--out", default="results/clustering.json")
+    cl.add_argument("--nonce", default="")
+    cl.add_argument("--fresh", action="store_true")
+    cl.set_defaults(fn=cmd_clustering)
     rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
     rp.add_argument("--results", default="results/pointwise_A.json")
     rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")

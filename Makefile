@@ -1,6 +1,6 @@
 PY ?= python
 
-.PHONY: install smoke test budget generate pointwise replay position run compare probes
+.PHONY: install smoke test budget generate pointwise replay position run compare probes selfpref clustering
 
 install:
 	$(PY) -m pip install -e ".[dev]"
@@ -34,3 +34,9 @@ compare:
 
 probes:
 	$(PY) -m judge.cli probes
+
+selfpref:
+	$(PY) -m judge.cli selfpref
+
+clustering:
+	$(PY) -m judge.cli clustering

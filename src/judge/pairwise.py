@@ -306,6 +306,8 @@ async def judge_pairs(
     nonce: str = "",
     fresh: bool = False,
     concurrency: int = 2,
+    x_label: str = "A",
+    y_label: str = "B",
 ) -> tuple[list[PairResult], list[str]]:
     """Judge the pairs `ids` (x = cases_x config shown first in the primary order). Checkpointed: a quota stop
     resumes without redoing finished pairs. Returns (results in `ids` order, ids not yet judged)."""
@@ -316,7 +318,7 @@ async def judge_pairs(
 
     async def one(case_id: str) -> dict[str, Any]:
         x, y = pairs[case_id]
-        return asdict(await judge_pair(client, x, x.model_output, y.model_output, mode=mode, nonce=nonce))
+        return asdict(await judge_pair(client, x, x.model_output, y.model_output, mode=mode, x=x_label, y=y_label, nonce=nonce))
 
     status = await run_checkpointed(list(ids), one, cp, concurrency=concurrency, persist=_persist_pair)
     return [_pair_from_dict(status.results[i]) for i in ids if i in status.results], status.remaining

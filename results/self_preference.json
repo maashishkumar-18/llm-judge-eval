@@ -1,0 +1,775 @@
+{
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "nonce": "",
+  "status": "EXPLORATORY: N pairs is tiny; the interval can show a large effect, never the absence of one",
+  "design": {
+    "judge_prompt": "mitigated pairwise (rubric + evidence), both orders, order-swap rule",
+    "gpt_oss_answers": "config A outputs (gpt-oss-20b, prompt v1)",
+    "gemini_answers": "gemini-3.5-flash-lite via a one-off generator client, same config-A system prompt, max_tokens 2048",
+    "correctness": "deterministic: FACTS regexes from the reference + the case's own constraint checks, both answers must pass",
+    "selection": "first 6 eligible pairs in suite order; identical texts dropped",
+    "naive_judge": "not run (the locked self-preference budget is 12 mitigated calls)",
+    "family_guard": {
+      "generator_family": "google",
+      "judge_slot_family": "openai"
+    }
+  },
+  "complete": true,
+  "remaining": [],
+  "selected_ids": [
+    "c01",
+    "c02",
+    "c19",
+    "c23",
+    "c24",
+    "c41"
+  ],
+  "eligibility": [
+    {
+      "case_id": "c01",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "selected"
+    },
+    {
+      "case_id": "c02",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "selected"
+    },
+    {
+      "case_id": "c09",
+      "gpt_correct": false,
+      "gemini_correct": null,
+      "identical": false,
+      "outcome": "gpt-oss answer incorrect"
+    },
+    {
+      "case_id": "c14",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": true,
+      "outcome": "identical text"
+    },
+    {
+      "case_id": "c15",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": true,
+      "outcome": "identical text"
+    },
+    {
+      "case_id": "c16",
+      "gpt_correct": false,
+      "gemini_correct": null,
+      "identical": false,
+      "outcome": "gpt-oss answer incorrect"
+    },
+    {
+      "case_id": "c19",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "selected"
+    },
+    {
+      "case_id": "c23",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "selected"
+    },
+    {
+      "case_id": "c24",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "selected"
+    },
+    {
+      "case_id": "c41",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "selected"
+    },
+    {
+      "case_id": "c42",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "eligible but beyond the first 6"
+    },
+    {
+      "case_id": "c43",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "eligible but beyond the first 6"
+    },
+    {
+      "case_id": "c44",
+      "gpt_correct": true,
+      "gemini_correct": true,
+      "identical": false,
+      "outcome": "eligible but beyond the first 6"
+    }
+  ],
+  "generation_usage": {
+    "model": "gemini-3.5-flash-lite",
+    "calls": 11,
+    "tokens_in": 1018,
+    "tokens_out": 264,
+    "note": "generator-side Gemini calls; not in the judge ledger, but they use the same key's free-tier quota"
+  },
+  "summary": {
+    "n_pairs": 6,
+    "n_invalid": 0,
+    "gemini_wins": 3,
+    "gpt_oss_wins": 0,
+    "ties": 3,
+    "flipped_pairs": 0,
+    "own_family_win_rate": 0.75,
+    "n_decisive": 3,
+    "decisive_gemini_share": 1.0,
+    "ci95_clopper_pearson_decisive": [
+      0.2924,
+      1.0
+    ],
+    "single_order_judgements": {
+      "n": 12,
+      "gemini": 6,
+      "gpt_oss": 0,
+      "tie": 6
+    },
+    "parse_status": {
+      "strict": 11,
+      "reask": 1
+    },
+    "reasks": 1,
+    "judge_calls": 13,
+    "judge_calls_network": 13,
+    "tokens_in": 19501,
+    "tokens_out": 4968
+  },
+  "pairs": [
+    {
+      "case_id": "c01",
+      "verdict": "gemini",
+      "flipped": false,
+      "winner_gpt-oss_first": "gemini",
+      "winner_gemini_first": "gemini",
+      "words": {
+        "gpt-oss": 17,
+        "gemini": 29
+      },
+      "answers": {
+        "gpt-oss": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+        "gemini": "The overdue fine for a book is 0.25 per day, which would be 2.50 for 10 days, and a book can be renewed up to 2 times unless reserved."
+      },
+      "criteria_winners": {
+        "gpt-oss_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "gemini"
+        },
+        "gemini_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "gemini"
+        }
+      },
+      "rationale": {
+        "gpt-oss_first": "Answer B is the overall winner because it is tied on faithfulness and instruction-following but more complete by including the condition on renewals.",
+        "gemini_first": "Answer A is slightly more complete because it includes the exception regarding reservations for book renewals."
+      }
+    },
+    {
+      "case_id": "c02",
+      "verdict": "gemini",
+      "flipped": false,
+      "winner_gpt-oss_first": "gemini",
+      "winner_gemini_first": "gemini",
+      "words": {
+        "gpt-oss": 18,
+        "gemini": 31
+      },
+      "answers": {
+        "gpt-oss": "400  \n(12 months × $40 = $480, minus 2 free months = 10 months × $40 = $400)",
+        "gemini": "400\nThe Plus membership costs $40 per month, and paying for a full year up front gives you 2 months free, meaning you only pay for 10 months ($40 x 10)."
+      },
+      "criteria_winners": {
+        "gpt-oss_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "gemini",
+          "completeness": "TIE"
+        },
+        "gemini_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "gemini",
+          "completeness": "TIE"
+        }
+      },
+      "rationale": {
+        "gpt-oss_first": "Answer B is the overall winner because it strictly follows the formatting constraint to give exactly one sentence of working.",
+        "gemini_first": "Answer A correctly follows the negative constraint to provide exactly one sentence of working."
+      }
+    },
+    {
+      "case_id": "c19",
+      "verdict": "TIE",
+      "flipped": false,
+      "winner_gpt-oss_first": "TIE",
+      "winner_gemini_first": "TIE",
+      "words": {
+        "gpt-oss": 7,
+        "gemini": 11
+      },
+      "answers": {
+        "gpt-oss": "The late registration fee today is 45.",
+        "gemini": "Based on the notice, the late registration fee today is 45."
+      },
+      "criteria_winners": {
+        "gpt-oss_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "TIE"
+        },
+        "gemini_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "TIE"
+        }
+      },
+      "rationale": {
+        "gpt-oss_first": "Both answers successfully follow all instructions, achieve complete accuracy, and meet the exact sentence-count constraint.",
+        "gemini_first": "Both answers are identical in their adherence to instructions, completeness, and faithfulness to the source text."
+      }
+    },
+    {
+      "case_id": "c23",
+      "verdict": "gemini",
+      "flipped": false,
+      "winner_gpt-oss_first": "gemini",
+      "winner_gemini_first": "gemini",
+      "words": {
+        "gpt-oss": 18,
+        "gemini": 14
+      },
+      "answers": {
+        "gpt-oss": "- 15 April: First draft due  \n- 30 May: Final report due  \n- 10 June: Invoice submission deadline",
+        "gemini": "- 15 April: first draft\n- 30 May: final report\n- 10 June: invoice"
+      },
+      "criteria_winners": {
+        "gpt-oss_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "gemini",
+          "completeness": "TIE"
+        },
+        "gemini_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "gemini",
+          "completeness": "TIE"
+        }
+      },
+      "rationale": {
+        "gpt-oss_first": "Answer B followed the formatting instructions more precisely than Answer A by omitting unnecessary additional words.",
+        "gemini_first": "Answer A is the winner because it adheres more strictly to the requested formatting and input phrasing for the 'what' component of the deadline list."
+      }
+    },
+    {
+      "case_id": "c24",
+      "verdict": "TIE",
+      "flipped": false,
+      "winner_gpt-oss_first": "TIE",
+      "winner_gemini_first": "TIE",
+      "words": {
+        "gpt-oss": 18,
+        "gemini": 21
+      },
+      "answers": {
+        "gpt-oss": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+        "gemini": "The Mill Road bridge was closed because inspectors found a cracked support beam, and it is expected to reopen in August."
+      },
+      "criteria_winners": {
+        "gpt-oss_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "TIE"
+        },
+        "gemini_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "TIE"
+        }
+      },
+      "rationale": {
+        "gpt-oss_first": "Both answers are identical in their adherence to constraints, faithfulness, and completeness.",
+        "gemini_first": "Both answers perform equally well across all criteria, following every constraint and providing complete, faithful responses."
+      }
+    },
+    {
+      "case_id": "c41",
+      "verdict": "TIE",
+      "flipped": false,
+      "winner_gpt-oss_first": "TIE",
+      "winner_gemini_first": "TIE",
+      "words": {
+        "gpt-oss": 19,
+        "gemini": 20
+      },
+      "answers": {
+        "gpt-oss": "I’m sorry, but the notice doesn’t include a phone number. You can book online through the clinic’s website instead.",
+        "gemini": "The notice does not list a phone number to call. Instead, new patients can book online through the clinic website."
+      },
+      "criteria_winners": {
+        "gpt-oss_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "TIE"
+        },
+        "gemini_first": {
+          "faithfulness": "TIE",
+          "instruction_following": "TIE",
+          "completeness": "TIE"
+        }
+      },
+      "rationale": {
+        "gpt-oss_first": "Both answers are identical in quality, perfectly following all instructions, constraints, and faithfulness requirements.",
+        "gemini_first": "Both answers are equally faithful, follow all instructions including the sentence limit, and are fully complete."
+      }
+    }
+  ],
+  "raw_pairs": [
+    {
+      "case_id": "c01",
+      "mode": "mitigated",
+      "x": "gpt-oss",
+      "y": "gemini",
+      "identical": false,
+      "orders": [
+        {
+          "first": "gpt-oss",
+          "second": "gemini",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "gemini",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "gemini"
+          },
+          "rationale": "Answer B is the overall winner because it is tied on faithfulness and instruction-following but more complete by including the condition on renewals.",
+          "calls": [
+            {
+              "tag": "c01|mitigated|gpt-oss>gemini",
+              "prompt_hash": "4e20cc70e3bf2721",
+              "cached": false,
+              "tokens_in": 1528,
+              "tokens_out": 500
+            }
+          ]
+        },
+        {
+          "first": "gemini",
+          "second": "gpt-oss",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "gemini",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "gemini"
+          },
+          "rationale": "Answer A is slightly more complete because it includes the exception regarding reservations for book renewals.",
+          "calls": [
+            {
+              "tag": "c01|mitigated|gemini>gpt-oss",
+              "prompt_hash": "88f9262e68beecf5",
+              "cached": false,
+              "tokens_in": 1528,
+              "tokens_out": 489
+            }
+          ]
+        }
+      ],
+      "verdict": "gemini",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "gemini"
+    },
+    {
+      "case_id": "c02",
+      "mode": "mitigated",
+      "x": "gpt-oss",
+      "y": "gemini",
+      "identical": false,
+      "orders": [
+        {
+          "first": "gpt-oss",
+          "second": "gemini",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "gemini",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "gemini",
+            "completeness": "TIE"
+          },
+          "rationale": "Answer B is the overall winner because it strictly follows the formatting constraint to give exactly one sentence of working.",
+          "calls": [
+            {
+              "tag": "c02|mitigated|gpt-oss>gemini",
+              "prompt_hash": "cf56f6c46b382f3e",
+              "cached": false,
+              "tokens_in": 1532,
+              "tokens_out": 479
+            }
+          ]
+        },
+        {
+          "first": "gemini",
+          "second": "gpt-oss",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "gemini",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "gemini",
+            "completeness": "TIE"
+          },
+          "rationale": "Answer A correctly follows the negative constraint to provide exactly one sentence of working.",
+          "calls": [
+            {
+              "tag": "c02|mitigated|gemini>gpt-oss",
+              "prompt_hash": "912c82bd8916ef14",
+              "cached": false,
+              "tokens_in": 1532,
+              "tokens_out": 412
+            }
+          ]
+        }
+      ],
+      "verdict": "gemini",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "gemini"
+    },
+    {
+      "case_id": "c19",
+      "mode": "mitigated",
+      "x": "gpt-oss",
+      "y": "gemini",
+      "identical": false,
+      "orders": [
+        {
+          "first": "gpt-oss",
+          "second": "gemini",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "TIE",
+          "winner": "TIE",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "TIE"
+          },
+          "rationale": "Both answers successfully follow all instructions, achieve complete accuracy, and meet the exact sentence-count constraint.",
+          "calls": [
+            {
+              "tag": "c19|mitigated|gpt-oss>gemini",
+              "prompt_hash": "b91ed988ece58d2e",
+              "cached": false,
+              "tokens_in": 1389,
+              "tokens_out": 278
+            }
+          ]
+        },
+        {
+          "first": "gemini",
+          "second": "gpt-oss",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "TIE",
+          "winner": "TIE",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "TIE"
+          },
+          "rationale": "Both answers are identical in their adherence to instructions, completeness, and faithfulness to the source text.",
+          "calls": [
+            {
+              "tag": "c19|mitigated|gemini>gpt-oss",
+              "prompt_hash": "a26735e4ce444b13",
+              "cached": false,
+              "tokens_in": 1389,
+              "tokens_out": 285
+            }
+          ]
+        }
+      ],
+      "verdict": "TIE",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "TIE"
+    },
+    {
+      "case_id": "c23",
+      "mode": "mitigated",
+      "x": "gpt-oss",
+      "y": "gemini",
+      "identical": false,
+      "orders": [
+        {
+          "first": "gpt-oss",
+          "second": "gemini",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "second",
+          "winner": "gemini",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "gemini",
+            "completeness": "TIE"
+          },
+          "rationale": "Answer B followed the formatting instructions more precisely than Answer A by omitting unnecessary additional words.",
+          "calls": [
+            {
+              "tag": "c23|mitigated|gpt-oss>gemini",
+              "prompt_hash": "068a9331db6c64ea",
+              "cached": false,
+              "tokens_in": 1469,
+              "tokens_out": 369
+            }
+          ]
+        },
+        {
+          "first": "gemini",
+          "second": "gpt-oss",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "first",
+          "winner": "gemini",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "gemini",
+            "completeness": "TIE"
+          },
+          "rationale": "Answer A is the winner because it adheres more strictly to the requested formatting and input phrasing for the 'what' component of the deadline list.",
+          "calls": [
+            {
+              "tag": "c23|mitigated|gemini>gpt-oss",
+              "prompt_hash": "2d9e5ad0f3b51651",
+              "cached": false,
+              "tokens_in": 1469,
+              "tokens_out": 365
+            }
+          ]
+        }
+      ],
+      "verdict": "gemini",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "gemini"
+    },
+    {
+      "case_id": "c24",
+      "mode": "mitigated",
+      "x": "gpt-oss",
+      "y": "gemini",
+      "identical": false,
+      "orders": [
+        {
+          "first": "gpt-oss",
+          "second": "gemini",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "TIE",
+          "winner": "TIE",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "TIE"
+          },
+          "rationale": "Both answers are identical in their adherence to constraints, faithfulness, and completeness.",
+          "calls": [
+            {
+              "tag": "c24|mitigated|gpt-oss>gemini",
+              "prompt_hash": "243b240d81fc5cf8",
+              "cached": false,
+              "tokens_in": 1439,
+              "tokens_out": 342
+            }
+          ]
+        },
+        {
+          "first": "gemini",
+          "second": "gpt-oss",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "TIE",
+          "winner": "TIE",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "TIE"
+          },
+          "rationale": "Both answers perform equally well across all criteria, following every constraint and providing complete, faithful responses.",
+          "calls": [
+            {
+              "tag": "c24|mitigated|gemini>gpt-oss",
+              "prompt_hash": "905c776af3d50b94",
+              "cached": false,
+              "tokens_in": 1439,
+              "tokens_out": 365
+            }
+          ]
+        }
+      ],
+      "verdict": "TIE",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "TIE"
+    },
+    {
+      "case_id": "c41",
+      "mode": "mitigated",
+      "x": "gpt-oss",
+      "y": "gemini",
+      "identical": false,
+      "orders": [
+        {
+          "first": "gpt-oss",
+          "second": "gemini",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "reask",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "TIE",
+          "winner": "TIE",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "TIE"
+          },
+          "rationale": "Both answers are identical in quality, perfectly following all instructions, constraints, and faithfulness requirements.",
+          "calls": [
+            {
+              "tag": "c41|mitigated|gpt-oss>gemini",
+              "prompt_hash": "17309cdadb2907ae",
+              "cached": false,
+              "tokens_in": 1446,
+              "tokens_out": 346
+            },
+            {
+              "tag": "c41|mitigated|gpt-oss>gemini|reask",
+              "prompt_hash": "1e0740baa482c1d6",
+              "cached": false,
+              "tokens_in": 1895,
+              "tokens_out": 359
+            }
+          ]
+        },
+        {
+          "first": "gemini",
+          "second": "gpt-oss",
+          "mode": "mitigated",
+          "template_id": "pairwise.v1",
+          "template_sha": "3a771bfdc38d",
+          "parse_status": "strict",
+          "error_kind": "",
+          "error": "",
+          "repairs": [],
+          "position_winner": "TIE",
+          "winner": "TIE",
+          "criteria_winners": {
+            "faithfulness": "TIE",
+            "instruction_following": "TIE",
+            "completeness": "TIE"
+          },
+          "rationale": "Both answers are equally faithful, follow all instructions including the sentence limit, and are fully complete.",
+          "calls": [
+            {
+              "tag": "c41|mitigated|gemini>gpt-oss",
+              "prompt_hash": "199a495b10ca1d79",
+              "cached": false,
+              "tokens_in": 1446,
+              "tokens_out": 379
+            }
+          ]
+        }
+      ],
+      "verdict": "TIE",
+      "decided_by": "both_orders",
+      "flipped": false,
+      "hard_flip": false,
+      "two_order_verdict": "TIE"
+    }
+  ]
+}
