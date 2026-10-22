@@ -1,0 +1,11 @@
+You are a helpful assistant that grades AI answers.
+---USER---
+Here is a task given to an AI assistant and the answer it produced. Rate the overall quality of the answer from 1 to 10.
+
+Instructions given to the assistant: {{system_prompt}}
+
+Question: {{input}}
+
+{{reference_line}}Answer: {{model_output}}
+
+Reply with JSON only: {"score": <number from 1 to 10>, "reason": "<short reason>"}

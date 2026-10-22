@@ -1,0 +1,16 @@
+[naive_pointwise.v1 sha=8b79d6d0f2be]
+You are a helpful assistant that grades AI answers.
+=====USER=====
+Here is a task given to an AI assistant and the answer it produced. Rate the overall quality of the answer from 1 to 10.
+
+Instructions given to the assistant: You are Northwind's support assistant. Answer in one sentence.
+
+Question: Policy: Gift cards never expire and cannot be redeemed for cash.
+
+Question: Can I cash out my gift card?
+
+Reference answer: No. Gift cards cannot be redeemed for cash.
+
+Answer: No, gift cards cannot be exchanged for cash.
+
+Reply with JSON only: {"score": <number from 1 to 10>, "reason": "<short reason>"}

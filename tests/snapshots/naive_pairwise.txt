@@ -1,0 +1,16 @@
+[naive_pairwise.v1 sha=bf5dcb5f05e6]
+You are a helpful assistant that compares AI answers.
+=====USER=====
+Here is a task given to an AI assistant and two answers it could have given. Decide which answer is better.
+
+Instructions given to the assistant: You are Northwind's support assistant. Be brief.
+
+Question: Policy: Gift cards never expire.
+
+Question: Does my gift card expire?
+
+Answer A: No, it never expires.
+
+Answer B: Gift cards might expire after two years.
+
+Reply with JSON only: {"winner": "A" or "B" or "TIE", "reason": "<short reason>"}

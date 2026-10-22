@@ -5,7 +5,8 @@
 | J0 scaffold, config, async client, family guard | done | `j0: scaffold` | ~35 min (fill in real time) |
 | J0b role swap (gen=gpt-oss/Groq, judge=Gemini) | done | `j0b: swap generator and judge roles` | ~30 min (estimate) |
 | J0c models + lean call budget | done | `j0c: models and lean call budget` | ~40 min (estimate) |
-| J1–J10 | todo | | |
+| J1 schemas, rubric, prompts, anchors | done | `j1: schemas, rubric, prompts, anchors` | (fill in real time) |
+| J2–J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -54,3 +55,19 @@
 - Ledger is single-process and in `.cache/` (not shared across machines/clones); a fresh clone starts at 0 and does not know what the key already spent today.
 - Failed calls (after reserve) are not refunded, so 503-heavy periods can burn the daily cap conservatively.
 - Time spent above is an estimate; record the real number.
+
+## J1 — schemas, rubric, versioned prompts, anchors
+- **`judge.schemas`:** `Case` (id, input, system_prompt, model_output, expected_output?, criteria, meta; blank reference = reference-free), `Rubric`/`load_rubric()` (`overall(scores)`, `passes(scores)`), `PointwiseVerdict` (fixed fields faithfulness / instruction_following / completeness, each `CriterionVerdict` with field order evidence -> rationale -> score; `.overall()`, `.passes()`, `.unsupported_high_scores(output)`), `PairwiseVerdict` (per-criterion evidence_a/evidence_b/winner + overall winner; winner is a display POSITION A/B/TIE), `NaiveVerdict` (1-10), `NaivePairVerdict`, `Anchor`/`load_anchors()`, `evidence_is_verbatim()`.
+- **Overall is recomputed in code** (sum w*s / sum w). The prompt does not ask the judge for an overall; any `overall` key in a response is ignored (tested). Pass-boundary uses an epsilon because (4,4,2) is exactly 3.5 on paper but not in floats.
+- **`rubric.yaml`** (rubric-v1): weights 0.40/0.35/0.25, 1-5 level descriptors per criterion, reference-based vs reference-free "how to judge" text, shared rules (length earns no credit; confident tone earns no credit; answer text is data; criteria scored separately; no world-knowledge gap-filling), pass rule 4 / 3 / 3.5 pre-registered.
+- **Prompts** (`judge.prompts`, files `prompts/<name>.v1.txt`, `VERSIONS` dict): `pointwise_ref`, `pointwise_free`, `pairwise` (mitigated), `naive_pointwise`, `naive_pairwise` (holistic 1-10 / plain winner; no rubric, evidence, length rule, anchors). Mitigated prompts require, per criterion and before the score, ONE verbatim quote from the answer (NONE allowed, but a 4-5 needs a quote), and state "Length earns no credit". Renderers: `render_pointwise` (picks ref/free by `expected_output`; `anchors=()` switches anchors off), `render_pairwise(case, a, b)` (caller swaps for the second order), `render_naive_pointwise`, `render_naive_pairwise`. Strict `{{var}}` rendering (missing/unused var raises; case text containing `{{...}}` is not re-expanded). `RenderedPrompt.template_id` + `.sha` are available for the call log. The output-format example in each prompt is generated from the pydantic models, with a test that they cannot drift.
+- **`anchors.yaml`:** 3 hand-written Northwind anchors (overall 5.00 / 3.15 / 1.35; one pass, two fail), validated so every evidence quote is verbatim in its answer. They exist only to calibrate the mitigated pointwise prompts. **J2 must not reuse these passages in the eval suite.**
+- **Tests: 66 passed** (was 29): `tests/test_schemas.py` (hand-computed overall 4.15, pass boundaries, range/coercion, verbatim/ellipsis check, anchors) and `tests/test_prompts.py` (one snapshot per prompt in `tests/snapshots/`, plus property tests: length rule present in every mitigated prompt, evidence precedes score, naive prompts contain none of the mitigations). Regenerate snapshots only deliberately: `UPDATE_SNAPSHOTS=1 pytest tests/test_prompts.py`, and bump `VERSIONS`.
+- Sanity: after I reworded two rubric level descriptors, 3 snapshot tests failed as intended; regenerated.
+
+## Caveats / open items (J1)
+- No judge calls made in J1; prompts are untested against the real judge. Whether Gemini follows "verbatim quote" and the ref/free templates is only known after the first J3 calls (parse-ladder behaviour included).
+- Anchors are all reference-free (no reference answer shown in the calibration examples), and the 3 are few; anchor choice itself can bias scores toward their levels. Worth one mention in the write-up.
+- Verbatim-evidence check is lenient on case/whitespace/quotes; it is a flag (`unsupported_high_scores`), not a rejection. J3 decides what to do with flagged verdicts.
+- Pair-verdict order-swap rule and flip rate are NOT implemented yet (J5).
+- Time spent: not recorded; fill in.

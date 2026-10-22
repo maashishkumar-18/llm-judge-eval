@@ -1,0 +1,76 @@
+# Few-shot calibration anchors for the MITIGATED pointwise prompts (score-clustering mitigation).
+# Rules: (1) these passages/questions must never appear in the eval suite (J2 must not reuse them);
+# (2) every evidence span must be a verbatim span of the answer (enforced by schemas.Anchor);
+# (3) the three anchors deliberately span the scale: overall 5.00 / 3.15 / 1.35.
+anchors:
+  - id: anchor-high
+    case:
+      id: anchor-high
+      system_prompt: You are Northwind's support assistant. Answer using only the policy provided. Reply in at most two sentences.
+      input: |-
+        Policy: Items may be returned within 30 days of delivery in original packaging for a full refund. Refunds are issued to the original payment method within 5 business days of receipt. Final-sale items cannot be returned.
+
+        Question: Can I return a jacket I received 12 days ago, and how long will the refund take?
+      model_output: |-
+        Yes, you can return it: it is within the 30-day window as long as it is in its original packaging and not a final-sale item. The refund goes to your original payment method within 5 business days of Northwind receiving the item.
+    verdict:
+      faithfulness:
+        evidence: "it is within the 30-day window as long as it is in its original packaging and not a final-sale item"
+        rationale: Every condition stated (30 days, original packaging, final-sale exclusion) comes from the policy; nothing is added.
+        score: 5
+      instruction_following:
+        evidence: "The refund goes to your original payment method within 5 business days of Northwind receiving the item."
+        rationale: The answer is exactly two sentences and uses only the supplied policy, as the system prompt requires.
+        score: 5
+      completeness:
+        evidence: "within the 30-day window ... within 5 business days of Northwind receiving the item"
+        rationale: It answers both parts of the question, eligibility (day 12 of 30) and refund timing.
+        score: 5
+
+  - id: anchor-mid
+    case:
+      id: anchor-mid
+      system_prompt: You are Northwind's shipping assistant. Answer as a short bulleted list.
+      input: |-
+        Policy: Standard shipping takes 3-5 business days. Express shipping takes 1-2 business days and costs $12. Orders over $75 ship Standard for free. Orders placed after 2 p.m. ship the next business day.
+
+        Question: I'm ordering a $60 lamp at 4 p.m. on Tuesday and want it by Thursday. What are my options?
+      model_output: |-
+        Express shipping is 1-2 business days and costs $12, so it could arrive Thursday. Standard shipping is also available.
+    verdict:
+      faithfulness:
+        evidence: "Express shipping is 1-2 business days and costs $12, so it could arrive Thursday."
+        rationale: The Express timing and price are correct, but "could arrive Thursday" glosses over the 4 p.m. order shipping Wednesday, so Thursday is only the best case.
+        score: 4
+      instruction_following:
+        evidence: "Standard shipping is also available."
+        rationale: The answer is short and on topic but written as plain prose; the system prompt required a bulleted list.
+        score: 3
+      completeness:
+        evidence: "Standard shipping is also available."
+        rationale: It never says Standard takes 3-5 business days (so it would miss Thursday), that a $60 order does not get free Standard, or that the 2 p.m. cutoff delays shipping.
+        score: 2
+
+  - id: anchor-low
+    case:
+      id: anchor-low
+      system_prompt: You are Northwind's support assistant. Be accurate and concise.
+      input: |-
+        Policy: Electronics carry a 12-month limited warranty covering manufacturing defects. Accidental damage and water damage are not covered. Warranty claims require proof of purchase.
+
+        Question: My Northwind speaker stopped working after I dropped it 8 months ago. Is it covered?
+      model_output: |-
+        Yes, absolutely! Northwind's premium 24-month warranty fully covers drops and accidents, so you're covered. Just send it in and we'll replace it free of charge, no receipt needed.
+    verdict:
+      faithfulness:
+        evidence: "premium 24-month warranty fully covers drops and accidents"
+        rationale: The policy gives a 12-month limited warranty that excludes accidental damage, and requires proof of purchase; the answer invents a 24-month warranty that covers drops.
+        score: 1
+      instruction_following:
+        evidence: "no receipt needed"
+        rationale: The answer is concise, but the system prompt also demands accuracy and this contradicts the proof-of-purchase requirement.
+        score: 2
+      completeness:
+        evidence: "so you're covered"
+        rationale: The correct conclusion is that a drop is accidental damage and is not covered; the answer reaches the opposite conclusion despite its confident tone.
+        score: 1
