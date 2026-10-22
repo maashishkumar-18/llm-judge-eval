@@ -26,6 +26,10 @@ experiments:
     desc: 6 base cases x {padded, confidently-wrong, terse-correct, verbose-wrong} pointwise x (naive, mitigated), plus 6 naive originals
     terms: [[6, 4, 2], [6]]
     cap: 62
+  sensitivity:
+    desc: J6 sensitivity check, 6 probe bases (correct answer vs its confidently-wrong version) x both orders x (mitigated, naive); needs the J6 confidently-wrong answers
+    terms: [[6, 2, 2]]
+    cap: 28
   clustering_naive:
     desc: naive pointwise on 12 suite cases (score clustering baseline)
     terms: [[12]]

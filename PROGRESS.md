@@ -156,3 +156,23 @@
 - Leniency flag (5/5 pass, 17/20 scores at 5) is NOT a finding. J4/J7 probes and J8 negative controls decide it. **If the probes also score near 5, investigate (prompt, anchors, evidence rule) before reporting any number.**
 - The lower parse rungs are test-proven only; stated in README Known limitations. **Report the real INVALID count and re-ask count from the full pointwise run** (they are in `results/pointwise_<label>.json` -> `summary.parse_status`, `n_invalid`, `reasks`).
 
+
+## J4 — pairwise order-swap, naive single-order baseline, position bias
+- **Code:** `judge.pairwise` (`judge_order`, `judge_pair`, `judge_control`, `resolve`, summaries, checkpointed `judge_pairs`/`judge_controls`), CLI `judge position` (`make position`), results `results/position_bias.json`, log `logs/position_main.jsonl`. `build_reask_prompt` gained `kind="pairwise"` wording (the pointwise text asked for 1-5 scores). Smoke run (pair c01, 4 calls) moved to `results/smoke/`.
+- **Rule:** mitigated = both orders, verdict mapped back to config A/B, disagreement -> TIE + `flipped`. Naive = verdict from the single order "A first"; the swapped order is judged only to measure the flip. Flip = the two orders name different underlying winners (decisive vs TIE counts); hard flip = opposite decisive winners. Naive pairs = first 12 suite-order pairs whose A and B texts differ (rule fixed in code before the run). Controls = the 6 probe bases, A's answer used as both answers, one order each.
+- **Tests:** 168 passed (was 145; +23): resolve table, order mapping, fake always-A judge (mitigated: TIE + hard flip every pair; naive: A wins every pair, flip 100%; controls: first 6/6), hand-computed summary, re-ask wording, INVALID excluded from the flip denominator, checkpoint resume, selection rule.
+- **Live results (judge gemini-3.5-flash-lite, JSON mode off; 0 INVALID, 0 re-asks; exploratory, N stated):**
+
+| | N | flips | hard flips | flip rate | A / B / tie | win rate A | first-position share (decisive) |
+|---|---|---|---|---|---|---|---|
+| naive | 12 | 5 | 2 | 41.7% | 7 / 4 / 1 | 0.625 | 66.7% |
+| mitigated, same 12 | 12 | 0 | 0 | 0% | 3 / 1 / 8 | 0.583 | 50% |
+| mitigated, 14 differing | 14 | 0 | 0 | 0% | 3 / 1 / 10 | 0.571 | 50% |
+| mitigated, all 20 | 20 | 0 | 0 | 0% | 3 / 1 / 16 | 0.55 | 50% |
+
+  Controls (6 identical pairs, one order): naive 0 first / 0 second / 6 TIE; mitigated 0 / 0 / 6 TIE.
+- **Mitigated decisive pairs (4):** c09 -> B, c23 -> A, c40 -> A, c41 -> A, each stable across both orders. The other 16 are TIE in both orders; 6 of those 16 are identical-text pairs (c14 c15 c16 c19 c24 c44).
+- **Pair c28 (for the template screenshot):** naive picks the first-listed answer in both orders (A first -> A; B first -> B; verdict A, hard flip). Mitigated: TIE in both orders. Detail in `results/position_bias.json` -> `pairs.naive` / `pairs.mitigated`, case_id c28.
+- **Caveat (open):** a judge that always answers TIE also has a 0% flip rate; 0% is meaningful only if the mitigated judge picks a winner when there is a real quality gap. Not yet tested. **Added to J6:** sensitivity check, 6 probe bases, correct answer vs its confidently-wrong version, both orders, mitigated + naive (24 calls, cap 28; budget.yaml `sensitivity`, planned total now 238, cap 275). Report share decided correctly and flip rate on those pairs; if the mitigated judge ties them too, state that the mitigation trades bias for indecision.
+- **Budget spent:** pairwise_naive 24/28, pairwise_mitigated 34/46 (second order of the 6 identical pairs is a cache hit), controls 8/14 (4 mitigated controls duplicate identical-pair prompts and were cache hits).
+- Template 2.5 reflection: left for the user.
