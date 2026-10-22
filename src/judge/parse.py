@@ -421,6 +421,10 @@ REASK_CLOSING = {
         "Grade the same case again and reply with ONLY the JSON object in the required format: "
         "no markdown fences, no text before or after, every field present, scores as integers 1-5."
     ),
+    "naive_pointwise": (
+        "Rate the same answer again and reply with ONLY the JSON object "
+        '{"score": <integer 1-10>, "reason": "<short reason>"}: no markdown fences, no text before or after.'
+    ),
     "pairwise": (
         "Compare the same two answers again and reply with ONLY the JSON object in the required format: "
         "no markdown fences, no text before or after, every field present, winners as \"A\", \"B\" or \"TIE\"."

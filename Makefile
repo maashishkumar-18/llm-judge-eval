@@ -1,6 +1,6 @@
 PY ?= python
 
-.PHONY: install smoke test budget generate pointwise replay position run compare
+.PHONY: install smoke test budget generate pointwise replay position run compare probes
 
 install:
 	$(PY) -m pip install -e ".[dev]"
@@ -31,3 +31,6 @@ run:
 
 compare:
 	$(PY) -m judge.cli compare --a A --b B
+
+probes:
+	$(PY) -m judge.cli probes

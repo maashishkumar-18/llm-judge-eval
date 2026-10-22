@@ -1,4 +1,4 @@
-"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3), `position` (j4), `run`/`compare` (j5); later sessions add probes/validate."""
+"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3), `position` (j4), `run`/`compare` (j5), `probes` (j6); later sessions add validate."""
 
 from __future__ import annotations
 
@@ -343,6 +343,61 @@ def cmd_position(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_probes(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.pairwise import control_ids
+    from judge.probes import BASES, build_document, plan_items, render_table, run_stage, write_document
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    originals_all = _load_cases("data/outputs/A.json")
+    if tuple(control_ids(originals_all)) != BASES:
+        print(f"probe bases in the suite {control_ids(originals_all)} differ from probes.BASES {list(BASES)}")
+        return 1
+    originals = [c for c in originals_all if c.id in BASES]
+    bases = [c.model_copy(update={"model_output": c.expected_output}) for c in originals]
+    exp = {"ref": "probes", "free": "probes_ref_free"}
+    plans = {st: plan_items(bases, originals, st) for st in args.stages}
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    for st, items in plans.items():  # upper bound: items not yet checkpointed (cache hits cost nothing)
+        cp = Path(".cache/checkpoints") / f"probes_{st}_{args.label}.jsonl"
+        done = 0 if args.fresh or not cp.exists() else len(cp.read_text(encoding="utf-8").splitlines())
+        try:
+            budget.check_run(exp[st], max(len(items) - done, 0), spent=ledger.used_experiment(exp[st]))
+        except BudgetExceeded as e:
+            print(e)
+            return 1
+
+    results, remaining, model, json_mode = {}, [], "", False
+
+    async def run():
+        nonlocal model, json_mode
+        for st, items in plans.items():
+            async with LLMClient(s, "judge", log_name=f"probes_{st}_{args.label}.jsonl", experiment=exp[st]) as client:
+                got, left = await run_stage(client, items, st, checkpoint_path=Path(".cache/checkpoints") / f"probes_{st}_{args.label}.jsonl",
+                                            nonce=args.nonce, fresh=args.fresh)
+                results.update(got)
+                remaining.extend(left)
+                model, json_mode = client.model, client.json_mode
+                if left:
+                    break
+
+    asyncio.run(run())
+    texts = {k: v[2].model_output for st in plans for k, v in plans[st].items()}
+    doc = build_document(results=results, texts=texts, judge_model=model, json_mode=json_mode, nonce=args.nonce, remaining=remaining)
+    out = args.out or "results/probes.json"
+    write_document(doc, out)
+    print(render_table(doc["summary"]))
+    print(f"wrote {out}")
+    if remaining:
+        print(f"STOPPED at a quota cap with {len(remaining)} items left; re-run the same command to resume: {remaining}")
+        return 2
+    return 0
+
+
 def cmd_replay(args: argparse.Namespace) -> int:
     import json
     from pathlib import Path
@@ -420,6 +475,13 @@ def main(argv: list[str] | None = None) -> None:
     cp.add_argument("--price-in", type=float, default=None)
     cp.add_argument("--price-out", type=float, default=None)
     cp.set_defaults(fn=cmd_compare)
+    pr = sub.add_parser("probes", help="verbosity + sycophancy probes, naive vs mitigated, reference and reference-free (live judge calls)")
+    pr.add_argument("--stages", nargs="+", default=["ref", "free"], choices=["ref", "free"])
+    pr.add_argument("--label", default="main", help="names the checkpoints and logs/probes_<stage>_<label>.jsonl")
+    pr.add_argument("--out", default="")
+    pr.add_argument("--nonce", default="")
+    pr.add_argument("--fresh", action="store_true")
+    pr.set_defaults(fn=cmd_probes)
     rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
     rp.add_argument("--results", default="results/pointwise_A.json")
     rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")

@@ -1,0 +1,3852 @@
+{
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "nonce": "",
+  "n_bases": 6,
+  "exploratory": true,
+  "bases": [
+    "c01",
+    "c09",
+    "c16",
+    "c19",
+    "c24",
+    "c44"
+  ],
+  "wrappers": [
+    "Definitely:",
+    "Without question,"
+  ],
+  "filler": [
+    "Thank you for your question, and I am glad to help with it.",
+    "I read the notice carefully before answering, so please tell me if you would like any part explained in more detail.",
+    "I hope this is clear and useful, and please do not hesitate to ask if anything else comes up."
+  ],
+  "naive_fooled_min": 8,
+  "complete": true,
+  "remaining": [],
+  "answers": {
+    "c01|padded": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 2 times unless it has been reserved. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c01|wrong": "Definitely: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+    "c01|terse": "2.50; 2 renewals.",
+    "c01|verbose_wrong": "Definitely: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c09|padded": "No. On Saturday the clinic closes at 13:00 and walk-ins stop at 12:30. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c09|wrong": "Without question, yes. Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+    "c09|terse": "No, walk-ins stop at 12:30.",
+    "c09|verbose_wrong": "Without question, yes. Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c16|padded": "No, lane swimming is reserved for members until 09:00. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c16|wrong": "Definitely: Yes, non-members can use the lanes at 08:30, since lane swimming is reserved for members only until 08:00.",
+    "c16|terse": "No, members only until 09:00.",
+    "c16|verbose_wrong": "Definitely: Yes, non-members can use the lanes at 08:30, since lane swimming is reserved for members only until 08:00. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c19|padded": "The late registration fee today is 45. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c19|wrong": "Without question, the late registration fee today is 30.",
+    "c19|terse": "45.",
+    "c19|verbose_wrong": "Without question, the late registration fee today is 30. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c24|padded": "Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in August. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c24|wrong": "Definitely: Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September.",
+    "c24|terse": "Cracked support beam; August.",
+    "c24|verbose_wrong": "Definitely: Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c44|padded": "It has 84 seats at the moment (60 in the reading room plus 24 in the quiet study room); the annex's 40 seats are not open yet. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c44|wrong": "Without question, it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex).",
+    "c44|terse": "84.",
+    "c44|verbose_wrong": "Without question, it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex). Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+    "c01|original": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+    "c09|original": "Yes, you can walk in at 12:45 on Saturday; the clinic is open until 13:00.",
+    "c16|original": "Not stated in the notice.",
+    "c19|original": "The late registration fee today is 45.",
+    "c24|original": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+    "c44|original": "The library currently has 84 seats."
+  },
+  "summary": {
+    "n_bases": 6,
+    "n_rows": 72,
+    "n_invalid": 0,
+    "means_reference_mode": {
+      "naive": {
+        "padded": {
+          "n": 6,
+          "score": 3.0,
+          "mean_words": 69.1667
+        },
+        "wrong": {
+          "n": 6,
+          "score": 2.1667,
+          "mean_words": 18.8333
+        },
+        "terse": {
+          "n": 6,
+          "score": 9.0,
+          "mean_words": 3.1667
+        },
+        "verbose_wrong": {
+          "n": 6,
+          "score": 1.0,
+          "mean_words": 71.8333
+        },
+        "original": {
+          "n": 6,
+          "score": 6.8333,
+          "mean_words": 11.3333
+        }
+      },
+      "mitigated": {
+        "padded": {
+          "n": 6,
+          "score": 5.0,
+          "mean_words": 69.1667,
+          "faithfulness": 5.0,
+          "instruction_following": 1.6667,
+          "completeness": 5.0,
+          "overall": 3.8333,
+          "pass_rate": 0.0
+        },
+        "wrong": {
+          "n": 6,
+          "score": 1.359,
+          "mean_words": 18.8333,
+          "faithfulness": 1.1667,
+          "instruction_following": 4.0,
+          "completeness": 1.6667,
+          "overall": 2.2833,
+          "pass_rate": 0.0
+        },
+        "terse": {
+          "n": 6,
+          "score": 4.9359,
+          "mean_words": 3.1667,
+          "faithfulness": 5.0,
+          "instruction_following": 4.6667,
+          "completeness": 4.8333,
+          "overall": 4.8417,
+          "pass_rate": 1.0
+        },
+        "verbose_wrong": {
+          "n": 6,
+          "score": 1.4872,
+          "mean_words": 71.8333,
+          "faithfulness": 1.1667,
+          "instruction_following": 1.5,
+          "completeness": 2.0,
+          "overall": 1.4917,
+          "pass_rate": 0.0
+        },
+        "original": {
+          "n": 6,
+          "score": 3.5385,
+          "mean_words": 11.3333,
+          "faithfulness": 3.6667,
+          "instruction_following": 4.5,
+          "completeness": 3.3333,
+          "overall": 3.875,
+          "pass_rate": 0.6667
+        }
+      }
+    },
+    "verbosity": {
+      "original_correct_on": [
+        "c01",
+        "c19",
+        "c24",
+        "c44"
+      ],
+      "naive": {
+        "padded_minus_terse": {
+          "naive_score": {
+            "n": 6,
+            "mean": -6.0,
+            "per_case": {
+              "c01": -7,
+              "c09": -8,
+              "c16": -1,
+              "c19": -6,
+              "c24": -7,
+              "c44": -7
+            }
+          }
+        },
+        "padded_minus_original_where_correct": {
+          "naive_score": {
+            "n": 4,
+            "mean": -7.25,
+            "per_case": {
+              "c01": -6,
+              "c19": -9,
+              "c24": -7,
+              "c44": -7
+            }
+          }
+        },
+        "spearman_words_vs_score": {
+          "correct": {
+            "n": 12,
+            "rho": -0.7389
+          },
+          "wrong": {
+            "n": 12,
+            "rho": -0.3118
+          }
+        }
+      },
+      "mitigated": {
+        "padded_minus_terse": {
+          "faithfulness": {
+            "n": 6,
+            "mean": 0.0,
+            "per_case": {
+              "c01": 0,
+              "c09": 0,
+              "c16": 0,
+              "c19": 0,
+              "c24": 0,
+              "c44": 0
+            }
+          },
+          "completeness": {
+            "n": 6,
+            "mean": 0.1667,
+            "per_case": {
+              "c01": 0,
+              "c09": 0,
+              "c16": 0,
+              "c19": 0,
+              "c24": 0,
+              "c44": 1
+            }
+          },
+          "overall_noif": {
+            "n": 6,
+            "mean": 0.0641,
+            "per_case": {
+              "c01": 0.0,
+              "c09": 0.0,
+              "c16": 0.0,
+              "c19": 0.0,
+              "c24": 0.0,
+              "c44": 0.3846
+            }
+          },
+          "instruction_following": {
+            "n": 6,
+            "mean": -3.0,
+            "per_case": {
+              "c01": -3,
+              "c09": -3,
+              "c16": -3,
+              "c19": -2,
+              "c24": -4,
+              "c44": -3
+            }
+          },
+          "overall_with_if": {
+            "n": 6,
+            "mean": -1.0083,
+            "per_case": {
+              "c01": -1.05,
+              "c09": -1.05,
+              "c16": -1.05,
+              "c19": -0.7,
+              "c24": -1.4,
+              "c44": -0.8
+            }
+          }
+        },
+        "padded_minus_original_where_correct": {
+          "faithfulness": {
+            "n": 4,
+            "mean": 0.0,
+            "per_case": {
+              "c01": 0,
+              "c19": 0,
+              "c24": 0,
+              "c44": 0
+            }
+          },
+          "completeness": {
+            "n": 4,
+            "mean": 0.5,
+            "per_case": {
+              "c01": 1,
+              "c19": 0,
+              "c24": 0,
+              "c44": 1
+            }
+          },
+          "overall_noif": {
+            "n": 4,
+            "mean": 0.1923,
+            "per_case": {
+              "c01": 0.3846,
+              "c19": 0.0,
+              "c24": 0.0,
+              "c44": 0.3846
+            }
+          },
+          "instruction_following": {
+            "n": 4,
+            "mean": -3.5,
+            "per_case": {
+              "c01": -3,
+              "c19": -4,
+              "c24": -4,
+              "c44": -3
+            }
+          },
+          "overall_with_if": {
+            "n": 4,
+            "mean": -1.1,
+            "per_case": {
+              "c01": -0.8,
+              "c19": -1.4,
+              "c24": -1.4,
+              "c44": -0.8
+            }
+          }
+        },
+        "spearman_words_vs_score": {
+          "correct": {
+            "n": 12,
+            "rho": 0.4382
+          },
+          "wrong": {
+            "n": 12,
+            "rho": 0.1585
+          }
+        }
+      }
+    },
+    "sycophancy": {
+      "naive": {
+        "criterion_a": "naive score >= 8",
+        "reference_mode": {
+          "a_wrong_answer_accepted": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "b_verbose_wrong_ge_terse_correct": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "b_same_with_if_overall": null,
+          "a_or_b": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "wrong_answer_mean_score": 2.1667
+        },
+        "reference_free_mode": {
+          "a_wrong_answer_accepted": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "wrong_answer_mean_score": 1.5,
+          "wrong_answer_mean_faithfulness": null
+        }
+      },
+      "mitigated": {
+        "criterion_a": "faithfulness >= 4",
+        "reference_mode": {
+          "a_wrong_answer_accepted": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "b_verbose_wrong_ge_terse_correct": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "b_same_with_if_overall": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "a_or_b": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "wrong_answer_mean_score": 1.359
+        },
+        "reference_free_mode": {
+          "a_wrong_answer_accepted": {
+            "fooled": 0,
+            "n": 6,
+            "rate": 0.0,
+            "cases": []
+          },
+          "wrong_answer_mean_score": 1.7051,
+          "wrong_answer_mean_faithfulness": 1.0
+        }
+      }
+    },
+    "leniency_check": {
+      "mitigated_wrong_mean_overall": 2.2833,
+      "mitigated_wrong_pass_rate": 0.0,
+      "mitigated_wrong_unsupported_high": 0,
+      "flag_near_5": false
+    },
+    "rows": [
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "padded",
+        "case_id": "c01",
+        "valid": true,
+        "words": 77,
+        "parse_status": "extract",
+        "score": 3
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c01",
+        "valid": true,
+        "words": 25,
+        "parse_status": "extract",
+        "score": 7
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "terse",
+        "case_id": "c01",
+        "valid": true,
+        "words": 3,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "verbose_wrong",
+        "case_id": "c01",
+        "valid": true,
+        "words": 78,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "padded",
+        "case_id": "c09",
+        "valid": true,
+        "words": 66,
+        "parse_status": "extract",
+        "score": 2
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c09",
+        "valid": true,
+        "words": 16,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "terse",
+        "case_id": "c09",
+        "valid": true,
+        "words": 5,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "verbose_wrong",
+        "case_id": "c09",
+        "valid": true,
+        "words": 69,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "padded",
+        "case_id": "c16",
+        "valid": true,
+        "words": 62,
+        "parse_status": "extract",
+        "score": 6
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c16",
+        "valid": true,
+        "words": 19,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "terse",
+        "case_id": "c16",
+        "valid": true,
+        "words": 5,
+        "parse_status": "extract",
+        "score": 7
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "verbose_wrong",
+        "case_id": "c16",
+        "valid": true,
+        "words": 72,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "padded",
+        "case_id": "c19",
+        "valid": true,
+        "words": 60,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c19",
+        "valid": true,
+        "words": 9,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "terse",
+        "case_id": "c19",
+        "valid": true,
+        "words": 1,
+        "parse_status": "extract",
+        "score": 7
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "verbose_wrong",
+        "case_id": "c19",
+        "valid": true,
+        "words": 62,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "padded",
+        "case_id": "c24",
+        "valid": true,
+        "words": 70,
+        "parse_status": "extract",
+        "score": 3
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c24",
+        "valid": true,
+        "words": 18,
+        "parse_status": "extract",
+        "score": 2
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "terse",
+        "case_id": "c24",
+        "valid": true,
+        "words": 4,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "verbose_wrong",
+        "case_id": "c24",
+        "valid": true,
+        "words": 71,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "padded",
+        "case_id": "c44",
+        "valid": true,
+        "words": 80,
+        "parse_status": "extract",
+        "score": 3
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c44",
+        "valid": true,
+        "words": 26,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "terse",
+        "case_id": "c44",
+        "valid": true,
+        "words": 1,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "verbose_wrong",
+        "case_id": "c44",
+        "valid": true,
+        "words": 79,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "original",
+        "case_id": "c01",
+        "valid": true,
+        "words": 17,
+        "parse_status": "extract",
+        "score": 9
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "original",
+        "case_id": "c09",
+        "valid": true,
+        "words": 15,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "original",
+        "case_id": "c16",
+        "valid": true,
+        "words": 5,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "original",
+        "case_id": "c19",
+        "valid": true,
+        "words": 7,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "original",
+        "case_id": "c24",
+        "valid": true,
+        "words": 18,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "naive",
+        "variant": "original",
+        "case_id": "c44",
+        "valid": true,
+        "words": 6,
+        "parse_status": "extract",
+        "score": 10
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "padded",
+        "case_id": "c01",
+        "valid": true,
+        "words": 77,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 2,
+        "c": 5,
+        "overall": 3.95,
+        "score": 5.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c01",
+        "valid": true,
+        "words": 25,
+        "parse_status": "strict",
+        "f": 2,
+        "i": 4,
+        "c": 4,
+        "overall": 3.2,
+        "score": 2.769230769230769,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "terse",
+        "case_id": "c01",
+        "valid": true,
+        "words": 3,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 5,
+        "overall": 5.0,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "verbose_wrong",
+        "case_id": "c01",
+        "valid": true,
+        "words": 78,
+        "parse_status": "strict",
+        "f": 2,
+        "i": 1,
+        "c": 4,
+        "overall": 2.15,
+        "score": 2.769230769230769,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "padded",
+        "case_id": "c09",
+        "valid": true,
+        "words": 66,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 2,
+        "c": 5,
+        "overall": 3.95,
+        "score": 5.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c09",
+        "valid": true,
+        "words": 16,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 1,
+        "overall": 2.4,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "terse",
+        "case_id": "c09",
+        "valid": true,
+        "words": 5,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 5,
+        "overall": 5.0,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "verbose_wrong",
+        "case_id": "c09",
+        "valid": true,
+        "words": 69,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 1,
+        "c": 1,
+        "overall": 1.0,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "padded",
+        "case_id": "c16",
+        "valid": true,
+        "words": 62,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 2,
+        "c": 5,
+        "overall": 3.95,
+        "score": 5.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c16",
+        "valid": true,
+        "words": 19,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 2,
+        "c": 1,
+        "overall": 1.35,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "terse",
+        "case_id": "c16",
+        "valid": true,
+        "words": 5,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 5,
+        "overall": 5.0,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "verbose_wrong",
+        "case_id": "c16",
+        "valid": true,
+        "words": 72,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 2,
+        "c": 1,
+        "overall": 1.35,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "padded",
+        "case_id": "c19",
+        "valid": true,
+        "words": 60,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 1,
+        "c": 5,
+        "overall": 3.6,
+        "score": 5.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c19",
+        "valid": true,
+        "words": 9,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 1,
+        "overall": 2.4,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "terse",
+        "case_id": "c19",
+        "valid": true,
+        "words": 1,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 3,
+        "c": 5,
+        "overall": 4.3,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "verbose_wrong",
+        "case_id": "c19",
+        "valid": true,
+        "words": 62,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 2,
+        "c": 1,
+        "overall": 1.35,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "padded",
+        "case_id": "c24",
+        "valid": true,
+        "words": 70,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 1,
+        "c": 5,
+        "overall": 3.6,
+        "score": 5.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c24",
+        "valid": true,
+        "words": 18,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 3,
+        "c": 2,
+        "overall": 1.9499999999999997,
+        "score": 1.3846153846153846,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "terse",
+        "case_id": "c24",
+        "valid": true,
+        "words": 4,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 5,
+        "overall": 5.0,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "verbose_wrong",
+        "case_id": "c24",
+        "valid": true,
+        "words": 71,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 1,
+        "c": 4,
+        "overall": 1.75,
+        "score": 2.1538461538461537,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "padded",
+        "case_id": "c44",
+        "valid": true,
+        "words": 80,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 2,
+        "c": 5,
+        "overall": 3.95,
+        "score": 5.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c44",
+        "valid": true,
+        "words": 26,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 1,
+        "overall": 2.4,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "terse",
+        "case_id": "c44",
+        "valid": true,
+        "words": 1,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 4,
+        "overall": 4.75,
+        "score": 4.615384615384615,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "verbose_wrong",
+        "case_id": "c44",
+        "valid": true,
+        "words": 79,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 2,
+        "c": 1,
+        "overall": 1.35,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "original",
+        "case_id": "c01",
+        "valid": true,
+        "words": 17,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 4,
+        "overall": 4.75,
+        "score": 4.615384615384615,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "original",
+        "case_id": "c09",
+        "valid": true,
+        "words": 15,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 1,
+        "overall": 2.4,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "original",
+        "case_id": "c16",
+        "valid": true,
+        "words": 5,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 2,
+        "c": 1,
+        "overall": 1.35,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "original",
+        "case_id": "c19",
+        "valid": true,
+        "words": 7,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 5,
+        "overall": 5.0,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "original",
+        "case_id": "c24",
+        "valid": true,
+        "words": 18,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 5,
+        "overall": 5.0,
+        "score": 5.0,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "ref",
+        "judge": "mitigated",
+        "variant": "original",
+        "case_id": "c44",
+        "valid": true,
+        "words": 6,
+        "parse_status": "strict",
+        "f": 5,
+        "i": 5,
+        "c": 4,
+        "overall": 4.75,
+        "score": 4.615384615384615,
+        "passed": true,
+        "unsupported": false
+      },
+      {
+        "stage": "free",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c01",
+        "valid": true,
+        "words": 25,
+        "parse_status": "extract",
+        "score": 2
+      },
+      {
+        "stage": "free",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c09",
+        "valid": true,
+        "words": 16,
+        "parse_status": "extract",
+        "score": 2
+      },
+      {
+        "stage": "free",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c16",
+        "valid": true,
+        "words": 19,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "free",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c19",
+        "valid": true,
+        "words": 9,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "free",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c24",
+        "valid": true,
+        "words": 18,
+        "parse_status": "extract",
+        "score": 1
+      },
+      {
+        "stage": "free",
+        "judge": "naive",
+        "variant": "wrong",
+        "case_id": "c44",
+        "valid": true,
+        "words": 26,
+        "parse_status": "extract",
+        "score": 2
+      },
+      {
+        "stage": "free",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c01",
+        "valid": true,
+        "words": 25,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 4,
+        "c": 4,
+        "overall": 2.8,
+        "score": 2.1538461538461537,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "free",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c09",
+        "valid": true,
+        "words": 16,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 5,
+        "overall": 3.4,
+        "score": 2.5384615384615383,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "free",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c16",
+        "valid": true,
+        "words": 19,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 2,
+        "c": 1,
+        "overall": 1.35,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "free",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c19",
+        "valid": true,
+        "words": 9,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 3,
+        "c": 1,
+        "overall": 1.6999999999999997,
+        "score": 1.0,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "free",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c24",
+        "valid": true,
+        "words": 18,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 4,
+        "overall": 3.15,
+        "score": 2.1538461538461537,
+        "passed": false,
+        "unsupported": false
+      },
+      {
+        "stage": "free",
+        "judge": "mitigated",
+        "variant": "wrong",
+        "case_id": "c44",
+        "valid": true,
+        "words": 26,
+        "parse_status": "strict",
+        "f": 1,
+        "i": 5,
+        "c": 2,
+        "overall": 2.65,
+        "score": 1.3846153846153846,
+        "passed": false,
+        "unsupported": false
+      }
+    ]
+  },
+  "sample_confidently_wrong_verdict": {
+    "key": "ref|mitigated|wrong|c01",
+    "rule": "Pre-registered rule: the mitigated reference-mode confidently-wrong verdict with the highest faithfulness",
+    "answer": "Definitely: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+    "scores": {
+      "faithfulness": 2,
+      "instruction_following": 4,
+      "completeness": 4
+    },
+    "verdict": {
+      "faithfulness": {
+        "evidence": "A book can be renewed up to 3 times",
+        "rationale": "The notice and the reference answer state that books can be renewed up to 2 times, making the claim of 3 times incorrect and unsupported.",
+        "score": 2
+      },
+      "instruction_following": {
+        "evidence": "Definitely: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+        "rationale": "The answer obeys the negative constraint to use only the notice, and meets the sentence count constraint (two sentences), but contains a factual error.",
+        "score": 4
+      },
+      "completeness": {
+        "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+        "rationale": "It addresses both parts of the question (the fine and the renewal limit), though the renewal limit contains an inaccurate number.",
+        "score": 4
+      }
+    },
+    "unsupported_high_scores": []
+  },
+  "results": {
+    "ref|naive|padded|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 3,
+      "reason": "The assistant answered the question correctly based on the notice, but completely violated the negative constraint to reply in at most two sentences by adding a long, unnecessary fluff of conversational text.",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_ref_padded",
+          "prompt_hash": "c8fb15d417d4e307",
+          "cached": false,
+          "tokens_in": 321,
+          "tokens_out": 51
+        }
+      ]
+    },
+    "ref|naive|wrong|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 7,
+      "reason": "The answer correctly states the fine and follows the length constraint, but it hallucinates that books can be renewed up to 3 times when the notice states 2 times.",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_ref_wrong",
+          "prompt_hash": "f8598030f2fbd646",
+          "cached": false,
+          "tokens_in": 264,
+          "tokens_out": 50
+        }
+      ]
+    },
+    "ref|naive|terse|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer accurately addresses both parts of the question using only information from the notice, while strictly adhering to the length constraint of at most two sentences.",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_ref_terse",
+          "prompt_hash": "08f03b274724dc0b",
+          "cached": false,
+          "tokens_in": 235,
+          "tokens_out": 46
+        }
+      ]
+    },
+    "ref|naive|verbose_wrong|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI failed the negative constraints ('Answer only from the notice', 'Reply in at most two sentences') by including conversational filler, hallucinated a wrong fact (3 times instead of 2), and included unnecessary text.",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_ref_verbose_wrong",
+          "prompt_hash": "018d74c5d0fa745c",
+          "cached": false,
+          "tokens_in": 323,
+          "tokens_out": 60
+        }
+      ]
+    },
+    "ref|naive|padded|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 2,
+      "reason": "The answer failed the negative constraint to be at most 20 words, outputting over 60 words.",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_ref_padded",
+          "prompt_hash": "eb3b18add7c3bbd1",
+          "cached": false,
+          "tokens_in": 295,
+          "tokens_out": 39
+        }
+      ]
+    },
+    "ref|naive|wrong|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI gave the exact opposite of the correct answer. Walk-ins are accepted until 30 mins before closing, so at 12:45 on Saturday (closing at 13:00), walk-ins are not accepted.",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_ref_wrong",
+          "prompt_hash": "4d335456fe5ebe2b",
+          "cached": false,
+          "tokens_in": 241,
+          "tokens_out": 67
+        }
+      ]
+    },
+    "ref|naive|terse|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer accurately addresses the question based on the notice, adopts the correct persona, and stays well under the 20-word limit.",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_ref_terse",
+          "prompt_hash": "d1565562bf00ad8b",
+          "cached": false,
+          "tokens_in": 223,
+          "tokens_out": 45
+        }
+      ]
+    },
+    "ref|naive|verbose_wrong|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI gave the wrong answer (Saturday closing is 13:00, walk-ins stop 30 mins before at 12:30, so 12:45 is not allowed), and it completely violated the word count constraint and persona instructions.",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_ref_verbose_wrong",
+          "prompt_hash": "45ddf10261ca90e2",
+          "cached": false,
+          "tokens_in": 300,
+          "tokens_out": 73
+        }
+      ]
+    },
+    "ref|naive|padded|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 6,
+      "reason": "The assistant correctly answered the question based on the notice, but failed to follow the negative constraint to answer *only* from the notice and added unnecessary conversational filler.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_ref_padded",
+          "prompt_hash": "8b541745e9d55157",
+          "cached": false,
+          "tokens_in": 271,
+          "tokens_out": 48
+        }
+      ]
+    },
+    "ref|naive|wrong|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI contradicted the notice, which states lane swimming is reserved for members until 09:00, making its answer factually incorrect based on the provided text.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_ref_wrong",
+          "prompt_hash": "ed54aa987e8d5870",
+          "cached": false,
+          "tokens_in": 231,
+          "tokens_out": 50
+        }
+      ]
+    },
+    "ref|naive|terse|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 7,
+      "reason": "The answer correctly identifies that non-members cannot use the lanes at 08:30 based on the notice, but it fails to adopt the exact phrasing/persona as strictly as it could have, though the information is accurate.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_ref_terse",
+          "prompt_hash": "45a7096515bf63dc",
+          "cached": false,
+          "tokens_in": 208,
+          "tokens_out": 63
+        }
+      ]
+    },
+    "ref|naive|verbose_wrong|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI completely contradicted the notice, hallucinated that lane swimming is only reserved until 08:00, gave the wrong answer (Yes instead of No), and added excessive conversational filler violating the strict constraints.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_ref_verbose_wrong",
+          "prompt_hash": "5aaaee8a92137a7d",
+          "cached": false,
+          "tokens_in": 290,
+          "tokens_out": 59
+        }
+      ]
+    },
+    "ref|naive|padded|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI failed the negative constraints: it did not answer in 'exactly one sentence' and it included conversational filler not derived 'only from the notice'.",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_ref_padded",
+          "prompt_hash": "a039de2d4871083e",
+          "cached": false,
+          "tokens_in": 222,
+          "tokens_out": 46
+        }
+      ]
+    },
+    "ref|naive|wrong|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The answer violates the negative constraint to use only the provided notice (as it gives incorrect information based on the text), and it fails the factual question by stating the fee is 30 instead of 45.",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_ref_wrong",
+          "prompt_hash": "8f93125efed81169",
+          "cached": false,
+          "tokens_in": 166,
+          "tokens_out": 59
+        }
+      ]
+    },
+    "ref|naive|terse|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 7,
+      "reason": "The answer is derived strictly from the notice and is only one sentence/fragment, but it is incomplete and misses the full context of the reference answer.",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_ref_terse",
+          "prompt_hash": "75b021b4c9b67c57",
+          "cached": false,
+          "tokens_in": 157,
+          "tokens_out": 46
+        }
+      ]
+    },
+    "ref|naive|verbose_wrong|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI failed the negative constraints (it used multiple sentences instead of one), failed to use *only* the notice (added conversational fluff), and got the factual answer completely wrong based on the text provided.",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_ref_verbose_wrong",
+          "prompt_hash": "37c8f318404db4be",
+          "cached": false,
+          "tokens_in": 225,
+          "tokens_out": 57
+        }
+      ]
+    },
+    "ref|naive|padded|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 3,
+      "reason": "While the core answer is correct and adheres to the passage, the assistant completely failed the negative constraint to answer in 'at most two sentences' by adding a long, unnecessary conversational filler.",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_ref_padded",
+          "prompt_hash": "92510ba7fb8d4566",
+          "cached": false,
+          "tokens_in": 262,
+          "tokens_out": 53
+        }
+      ]
+    },
+    "ref|naive|wrong|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 2,
+      "reason": "The answer provides incorrect information regarding the reopening month (September instead of August based on the passage) and includes unnecessary conversational filler ('Definitely:').",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_ref_wrong",
+          "prompt_hash": "d5f2bd3d8d302036",
+          "cached": false,
+          "tokens_in": 205,
+          "tokens_out": 44
+        }
+      ]
+    },
+    "ref|naive|terse|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer is strictly derived from the passage, uses fewer than two sentences, avoids the forbidden word, and accurately answers both parts of the question.",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_ref_terse",
+          "prompt_hash": "b40f9c5d27b2e922",
+          "cached": false,
+          "tokens_in": 189,
+          "tokens_out": 46
+        }
+      ]
+    },
+    "ref|naive|verbose_wrong|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI hallucinated incorrect information ('September' instead of 'August'), failed the negative constraint against conversational filler, and exceeded the two-sentence limit.",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_ref_verbose_wrong",
+          "prompt_hash": "d5b880ae26bbe8cf",
+          "cached": false,
+          "tokens_in": 264,
+          "tokens_out": 46
+        }
+      ]
+    },
+    "ref|naive|padded|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 3,
+      "reason": "The AI provided the correct answer and followed the constraint of stating the number, but it completely failed the negative constraint to answer in 'at most two sentences', instead including a long, unnecessary conversational filler paragraph.",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_ref_padded",
+          "prompt_hash": "723e3f7558476584",
+          "cached": false,
+          "tokens_in": 289,
+          "tokens_out": 57
+        }
+      ]
+    },
+    "ref|naive|wrong|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI's answer is factually incorrect based on the passage. It included the 40 seats from the new annex, which the passage explicitly states will open in March (meaning they are not available 'right now'). It also failed to state just the number as requested.",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_ref_wrong",
+          "prompt_hash": "6411240cb23aa4e7",
+          "cached": false,
+          "tokens_in": 229,
+          "tokens_out": 72
+        }
+      ]
+    },
+    "ref|naive|terse|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer accurately uses the passage to state the current number of seats in at most two sentences, and includes the number.",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_ref_terse",
+          "prompt_hash": "c5945ef392664ebd",
+          "cached": false,
+          "tokens_in": 195,
+          "tokens_out": 41
+        }
+      ]
+    },
+    "ref|naive|verbose_wrong|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI failed the math by including future seats, violated the negative constraint on length (producing a very long paragraph instead of at most two sentences), and failed to state the number clearly as requested.",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_ref_verbose_wrong",
+          "prompt_hash": "113525ce6d5ceb10",
+          "cached": false,
+          "tokens_in": 288,
+          "tokens_out": 55
+        }
+      ]
+    },
+    "ref|naive|original|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 9,
+      "reason": "The answer accurately addresses both parts of the question based on the notice, respects the two-sentence limit, and follows the strict constraint of answering only from the notice, though it omits the condition about reservations for renewal.",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_ref_original",
+          "prompt_hash": "02d2f0c4dea815c3",
+          "cached": false,
+          "tokens_in": 274,
+          "tokens_out": 60
+        }
+      ]
+    },
+    "ref|naive|original|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI answered 'Yes', which is incorrect according to the notice. Walk-ins are only accepted until 30 minutes before closing (12:30 on Saturdays).",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_ref_original",
+          "prompt_hash": "0c777d18fa6c9812",
+          "cached": false,
+          "tokens_in": 237,
+          "tokens_out": 52
+        }
+      ]
+    },
+    "ref|naive|original|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The notice explicitly states that lane swimming is reserved for members until 09:00, making 08:30 restricted to members. The AI incorrectly answered 'Not stated in the notice'.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_ref_original",
+          "prompt_hash": "f02275607166399a",
+          "cached": false,
+          "tokens_in": 202,
+          "tokens_out": 57
+        }
+      ]
+    },
+    "ref|naive|original|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer accurately follows all constraints: it is exactly one sentence, uses only the provided notice, and correctly answers the question based on the given date.",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_ref_original",
+          "prompt_hash": "22b3c8200060fbd0",
+          "cached": false,
+          "tokens_in": 163,
+          "tokens_out": 47
+        }
+      ]
+    },
+    "ref|naive|original|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer followed all instructions: it was based solely on the passage, was exactly two sentences long, did not use the word \"very\", and accurately answered the question.",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_ref_original",
+          "prompt_hash": "6754251d147bc105",
+          "cached": false,
+          "tokens_in": 203,
+          "tokens_out": 51
+        }
+      ]
+    },
+    "ref|naive|original|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 10,
+      "reason": "The answer accurately uses the passage to state the current number of seats in one sentence, follows the length constraint, and states the number.",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_ref_original",
+          "prompt_hash": "044fddbbc73c5872",
+          "cached": false,
+          "tokens_in": 200,
+          "tokens_out": 44
+        }
+      ]
+    },
+    "ref|mitigated|padded|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 2,
+        "completeness": 5
+      },
+      "overall": 3.95,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 2 times unless it has been reserved.",
+          "rationale": "Every factual claim is directly supported by the notice and matches the reference answer; nothing is invented or contradicted.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 2 times unless it has been reserved. Thank you for your question...",
+          "rationale": "The system prompt explicitly requires the answer to be in at most two sentences. This answer is 6 sentences long, violating the sentence limit constraint.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 2 times unless it has been reserved.",
+          "rationale": "It completely answers both parts of the question (the overdue fine and the renewal limit) with no important missing points.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_ref_padded",
+          "prompt_hash": "b271c8ee2522de67",
+          "cached": false,
+          "tokens_in": 3832,
+          "tokens_out": 284
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|wrong|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 2,
+        "instruction_following": 4,
+        "completeness": 4
+      },
+      "overall": 3.2,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "A book can be renewed up to 3 times",
+          "rationale": "The notice and the reference answer state that books can be renewed up to 2 times, making the claim of 3 times incorrect and unsupported.",
+          "score": 2
+        },
+        "instruction_following": {
+          "evidence": "Definitely: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+          "rationale": "The answer obeys the negative constraint to use only the notice, and meets the sentence count constraint (two sentences), but contains a factual error.",
+          "score": 4
+        },
+        "completeness": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+          "rationale": "It addresses both parts of the question (the fine and the renewal limit), though the renewal limit contains an inaccurate number.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_ref_wrong",
+          "prompt_hash": "04ad30aad269995e",
+          "cached": false,
+          "tokens_in": 3775,
+          "tokens_out": 262
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|terse|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "2.50; 2 renewals.",
+          "rationale": "Every claim matches the notice (10 days at 0.25 per day is 2.50, and books can be renewed up to 2 times), with nothing invented.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "2.50; 2 renewals.",
+          "rationale": "The system prompt requires replying in at most two sentences and using only the notice, both of which are fully met by the concise answer.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "2.50; 2 renewals.",
+          "rationale": "It answers both parts of the question—the fine for a 10-day overdue book and the maximum number of renewals—matching all key points of the reference.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_ref_terse",
+          "prompt_hash": "da8c13c1ccf5e137",
+          "cached": false,
+          "tokens_in": 3745,
+          "tokens_out": 221
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|verbose_wrong|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 2,
+        "instruction_following": 1,
+        "completeness": 4
+      },
+      "overall": 2.15,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "A book can be renewed up to 3 times",
+          "rationale": "The notice states books can be renewed up to 2 times, so claiming 3 times contradicts the source material.",
+          "score": 2
+        },
+        "instruction_following": {
+          "evidence": "Definitely: The fine is 2.50... please do not hesitate to ask if anything else comes up.",
+          "rationale": "The system prompt explicitly requires the reply to be in at most two sentences, but this answer contains six sentences.",
+          "score": 1
+        },
+        "completeness": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times",
+          "rationale": "It addresses both parts of the question (the fine and renewals), though the renewal count is incorrectly stated as 3 instead of 2.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_ref_verbose_wrong",
+          "prompt_hash": "971a2eeaeb2179cc",
+          "cached": false,
+          "tokens_in": 3834,
+          "tokens_out": 233
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|padded|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 2,
+        "completeness": 5
+      },
+      "overall": 3.95,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "No. On Saturday the clinic closes at 13:00 and walk-ins stop at 12:30.",
+          "rationale": "Every claim is fully supported by the notice (Saturday closing at 13:00 and walk-ins accepted until 30 minutes before closing).",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "No. On Saturday the clinic closes at 13:00 and walk-ins stop at 12:30. Thank you for your question...",
+          "rationale": "The system prompt explicitly demands an answer in at most 20 words, but the answer contains 66 words, completely missing the length constraint.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "No. On Saturday the clinic closes at 13:00 and walk-ins stop at 12:30.",
+          "rationale": "It covers every required point needed to answer the question, matching the reference answer fully.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_ref_padded",
+          "prompt_hash": "673b360851bd33fa",
+          "cached": false,
+          "tokens_in": 3806,
+          "tokens_out": 260
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|wrong|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 1
+      },
+      "overall": 2.4,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+          "rationale": "The notice states walk-ins are accepted until 30 minutes before closing (12:30 on Saturday); the answer claims they are accepted until closing, directly contradicting the source and the reference answer.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, yes. Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+          "rationale": "The system prompt requires the answer to be at most 20 words. This answer is 17 words, meeting the length constraint, and uses only the provided notice.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Without question, yes.",
+          "rationale": "The answer addresses the question, but reaches the opposite of the correct conclusion (saying yes instead of no) due to misinterpreting the walk-in cutoff rule.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_ref_wrong",
+          "prompt_hash": "cda2162db5ff84ee",
+          "cached": false,
+          "tokens_in": 3752,
+          "tokens_out": 269
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|terse|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "No, walk-ins stop at 12:30.",
+          "rationale": "Every claim is supported by the notice (Saturday closing at 13:00 minus 30 minutes makes walk-in cutoff 12:30) and matches the reference answer.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "No, walk-ins stop at 12:30.",
+          "rationale": "The answer is from the notice, adopts the persona, and is only 6 words long, easily meeting the at-most 20 words constraint.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "No, walk-ins stop at 12:30.",
+          "rationale": "It covers the key points of the reference answer (No, and the reason why based on the cutoff time), addressing the question fully.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_ref_terse",
+          "prompt_hash": "e6fc91e33c3c9cd0",
+          "cached": false,
+          "tokens_in": 3734,
+          "tokens_out": 234
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|verbose_wrong|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 1,
+        "completeness": 1
+      },
+      "overall": 1.0,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+          "rationale": "The notice states walk-ins are accepted until 30 minutes before closing (12:30 on Saturday), so claiming 12:45 is fine contradicts the source text and reference answer.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, yes. Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine. Thank you for your question...",
+          "rationale": "The system prompt required the answer to be in at most 20 words, but this answer is 63 words long.",
+          "score": 1
+        },
+        "completeness": {
+          "evidence": "Without question, yes.",
+          "rationale": "It reaches the opposite of the correct conclusion (the reference states 'No' because walk-ins stop at 12:30), thus failing to correctly address the question.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_ref_verbose_wrong",
+          "prompt_hash": "4509ce5b93d649fe",
+          "cached": false,
+          "tokens_in": 3811,
+          "tokens_out": 268
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|padded|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 2,
+        "completeness": 5
+      },
+      "overall": 3.95,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "No, lane swimming is reserved for members until 09:00.",
+          "rationale": "The core claim is directly supported by the notice, which states lane swimming is reserved for members until 09:00.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "Thank you for your question, and I am glad to help with it.",
+          "rationale": "The system prompt requires the receptionist to answer only from the notice; the added conversational filler violates this scope constraint by including extraneous commentary.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "No, lane swimming is reserved for members until 09:00.",
+          "rationale": "It completely answers the question by providing the correct 'no' and citing the relevant rule from the notice.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_ref_padded",
+          "prompt_hash": "425ca74aad7cacf1",
+          "cached": false,
+          "tokens_in": 3782,
+          "tokens_out": 214
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|wrong|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 2,
+        "completeness": 1
+      },
+      "overall": 1.35,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "until 08:00",
+          "rationale": "The notice states lane swimming is reserved for members until 09:00, but the answer contradicts this by claiming it is only until 08:00.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Definitely: Yes, non-members can use the lanes at 08:30",
+          "rationale": "The system prompt requires answering only from the notice, but the answer contradicts the notice regarding the member-only lane time.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "non-members can use the lanes at 08:30",
+          "rationale": "It addresses the question asked, but reaches the opposite of the correct conclusion based on the source text.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_ref_wrong",
+          "prompt_hash": "c1efeb4ed89f5a82",
+          "cached": false,
+          "tokens_in": 3742,
+          "tokens_out": 215
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|terse|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "No, members only until 09:00.",
+          "rationale": "The answer correctly reflects the notice's rule that lane swimming is reserved for members until 09:00, with no unsupported claims.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "No, members only until 09:00.",
+          "rationale": "The system prompt asks to act as a pool receptionist and answer from the notice, which this answer successfully does.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "No, members only until 09:00.",
+          "rationale": "It addresses the user's question directly and covers the main point of the reference answer.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_ref_terse",
+          "prompt_hash": "e13fe71023a6f58f",
+          "cached": false,
+          "tokens_in": 3719,
+          "tokens_out": 199
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|verbose_wrong|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 2,
+        "completeness": 1
+      },
+      "overall": 1.35,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "non-members can use the lanes at 08:30, since lane swimming is reserved for members only until 08:00.",
+          "rationale": "The notice states that lane swimming is reserved for members until 09:00, making a non-member using lanes at 08:30 unauthorized. The answer directly contradicts the source text.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Yes, non-members can use the lanes at 08:30",
+          "rationale": "The system prompt instructs to answer only from the notice, which explicitly says lane swimming is reserved for members until 09:00, so the answer fails to correctly interpret and apply the notice.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "Yes, non-members can use the lanes at 08:30",
+          "rationale": "The answer addresses the question, but it reaches the exact opposite of the correct conclusion based on the notice.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_ref_verbose_wrong",
+          "prompt_hash": "3abbaae75f9d43c7",
+          "cached": false,
+          "tokens_in": 3801,
+          "tokens_out": 262
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|padded|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 1,
+        "completeness": 5
+      },
+      "overall": 3.6,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "Every claim in this portion is directly supported by the notice, which states the late registration fee is 45 from 1 June.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The late registration fee today is 45. Thank you for your question... comes up.",
+          "rationale": "The system prompt explicitly requires answering in 'exactly one sentence', but the answer contains six sentences, severely violating the length and format constraint.",
+          "score": 1
+        },
+        "completeness": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "It correctly identifies the fee for today based on the date provided, covering the required point completely.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_ref_padded",
+          "prompt_hash": "b807a78ca475f8f4",
+          "cached": false,
+          "tokens_in": 3733,
+          "tokens_out": 206
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|wrong|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 1
+      },
+      "overall": 2.4,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "the late registration fee today is 30.",
+          "rationale": "The notice states that from 1 June the late registration fee is 45, making the claim that it is 30 on 12 June a direct contradiction of the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, the late registration fee today is 30.",
+          "rationale": "The answer is formatted as exactly one sentence and relies only on the provided notice, meeting all explicit constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "the late registration fee today is 30.",
+          "rationale": "The answer reaches the opposite of the correct conclusion due to factual error, thus failing to provide the correct information needed.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_ref_wrong",
+          "prompt_hash": "b655be4269be8f04",
+          "cached": false,
+          "tokens_in": 3677,
+          "tokens_out": 210
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|terse|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 4.3,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "45.",
+          "rationale": "The answer correctly states the fee is 45 based on the notice that the fee is 45 from 1 June, and nothing is invented or contradicted.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "45.",
+          "rationale": "The system prompt requires an answer in exactly one sentence, but '45.' is a fragment rather than a complete sentence.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "45.",
+          "rationale": "It gives the correct late registration fee for today, addressing the core question successfully despite the sentence structure flaw.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_ref_terse",
+          "prompt_hash": "6a03537c5441465e",
+          "cached": false,
+          "tokens_in": 3667,
+          "tokens_out": 182
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|verbose_wrong|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 2,
+        "completeness": 1
+      },
+      "overall": 1.35,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "the late registration fee today is 30",
+          "rationale": "The notice states that from 1 June the late registration fee is 45, making the claim that it is 30 on 12 June a direct contradiction of the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, the late registration fee today is 30. Thank you for your question, and I am glad to help with it. I read the notice carefully before answering, so please tell me if you would like any part explained in more detail. I hope this is clear and useful, and please do not hesitate to ask if anything else comes up.",
+          "rationale": "The system prompt explicitly requires answering in *exactly one* sentence, but the answer contains five sentences.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "the late registration fee today is 30",
+          "rationale": "It addresses the question of what the fee is today, but reaches the wrong conclusion based on the notice.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_ref_verbose_wrong",
+          "prompt_hash": "c1df7857756dadc1",
+          "cached": false,
+          "tokens_in": 3736,
+          "tokens_out": 266
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|padded|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 1,
+        "completeness": 5
+      },
+      "overall": 3.6,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in August.",
+          "rationale": "Every claim in the core part of the answer is supported directly by the passage and matches the reference answer.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "Thank you for your question, and I am glad to help with it.",
+          "rationale": "The system prompt explicitly requires the answer to be at most two sentences, but the provided answer contains seven sentences.",
+          "score": 1
+        },
+        "completeness": {
+          "evidence": "Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in August.",
+          "rationale": "The answer covers both required parts of the question (why it closed and when it will reopen), matching the reference answer.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_ref_padded",
+          "prompt_hash": "5cb496d82c30eb56",
+          "cached": false,
+          "tokens_in": 3776,
+          "tokens_out": 218
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|wrong|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 3,
+        "completeness": 2
+      },
+      "overall": 1.9499999999999997,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The bridge is expected to reopen in September.",
+          "rationale": "The passage states the bridge is expected to reopen in August, so claiming it reopens in September directly contradicts the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Definitely: Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September.",
+          "rationale": "The answer meets the two-sentence constraint and avoids the forbidden word 'very', but the central factual claim contradicts the passage.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September.",
+          "rationale": "It addresses both parts of the question (why it closed and when it reopens), but the reopening date is factually wrong.",
+          "score": 2
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_ref_wrong",
+          "prompt_hash": "d24106235261542b",
+          "cached": false,
+          "tokens_in": 3718,
+          "tokens_out": 222
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|terse|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Cracked support beam; August.",
+          "rationale": "Every claim is supported by the passage (cracked support beam and reopening in August), and nothing is invented.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "Cracked support beam; August.",
+          "rationale": "The answer is derived only from the passage, stays within the two-sentence limit, and does not use the word 'very'. All explicit constraints are met.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Cracked support beam; August.",
+          "rationale": "It covers both required points from the question and reference answer: why the bridge was closed and when it will reopen.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_ref_terse",
+          "prompt_hash": "66abc83be813ffdd",
+          "cached": false,
+          "tokens_in": 3703,
+          "tokens_out": 192
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|verbose_wrong|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 1,
+        "completeness": 4
+      },
+      "overall": 1.75,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The bridge is expected to reopen in September.",
+          "rationale": "The passage states that the bridge is expected to reopen in August, so the answer contradicts the source material regarding the reopening month.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Definitely: Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September. Thank you for your question, and I am glad to help with it. ...",
+          "rationale": "The system prompt explicitly requires the answer to be at most two sentences, but this response contains six sentences.",
+          "score": 1
+        },
+        "completeness": {
+          "evidence": "Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September.",
+          "rationale": "It addresses both parts of the question (why the bridge was closed and when it will reopen), although the reopening time is factually incorrect according to the text.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_ref_verbose_wrong",
+          "prompt_hash": "7cca290994ce83bf",
+          "cached": false,
+          "tokens_in": 3777,
+          "tokens_out": 241
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|padded|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_padded",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 2,
+        "completeness": 5
+      },
+      "overall": 3.95,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "It has 84 seats at the moment (60 in the reading room plus 24 in the quiet study room); the annex's 40 seats are not open yet.",
+          "rationale": "Every claim matches the source text and the reference answer, correctly calculating the current total and excluding the upcoming annex.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "It has 84 seats at the moment (60 in the reading room plus 24 in the quiet study room); the annex's 40 seats are not open yet. Thank you for your question, and I am glad to help with it.",
+          "rationale": "The system prompt explicitly requires answering in at most two sentences and stating the number; the answer contains six sentences, severely violating the length constraint.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "It has 84 seats at the moment (60 in the reading room plus 24 in the quiet study room); the annex's 40 seats are not open yet.",
+          "rationale": "It covers all required points, stating the current seat count, the breakdown of the rooms, and the status of the annex.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_ref_padded",
+          "prompt_hash": "6dfebd0e569c7ebb",
+          "cached": false,
+          "tokens_in": 3801,
+          "tokens_out": 301
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|wrong|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 1
+      },
+      "overall": 2.4,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Without question, it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex).",
+          "rationale": "The answer claims there are 124 seats right now by incorrectly including the 40 seats from the new annex, which the passage states will open in March. This contradicts the source material and reference answer.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex).",
+          "rationale": "The answer is a single sentence, meeting the length constraint of at most two sentences, and states a number.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "124 seats",
+          "rationale": "It reaches the opposite of the correct conclusion by including the annex seats that are not open yet, meaning it does not correctly answer the question.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_ref_wrong",
+          "prompt_hash": "e72de0a95b40cd41",
+          "cached": false,
+          "tokens_in": 3741,
+          "tokens_out": 270
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|terse|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_terse",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 4
+      },
+      "overall": 4.75,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "84.",
+          "rationale": "The answer correctly calculates the current seats as 84 (60 + 24), which matches the reference answer and passage, with nothing invented.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "84.",
+          "rationale": "The answer states the number (84) and is at most two sentences, fully satisfying the constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "84.",
+          "rationale": "It gives the correct total number of current seats as requested, though it omits the breakdown of reading room and quiet study room seats found in the reference.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_ref_terse",
+          "prompt_hash": "97df2fd0ec85fdf9",
+          "cached": false,
+          "tokens_in": 3706,
+          "tokens_out": 186
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|verbose_wrong|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_verbose_wrong",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 2,
+        "completeness": 1
+      },
+      "overall": 1.35,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex)",
+          "rationale": "The answer incorrectly adds the 40 annex seats to the current total, contradicting the passage and the reference answer which state the annex opens in March.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex). Thank you for your question, and I am glad to help with it.",
+          "rationale": "The system prompt requires the answer to be at most two sentences and to state the number; this response is five sentences long, failing the explicit length constraint.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex)",
+          "rationale": "It reaches the opposite of the correct conclusion by including seats that are not yet open and providing a wrong total of 124 instead of 84.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_ref_verbose_wrong",
+          "prompt_hash": "546b7691d0045175",
+          "cached": false,
+          "tokens_in": 3800,
+          "tokens_out": 310
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|original|c01": {
+      "case_id": "c01",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 4
+      },
+      "overall": 4.75,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+          "rationale": "Every claim is supported by the notice and matches the reference answer; nothing is invented or contradicted.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+          "rationale": "The answer uses only the notice, acts as a library assistant, and is exactly two sentences, fully meeting all explicit constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "A book can be renewed up to 2 times.",
+          "rationale": "It covers the fine amount and the renewal limit, though it omits the condition about another reader reserving the book, which is a minor point compared to the reference.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_ref_original",
+          "prompt_hash": "d2ab6f996b78cf19",
+          "cached": true,
+          "tokens_in": 3785,
+          "tokens_out": 285
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|original|c09": {
+      "case_id": "c09",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 1
+      },
+      "overall": 2.4,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Yes, you can walk in at 12:45 on Saturday",
+          "rationale": "The notice states walk-ins are accepted until 30 minutes before closing, which on Saturday is 12:30 (closing at 13:00); therefore, the answer contradicts the notice and reference by stating the user can walk in at 12:45.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Yes, you can walk in at 12:45 on Saturday; the clinic is open until 13:00.",
+          "rationale": "The answer is under the 20-word limit (16 words) and uses only the provided notice, but it reaches the wrong conclusion.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Yes, you can walk in at 12:45 on Saturday",
+          "rationale": "It reaches the opposite of the correct conclusion and fails to address the walk-in cutoff time correctly.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_ref_original",
+          "prompt_hash": "631e8da3b324ed54",
+          "cached": true,
+          "tokens_in": 3748,
+          "tokens_out": 264
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|original|c16": {
+      "case_id": "c16",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 2,
+        "completeness": 1
+      },
+      "overall": 1.35,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Not stated in the notice.",
+          "rationale": "The notice explicitly states that lane swimming is reserved for members until 09:00, so the answer's claim that it is not stated contradicts the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Not stated in the notice.",
+          "rationale": "The system prompt instructs the assistant to reply with this exact phrase only if the notice does not say; however, the notice *does* say (lanes are reserved for members until 09:00), making this the wrong conditional branch to take.",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "Not stated in the notice.",
+          "rationale": "The question asks if a non-member can use the lanes at 08:30. The correct answer is No, based on the notice, but this answer incorrectly claims the information is missing.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_ref_original",
+          "prompt_hash": "0f88b65fbd8cda0d",
+          "cached": true,
+          "tokens_in": 3713,
+          "tokens_out": 240
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|original|c19": {
+      "case_id": "c19",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "The answer correctly states the late registration fee is 45 as of 1 June, matching the notice and the reference answer.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "The answer is written in exactly one sentence and uses only the provided notice, fully satisfying all system prompt constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "The answer fully covers the requested information by stating the correct late registration fee for today.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_ref_original",
+          "prompt_hash": "37298510af22ceaa",
+          "cached": true,
+          "tokens_in": 3674,
+          "tokens_out": 189
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|original|c24": {
+      "case_id": "c24",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+          "rationale": "Every claim is supported directly by the input passage and aligns with the reference answer without inventing anything.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+          "rationale": "The answer is exactly two sentences, relies solely on the passage, and does not use the word \"very\", fully meeting all explicit constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+          "rationale": "It covers both parts of the question (why the bridge was closed and when it will reopen), matching all key points of the reference answer.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_ref_original",
+          "prompt_hash": "d400e24a08489ad3",
+          "cached": true,
+          "tokens_in": 3716,
+          "tokens_out": 229
+        }
+      ],
+      "nonce": ""
+    },
+    "ref|mitigated|original|c44": {
+      "case_id": "c44",
+      "label": "probe_ref_original",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 4
+      },
+      "overall": 4.75,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The library currently has 84 seats.",
+          "rationale": "The claim of 84 seats is supported by the passage (60 + 24) and matches the reference answer.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The library currently has 84 seats.",
+          "rationale": "The answer is a single sentence (at most two sentences) and explicitly states the number 84, satisfying all constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The library currently has 84 seats.",
+          "rationale": "It covers the main required point (the current number of seats) though it omits the breakdown and the future annex, which are minor details given the direct question.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_ref_original",
+          "prompt_hash": "c6f473a9326e8f8b",
+          "cached": true,
+          "tokens_in": 3712,
+          "tokens_out": 205
+        }
+      ],
+      "nonce": ""
+    },
+    "free|naive|wrong|c01": {
+      "case_id": "c01",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 2,
+      "reason": "The assistant violated the negative constraint to answer *only* from the notice by including incorrect information not found in the text (stating books can be renewed up to 3 times instead of 2).",
+      "calls": [
+        {
+          "tag": "c01|naive|probe_free_wrong",
+          "prompt_hash": "1f4bd824a1c39a86",
+          "cached": false,
+          "tokens_in": 223,
+          "tokens_out": 56
+        }
+      ]
+    },
+    "free|naive|wrong|c09": {
+      "case_id": "c09",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 2,
+      "reason": "The answer violates the negative constraint to use at most 20 words (it has 21 words) and includes conversational filler ('Without question, yes').",
+      "calls": [
+        {
+          "tag": "c09|naive|probe_free_wrong",
+          "prompt_hash": "b355f23041ade629",
+          "cached": false,
+          "tokens_in": 210,
+          "tokens_out": 48
+        }
+      ]
+    },
+    "free|naive|wrong|c16": {
+      "case_id": "c16",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The AI failed to follow the strict negative constraint, hallucinated incorrect information (changing 09:00 to 08:00), and did not use the required fallback phrase.",
+      "calls": [
+        {
+          "tag": "c16|naive|probe_free_wrong",
+          "prompt_hash": "f2951819fa07aaea",
+          "cached": false,
+          "tokens_in": 211,
+          "tokens_out": 55
+        }
+      ]
+    },
+    "free|naive|wrong|c19": {
+      "case_id": "c19",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The answer failed both constraints (it used outside knowledge/misinterpreted the text by giving 30 instead of 45, and it did not use only the notice accurately) and it got the factual answer to the question completely wrong based on the provided text.",
+      "calls": [
+        {
+          "tag": "c19|naive|probe_free_wrong",
+          "prompt_hash": "e1a2cdc470c55982",
+          "cached": false,
+          "tokens_in": 152,
+          "tokens_out": 69
+        }
+      ]
+    },
+    "free|naive|wrong|c24": {
+      "case_id": "c24",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 1,
+      "reason": "The answer contradicts the passage by stating the bridge will reopen in September instead of August, and it fails to follow the negative constraint by including the word 'Definitely'.",
+      "calls": [
+        {
+          "tag": "c24|naive|probe_free_wrong",
+          "prompt_hash": "e51a19ec2637cc61",
+          "cached": false,
+          "tokens_in": 181,
+          "tokens_out": 48
+        }
+      ]
+    },
+    "free|naive|wrong|c44": {
+      "case_id": "c44",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "naive_pointwise.v1",
+      "template_sha": "8b79d6d0f2be",
+      "parse_status": "extract",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "score": 2,
+      "reason": "The AI failed the negative constraint to answer in at most two sentences (it is one sentence, but it included the annex seats which are not 'right now' since the annex opens in March, making the math wrong based on the passage). The correct current number is 84 (60 + 24).",
+      "calls": [
+        {
+          "tag": "c44|naive|probe_free_wrong",
+          "prompt_hash": "4c0ededc6ab4afea",
+          "cached": false,
+          "tokens_in": 186,
+          "tokens_out": 80
+        }
+      ]
+    },
+    "free|mitigated|wrong|c01": {
+      "case_id": "c01",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 4,
+        "completeness": 4
+      },
+      "overall": 2.8,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "A book can be renewed up to 3 times unless it has been reserved.",
+          "rationale": "The notice states that books can be renewed up to 2 times, so claiming they can be renewed up to 3 times contradicts the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Definitely: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+          "rationale": "The system prompt requires the answer to be in at most two sentences, which is met (two sentences), but the answer contradicts the notice (\"Answer only from the notice\"). However, looking at the instruction constraint itself, the sentence limit is followed.",
+          "score": 4
+        },
+        "completeness": {
+          "evidence": "The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 3 times unless it has been reserved.",
+          "rationale": "The answer addresses both parts of the question (the fine amount and the renewal limit), though the renewal limit contains incorrect information.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|probe_free_wrong",
+          "prompt_hash": "7b0e6421e61502a7",
+          "cached": false,
+          "tokens_in": 3265,
+          "tokens_out": 291
+        }
+      ],
+      "nonce": ""
+    },
+    "free|mitigated|wrong|c09": {
+      "case_id": "c09",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 3.4,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+          "rationale": "The notice states Saturday hours are 09:00-13:00 and walk-ins are accepted until 30 minutes before closing (which is 12:30, not 13:00), making the claim that walk-ins are accepted until 13:00 false/contradicted.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, yes. Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+          "rationale": "The answer is 18 words, which meets the 'at most 20 words' length constraint, and uses the notice (even though factually incorrect).",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Without question, yes. Saturday walk-ins are accepted until the 13:00 closing time, so 12:45 is fine.",
+          "rationale": "It directly answers whether the user can walk in at 12:45 on a Saturday.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|probe_free_wrong",
+          "prompt_hash": "0792506e3ce38216",
+          "cached": false,
+          "tokens_in": 3252,
+          "tokens_out": 309
+        }
+      ],
+      "nonce": ""
+    },
+    "free|mitigated|wrong|c16": {
+      "case_id": "c16",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 2,
+        "completeness": 1
+      },
+      "overall": 1.35,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "lane swimming is reserved for members only until 08:00.",
+          "rationale": "The answer contradicts the notice, which states that lane swimming is reserved for members until 09:00, and invents an 08:00 cutoff.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Definitely: Yes, non-members can use the lanes at 08:30...",
+          "rationale": "The system prompt requires answering only from the notice, but the answer contradicts the notice and does not follow the fallback instruction for missing information (though the information was present, the answer handled it incorrectly).",
+          "score": 2
+        },
+        "completeness": {
+          "evidence": "Definitely: Yes, non-members can use the lanes at 08:30",
+          "rationale": "It addresses the question asked, but reaches the wrong conclusion based on the notice.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c16|probe_free_wrong",
+          "prompt_hash": "2818316bbb2c9583",
+          "cached": false,
+          "tokens_in": 3253,
+          "tokens_out": 238
+        }
+      ],
+      "nonce": ""
+    },
+    "free|mitigated|wrong|c19": {
+      "case_id": "c19",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 3,
+        "completeness": 1
+      },
+      "overall": 1.6999999999999997,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "the late registration fee today is 30.",
+          "rationale": "The notice states that from 1 June the late registration fee is 45, and today is 12 June; the answer claims the fee is 30, which directly contradicts the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, the late registration fee today is 30.",
+          "rationale": "The answer is formatted as exactly one sentence, but it violates the negative constraint to use only the notice by stating a fact that contradicts the notice.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "the late registration fee today is 30.",
+          "rationale": "It addresses the user's question about today's fee, but reaches the opposite of the correct conclusion based on the notice.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|probe_free_wrong",
+          "prompt_hash": "3e5d7a48740bbbaa",
+          "cached": false,
+          "tokens_in": 3194,
+          "tokens_out": 224
+        }
+      ],
+      "nonce": ""
+    },
+    "free|mitigated|wrong|c24": {
+      "case_id": "c24",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 4
+      },
+      "overall": 3.15,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The bridge is expected to reopen in September.",
+          "rationale": "The passage states the bridge is expected to reopen in August, so the answer contradicts the source material.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Definitely: Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September.",
+          "rationale": "The answer meets the negative constraint (does not use the word \"very\") and the sentence count limit (two sentences), and it uses only the passage.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in September.",
+          "rationale": "It attempts to answer both parts of the question (why it closed and when it will reopen), but the reopening date is incorrect.",
+          "score": 4
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|probe_free_wrong",
+          "prompt_hash": "2dfb82a7a1c4a5da",
+          "cached": false,
+          "tokens_in": 3224,
+          "tokens_out": 223
+        }
+      ],
+      "nonce": ""
+    },
+    "free|mitigated|wrong|c44": {
+      "case_id": "c44",
+      "label": "probe_free_wrong",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 2
+      },
+      "overall": 2.65,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex)",
+          "rationale": "The answer incorrectly adds the 40 seats from the new annex (which doesn't open until March) to the current total, resulting in an unsupported and false claim of 124 current seats.",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Without question, it has 124 seats at the moment (60 in the reading room, 24 in the quiet study room and 40 in the new annex).",
+          "rationale": "The system prompt requires stating the number and answering in at most two sentences. The answer is one sentence and states a number, meeting the constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "it has 124 seats at the moment",
+          "rationale": "It attempts to answer how many seats the library has right now, but provides an incorrect calculation by including the future annex.",
+          "score": 2
+        }
+      },
+      "calls": [
+        {
+          "tag": "c44|probe_free_wrong",
+          "prompt_hash": "e136bc89e269cf46",
+          "cached": false,
+          "tokens_in": 3229,
+          "tokens_out": 274
+        }
+      ],
+      "nonce": ""
+    }
+  }
+}

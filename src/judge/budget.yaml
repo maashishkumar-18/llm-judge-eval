@@ -26,6 +26,10 @@ experiments:
     desc: 6 base cases x {padded, confidently-wrong, terse-correct, verbose-wrong} pointwise x (naive, mitigated), plus 6 naive originals
     terms: [[6, 4, 2], [6]]
     cap: 62
+  probes_ref_free:
+    desc: J6 reference-free re-judging of the 6 confidently-wrong answers (expected_output hidden) x (naive, mitigated)
+    terms: [[6, 2]]
+    cap: 14
   sensitivity:
     desc: J6 sensitivity check, 6 probe bases (correct answer vs its confidently-wrong version) x both orders x (mitigated, naive); needs the J6 confidently-wrong answers
     terms: [[6, 2, 2]]
