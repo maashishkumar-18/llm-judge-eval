@@ -152,3 +152,7 @@
 - `repair` heuristics (inner quotes, unquoted keys) are tuned on the corpus, not on real judge failures; the status and the stages are logged per result so a repair-heavy run is visible in the summary.
 - Time spent: not recorded; fill in.
 
+## Standing instructions from the J3 review (user)
+- Leniency flag (5/5 pass, 17/20 scores at 5) is NOT a finding. J4/J7 probes and J8 negative controls decide it. **If the probes also score near 5, investigate (prompt, anchors, evidence rule) before reporting any number.**
+- The lower parse rungs are test-proven only; stated in README Known limitations. **Report the real INVALID count and re-ask count from the full pointwise run** (they are in `results/pointwise_<label>.json` -> `summary.parse_status`, `n_invalid`, `reasks`).
+
