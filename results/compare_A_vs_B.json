@@ -1,0 +1,932 @@
+{
+  "configs": {
+    "a": "A",
+    "b": "B"
+  },
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "convention": "differences are A minus B; win rate is A over B",
+  "status": "N=20 paired cases; exploratory at this size, a CI that spans 0 is not evidence of equality",
+  "n_paired": 20,
+  "dropped_ids": [],
+  "overall_diff": {
+    "n": 20,
+    "mean": -0.0025,
+    "ci_low": -0.3625,
+    "ci_high": 0.325
+  },
+  "criteria_diff": {
+    "faithfulness": {
+      "n": 20,
+      "mean": 0.1,
+      "ci_low": -0.5,
+      "ci_high": 0.7
+    },
+    "instruction_following": {
+      "n": 20,
+      "mean": -0.05,
+      "ci_low": -0.35,
+      "ci_high": 0.25
+    },
+    "completeness": {
+      "n": 20,
+      "mean": -0.1,
+      "ci_low": -0.6,
+      "ci_high": 0.3
+    }
+  },
+  "pass": {
+    "n_pass_a": 18,
+    "n_pass_b": 17,
+    "a_only": 2,
+    "b_only": 1,
+    "rate_diff": {
+      "n": 20,
+      "mean": 0.05,
+      "ci_low": -0.1,
+      "ci_high": 0.2
+    }
+  },
+  "same_overall_cases": 14,
+  "win_rate": {
+    "n": 20,
+    "n_invalid": 0,
+    "wins_x": 3,
+    "wins_y": 1,
+    "ties": 16,
+    "win_rate": 0.55,
+    "ci_low": 0.45,
+    "ci_high": 0.65,
+    "flips": 0,
+    "flip_rate": 0.0
+  },
+  "win_rate_differing_pairs_only": {
+    "n": 14,
+    "n_invalid": 0,
+    "wins_x": 3,
+    "wins_y": 1,
+    "ties": 10,
+    "win_rate": 0.5714,
+    "ci_low": 0.428571,
+    "ci_high": 0.714286,
+    "flips": 0,
+    "flip_rate": 0.0
+  },
+  "win_rate_ci_excludes_half": false,
+  "decision": {
+    "winner": null,
+    "verdict": "no significant difference",
+    "reasons": [
+      "CI of the mean overall difference [-0.362, +0.325] spans 0"
+    ]
+  },
+  "per_case": [
+    {
+      "case_id": "c01",
+      "overall_a": 4.75,
+      "overall_b": 4.75,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c02",
+      "overall_a": 4.3,
+      "overall_b": 5.0,
+      "diff": -0.7,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c09",
+      "overall_a": 2.4,
+      "overall_b": 5.0,
+      "diff": -2.6,
+      "pass_a": false,
+      "pass_b": true
+    },
+    {
+      "case_id": "c14",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c15",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c16",
+      "overall_a": 1.35,
+      "overall_b": 1.35,
+      "diff": 0.0,
+      "pass_a": false,
+      "pass_b": false
+    },
+    {
+      "case_id": "c19",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c23",
+      "overall_a": 5.0,
+      "overall_b": 3.5,
+      "diff": 1.5,
+      "pass_a": true,
+      "pass_b": false
+    },
+    {
+      "case_id": "c24",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c28",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c31",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c32",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c33",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c38",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c39",
+      "overall_a": 4.65,
+      "overall_b": 5.0,
+      "diff": -0.35,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c40",
+      "overall_a": 5.0,
+      "overall_b": 3.4,
+      "diff": 1.6,
+      "pass_a": true,
+      "pass_b": false
+    },
+    {
+      "case_id": "c41",
+      "overall_a": 5.0,
+      "overall_b": 4.5,
+      "diff": 0.5,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c42",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c43",
+      "overall_a": 5.0,
+      "overall_b": 5.0,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    },
+    {
+      "case_id": "c44",
+      "overall_a": 4.75,
+      "overall_b": 4.75,
+      "diff": 0.0,
+      "pass_a": true,
+      "pass_b": true
+    }
+  ],
+  "usage": {
+    "pointwise_A": {
+      "calls": 20,
+      "network_calls": 15,
+      "cached_calls": 5,
+      "reasks": 0,
+      "tokens_in": 71267,
+      "tokens_out": 5421,
+      "network_tokens_in": 53477,
+      "network_tokens_out": 4060,
+      "cost_usd": null,
+      "cost_usd_if_uncached": null,
+      "priced": false
+    },
+    "pointwise_B": {
+      "calls": 20,
+      "network_calls": 14,
+      "cached_calls": 6,
+      "reasks": 0,
+      "tokens_in": 71185,
+      "tokens_out": 5448,
+      "network_tokens_in": 48935,
+      "network_tokens_out": 4044,
+      "cost_usd": null,
+      "cost_usd_if_uncached": null,
+      "priced": false
+    },
+    "pairwise": {
+      "calls": 40,
+      "network_calls": 32,
+      "cached_calls": 8,
+      "reasks": 0,
+      "tokens_in": 57948,
+      "tokens_out": 15316,
+      "network_tokens_in": 46421,
+      "network_tokens_out": 12607,
+      "cost_usd": null,
+      "cost_usd_if_uncached": null,
+      "priced": false
+    },
+    "judge_total": {
+      "calls": 80,
+      "network_calls": 61,
+      "cached_calls": 19,
+      "reasks": 0,
+      "tokens_in": 200400,
+      "tokens_out": 26185,
+      "network_tokens_in": 148833,
+      "network_tokens_out": 20711,
+      "cost_usd": null,
+      "cost_usd_if_uncached": null,
+      "priced": false
+    }
+  },
+  "reports": {
+    "A": {
+      "n": 20,
+      "n_scored": 20,
+      "n_invalid": 0,
+      "invalid_ids": [],
+      "parse_status": {
+        "strict": 20
+      },
+      "pass": {
+        "n_pass": 18,
+        "rate_scored": {
+          "n": 20,
+          "mean": 0.9,
+          "ci_low": 0.75,
+          "ci_high": 1.0
+        },
+        "rate_invalid_as_fail": 0.9,
+        "rule": {
+          "faithfulness_min": 4,
+          "instruction_following_min": 3,
+          "overall_min": 3.5
+        }
+      },
+      "overall": {
+        "n": 20,
+        "mean": 4.61,
+        "ci_low": 4.1325,
+        "ci_high": 4.9475,
+        "sd": 0.9428
+      },
+      "criteria": {
+        "faithfulness": {
+          "n": 20,
+          "mean": 4.6,
+          "ci_low": 4.0,
+          "ci_high": 5.0
+        },
+        "instruction_following": {
+          "n": 20,
+          "mean": 4.7,
+          "ci_low": 4.3,
+          "ci_high": 5.0
+        },
+        "completeness": {
+          "n": 20,
+          "mean": 4.5,
+          "ci_low": 3.9,
+          "ci_high": 4.95
+        }
+      },
+      "by_mode": {
+        "reference": {
+          "n": 13,
+          "pass_rate": 0.8462,
+          "mean_overall": 4.4269
+        },
+        "free": {
+          "n": 7,
+          "pass_rate": 1.0,
+          "mean_overall": 4.95
+        }
+      },
+      "unsupported_high_score_cases": 0,
+      "stored_mismatch_cases": [],
+      "rubric": {
+        "version": "rubric-v1",
+        "weights": {
+          "faithfulness": 0.4,
+          "instruction_following": 0.35,
+          "completeness": 0.25
+        }
+      },
+      "per_case": [
+        {
+          "case_id": "c01",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 4
+          },
+          "overall": 4.75,
+          "passed": true
+        },
+        {
+          "case_id": "c02",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 3,
+            "completeness": 5
+          },
+          "overall": 4.3,
+          "passed": true
+        },
+        {
+          "case_id": "c09",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 1,
+            "instruction_following": 5,
+            "completeness": 1
+          },
+          "overall": 2.4,
+          "passed": false
+        },
+        {
+          "case_id": "c14",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c15",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c16",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 1,
+            "instruction_following": 2,
+            "completeness": 1
+          },
+          "overall": 1.35,
+          "passed": false
+        },
+        {
+          "case_id": "c19",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c23",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c24",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c28",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c31",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c32",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c33",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c38",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c39",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 4,
+            "completeness": 5
+          },
+          "overall": 4.65,
+          "passed": true
+        },
+        {
+          "case_id": "c40",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c41",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c42",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c43",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c44",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 4
+          },
+          "overall": 4.75,
+          "passed": true
+        }
+      ]
+    },
+    "B": {
+      "n": 20,
+      "n_scored": 20,
+      "n_invalid": 0,
+      "invalid_ids": [],
+      "parse_status": {
+        "strict": 19,
+        "repair": 1
+      },
+      "pass": {
+        "n_pass": 17,
+        "rate_scored": {
+          "n": 20,
+          "mean": 0.85,
+          "ci_low": 0.7,
+          "ci_high": 1.0
+        },
+        "rate_invalid_as_fail": 0.85,
+        "rule": {
+          "faithfulness_min": 4,
+          "instruction_following_min": 3,
+          "overall_min": 3.5
+        }
+      },
+      "overall": {
+        "n": 20,
+        "mean": 4.6125,
+        "ci_low": 4.174938,
+        "ci_high": 4.9375,
+        "sd": 0.8805
+      },
+      "criteria": {
+        "faithfulness": {
+          "n": 20,
+          "mean": 4.5,
+          "ci_low": 3.9,
+          "ci_high": 5.0
+        },
+        "instruction_following": {
+          "n": 20,
+          "mean": 4.75,
+          "ci_low": 4.35,
+          "ci_high": 5.0
+        },
+        "completeness": {
+          "n": 20,
+          "mean": 4.6,
+          "ci_low": 4.1,
+          "ci_high": 4.95
+        }
+      },
+      "by_mode": {
+        "reference": {
+          "n": 13,
+          "pass_rate": 0.8462,
+          "mean_overall": 4.5269
+        },
+        "free": {
+          "n": 7,
+          "pass_rate": 0.8571,
+          "mean_overall": 4.7714
+        }
+      },
+      "unsupported_high_score_cases": 1,
+      "stored_mismatch_cases": [],
+      "rubric": {
+        "version": "rubric-v1",
+        "weights": {
+          "faithfulness": 0.4,
+          "instruction_following": 0.35,
+          "completeness": 0.25
+        }
+      },
+      "per_case": [
+        {
+          "case_id": "c01",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 4
+          },
+          "overall": 4.75,
+          "passed": true
+        },
+        {
+          "case_id": "c02",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c09",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c14",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c15",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c16",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 1,
+            "instruction_following": 2,
+            "completeness": 1
+          },
+          "overall": 1.35,
+          "passed": false
+        },
+        {
+          "case_id": "c19",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c23",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 3,
+            "instruction_following": 3,
+            "completeness": 5
+          },
+          "overall": 3.5,
+          "passed": false
+        },
+        {
+          "case_id": "c24",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c28",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c31",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c32",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c33",
+          "mode": "free",
+          "parse_status": "repair",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c38",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c39",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c40",
+          "mode": "free",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 1,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 3.4,
+          "passed": false
+        },
+        {
+          "case_id": "c41",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 3
+          },
+          "overall": 4.5,
+          "passed": true
+        },
+        {
+          "case_id": "c42",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c43",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 5
+          },
+          "overall": 5.0,
+          "passed": true
+        },
+        {
+          "case_id": "c44",
+          "mode": "reference",
+          "parse_status": "strict",
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 4
+          },
+          "overall": 4.75,
+          "passed": true
+        }
+      ]
+    }
+  }
+}

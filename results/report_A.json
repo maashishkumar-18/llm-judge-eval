@@ -1,0 +1,342 @@
+{
+  "config": "A",
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "label": "A",
+  "cases_file": "data/outputs/A.json",
+  "pointwise": {
+    "n": 20,
+    "n_scored": 20,
+    "n_invalid": 0,
+    "invalid_ids": [],
+    "parse_status": {
+      "strict": 20
+    },
+    "pass": {
+      "n_pass": 18,
+      "rate_scored": {
+        "n": 20,
+        "mean": 0.9,
+        "ci_low": 0.75,
+        "ci_high": 1.0
+      },
+      "rate_invalid_as_fail": 0.9,
+      "rule": {
+        "faithfulness_min": 4,
+        "instruction_following_min": 3,
+        "overall_min": 3.5
+      }
+    },
+    "overall": {
+      "n": 20,
+      "mean": 4.61,
+      "ci_low": 4.1325,
+      "ci_high": 4.9475,
+      "sd": 0.9428
+    },
+    "criteria": {
+      "faithfulness": {
+        "n": 20,
+        "mean": 4.6,
+        "ci_low": 4.0,
+        "ci_high": 5.0
+      },
+      "instruction_following": {
+        "n": 20,
+        "mean": 4.7,
+        "ci_low": 4.3,
+        "ci_high": 5.0
+      },
+      "completeness": {
+        "n": 20,
+        "mean": 4.5,
+        "ci_low": 3.9,
+        "ci_high": 4.95
+      }
+    },
+    "by_mode": {
+      "reference": {
+        "n": 13,
+        "pass_rate": 0.8462,
+        "mean_overall": 4.4269
+      },
+      "free": {
+        "n": 7,
+        "pass_rate": 1.0,
+        "mean_overall": 4.95
+      }
+    },
+    "unsupported_high_score_cases": 0,
+    "stored_mismatch_cases": [],
+    "rubric": {
+      "version": "rubric-v1",
+      "weights": {
+        "faithfulness": 0.4,
+        "instruction_following": 0.35,
+        "completeness": 0.25
+      }
+    },
+    "per_case": [
+      {
+        "case_id": "c01",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 4
+        },
+        "overall": 4.75,
+        "passed": true
+      },
+      {
+        "case_id": "c02",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 3,
+          "completeness": 5
+        },
+        "overall": 4.3,
+        "passed": true
+      },
+      {
+        "case_id": "c09",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 1,
+          "instruction_following": 5,
+          "completeness": 1
+        },
+        "overall": 2.4,
+        "passed": false
+      },
+      {
+        "case_id": "c14",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c15",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c16",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 1,
+          "instruction_following": 2,
+          "completeness": 1
+        },
+        "overall": 1.35,
+        "passed": false
+      },
+      {
+        "case_id": "c19",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c23",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c24",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c28",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c31",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c32",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c33",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c38",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c39",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 4,
+          "completeness": 5
+        },
+        "overall": 4.65,
+        "passed": true
+      },
+      {
+        "case_id": "c40",
+        "mode": "free",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c41",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c42",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c43",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 5
+        },
+        "overall": 5.0,
+        "passed": true
+      },
+      {
+        "case_id": "c44",
+        "mode": "reference",
+        "parse_status": "strict",
+        "scores": {
+          "faithfulness": 5,
+          "instruction_following": 5,
+          "completeness": 4
+        },
+        "overall": 4.75,
+        "passed": true
+      }
+    ]
+  },
+  "judge_usage": {
+    "calls": 20,
+    "network_calls": 15,
+    "cached_calls": 5,
+    "reasks": 0,
+    "tokens_in": 71267,
+    "tokens_out": 5421,
+    "network_tokens_in": 53477,
+    "network_tokens_out": 4060,
+    "cost_usd": null,
+    "cost_usd_if_uncached": null,
+    "priced": false
+  },
+  "generator_usage": {
+    "model": "openai/gpt-oss-20b",
+    "prompt_version": "v1",
+    "calls": 20,
+    "tokens_in": 3165,
+    "tokens_out": 1226
+  }
+}

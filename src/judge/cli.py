@@ -1,4 +1,4 @@
-"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3), `position` (j4); later sessions add compare/probes/validate."""
+"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3), `position` (j4), `run`/`compare` (j5); later sessions add probes/validate."""
 
 from __future__ import annotations
 
@@ -115,15 +115,15 @@ def _fmt_row(r: dict) -> str:
             f"calls={calls} {flags}{('  ERROR: ' + r['error'][:120]) if r['error'] else ''}")
 
 
-def cmd_pointwise(args: argparse.Namespace) -> int:
+def _pointwise_core(args: argparse.Namespace, config: str, label: str):
+    """Judge one config's outputs (checkpointed, budgeted). Returns (doc, remaining, n_cases) or an int exit code."""
     from pathlib import Path
 
     from judge.llm import LLMClient
     from judge.pointwise import judge_suite
 
-    sys.stdout.reconfigure(errors="replace")
     s = load_settings()
-    cases_file = args.cases_file or f"data/outputs/{args.config}.json"
+    cases_file = args.cases_file or f"data/outputs/{config}.json"
     cases = _load_cases(cases_file)
     if args.ids:
         cases = [c for c in cases if c.id in args.ids]
@@ -133,7 +133,6 @@ def cmd_pointwise(args: argparse.Namespace) -> int:
             return 1
     if args.limit:
         cases = cases[: args.limit]
-    label = args.label or args.config
     if args.experiment:
         budget = load_budget()
         ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
@@ -152,7 +151,11 @@ def cmd_pointwise(args: argparse.Namespace) -> int:
             )
 
     doc, remaining = asyncio.run(run())
-    print(f"judge {doc['judge_model']} (json_mode={doc['json_mode']}), {len(doc['results'])}/{len(cases)} cases, label {label}")
+    return doc, remaining, len(cases)
+
+
+def _print_pointwise(doc: dict, remaining: list, n_cases: int, label: str) -> None:
+    print(f"judge {doc['judge_model']} (json_mode={doc['json_mode']}), {len(doc['results'])}/{n_cases} cases, label {label}")
     for r in doc["results"]:
         print(_fmt_row(r))
     sm = doc["summary"]
@@ -161,7 +164,90 @@ def cmd_pointwise(args: argparse.Namespace) -> int:
           f"calls {sm['judge_calls']} ({sm['judge_calls_network']} network, {sm['reasks']} re-ask) | tokens {sm['tokens_in']} in / {sm['tokens_out']} out")
     if remaining:
         print(f"STOPPED with {len(remaining)} cases left (quota cap); re-run the same command to resume: {remaining}")
-        return 2
+
+
+def cmd_pointwise(args: argparse.Namespace) -> int:
+    sys.stdout.reconfigure(errors="replace")
+    label = args.label or args.config
+    out = _pointwise_core(args, args.config, label)
+    if isinstance(out, int):
+        return out
+    doc, remaining, n = out
+    _print_pointwise(doc, remaining, n, label)
+    return 2 if remaining else 0
+
+
+def _prices(args: argparse.Namespace):
+    from judge.aggregate import Prices
+
+    return Prices(args.price_in, args.price_out)
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    """Pointwise-judge each config and write results/report_<config>.json (aggregates, CIs, usage)."""
+    import json
+    from pathlib import Path
+
+    from judge.compare import config_report
+
+    sys.stdout.reconfigure(errors="replace")
+    rc = 0
+    for config in args.config:
+        out = _pointwise_core(args, config, config)
+        if isinstance(out, int):
+            return out
+        doc, remaining, n = out
+        _print_pointwise(doc, remaining, n, config)
+        if remaining:
+            rc = 2
+            continue  # an incomplete run gets no report: a partial suite must not look like a result
+        gen = json.loads(Path(doc["cases_file"]).read_text(encoding="utf-8"))
+        rep = config_report(doc, gen, name=config, prices=_prices(args))
+        Path("results").mkdir(exist_ok=True)
+        path = Path(f"results/report_{config}.json")
+        path.write_text(json.dumps(rep, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+        pw = rep["pointwise"]
+        o, p = pw["overall"], pw["pass"]["rate_scored"]
+        print(f"report {config}: overall {o['mean']} [{o['ci_low']}, {o['ci_high']}] | pass {pw['pass']['n_pass']}/{pw['n_scored']} "
+              f"= {p['mean']} [{p['ci_low']}, {p['ci_high']}] | " + " ".join(f"{k[:4]}={v['mean']}" for k, v in pw["criteria"].items())
+              + f" | wrote {path}")
+    return rc
+
+
+def cmd_compare(args: argparse.Namespace) -> int:
+    """Offline (zero judge calls): paired bootstrap + win rate + decision from the saved results files."""
+    import json
+    from pathlib import Path
+
+    from judge.compare import compare_configs, render_markdown
+
+    sys.stdout.reconfigure(errors="replace")
+    load = lambda p: json.loads(Path(p).read_text(encoding="utf-8"))  # noqa: E731
+    a_path = args.a_results or f"results/pointwise_{args.a}.json"
+    b_path = args.b_results or f"results/pointwise_{args.b}.json"
+    for p in (a_path, b_path):
+        if not Path(p).exists():
+            print(f"missing {p}: run `judge run --config {Path(p).stem.removeprefix('pointwise_')}` first")
+            return 1
+    doc_a, doc_b = load(a_path), load(b_path)
+    pairs = None
+    if Path(args.pairs).exists():
+        pairs = load(args.pairs)["pairs"].get("mitigated")
+        if pairs and (pairs[0]["x"], pairs[0]["y"]) != (args.a, args.b):
+            print(f"{args.pairs} pairs are {pairs[0]['x']} vs {pairs[0]['y']}, not {args.a} vs {args.b}; win rate skipped")
+            pairs = None
+    else:
+        print(f"no {args.pairs}: win rate skipped (run `judge position` for the pairwise half)")
+    if doc_a.get("judge_model") != doc_b.get("judge_model"):
+        print(f"WARNING: configs were judged by different models: {doc_a.get('judge_model')} vs {doc_b.get('judge_model')}")
+    c = compare_configs(doc_a, doc_b, pairs, name_a=args.a, name_b=args.b, prices=_prices(args))
+    stem = f"results/compare_{args.a}_vs_{args.b}"
+    Path("results").mkdir(exist_ok=True)
+    Path(stem + ".json").write_text(json.dumps(c, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    md = render_markdown(c)
+    Path(stem + ".md").write_text(md, encoding="utf-8")
+    print(md)
+    print(f"wrote {stem}.json and {stem}.md")
     return 0
 
 
@@ -302,6 +388,26 @@ def main(argv: list[str] | None = None) -> None:
     po.add_argument("--nonce", default="")
     po.add_argument("--fresh", action="store_true")
     po.set_defaults(fn=cmd_position)
+    ru = sub.add_parser("run", help="mitigated pointwise judging + aggregate report per config (live judge calls)")
+    ru.add_argument("--config", nargs="+", default=["A", "B"])
+    ru.add_argument("--cases-file", default="")
+    ru.add_argument("--ids", nargs="+")
+    ru.add_argument("--limit", type=int, default=0)
+    ru.add_argument("--experiment", default="pointwise_mitigated")
+    ru.add_argument("--nonce", default="")
+    ru.add_argument("--fresh", action="store_true")
+    ru.add_argument("--price-in", type=float, default=None, help="USD per 1M judge input tokens (unset = cost not computed)")
+    ru.add_argument("--price-out", type=float, default=None, help="USD per 1M judge output tokens")
+    ru.set_defaults(fn=cmd_run)
+    cp = sub.add_parser("compare", help="A/B decision from saved results: paired bootstrap, win rate (no judge calls)")
+    cp.add_argument("--a", default="A")
+    cp.add_argument("--b", default="B")
+    cp.add_argument("--a-results", default="")
+    cp.add_argument("--b-results", default="")
+    cp.add_argument("--pairs", default="results/position_bias.json")
+    cp.add_argument("--price-in", type=float, default=None)
+    cp.add_argument("--price-out", type=float, default=None)
+    cp.set_defaults(fn=cmd_compare)
     rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
     rp.add_argument("--results", default="results/pointwise_A.json")
     rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")

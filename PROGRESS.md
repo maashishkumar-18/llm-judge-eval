@@ -8,7 +8,9 @@
 | J1 schemas, rubric, prompts, anchors | done | `j1: schemas, rubric, prompts, anchors` | (fill in real time) |
 | J2 candidate pool (40), checks, generate A/B | done, curation pending (user) | `j2: candidate pool, constraint checks, generate A/B` | (fill in real time) |
 | J3 parse ladder, pointwise, replay | done (pairwise live check deferred to J5) | `j3: parse ladder, pointwise judge, replay` | (fill in real time) |
-| J4–J10 | todo | | |
+| J4 pairwise order-swap, position bias | done | `j4: pairwise order-swap...` | (fill in) |
+| J5 aggregate, compare, run/compare CLI | done | `j5: aggregate, compare, run and compare CLI` | (fill in) |
+| J6–J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -176,3 +178,30 @@
 - **Caveat (open):** a judge that always answers TIE also has a 0% flip rate; 0% is meaningful only if the mitigated judge picks a winner when there is a real quality gap. Not yet tested. **Added to J6:** sensitivity check, 6 probe bases, correct answer vs its confidently-wrong version, both orders, mitigated + naive (24 calls, cap 28; budget.yaml `sensitivity`, planned total now 238, cap 275). Report share decided correctly and flip rate on those pairs; if the mitigated judge ties them too, state that the mitigation trades bias for indecision.
 - **Budget spent:** pairwise_naive 24/28, pairwise_mitigated 34/46 (second order of the 6 identical pairs is a cache hit), controls 8/14 (4 mitigated controls duplicate identical-pair prompts and were cache hits).
 - Template 2.5 reflection: left for the user.
+
+
+## J5 — aggregate, compare, `run` / `compare` CLI, reports for A and B
+- **`judge.aggregate`:** `bootstrap_ci` (percentile, 10,000 resamples, seed 5150, ends rounded to 6 places so float noise cannot fake a CI that excludes 0; None for N<2), `mean_ci`, `score_rows` / `aggregate_pointwise` (per-case pass/fail, pass rate with CI and with INVALID-as-fail, overall and per-criterion means with CIs, by-mode split), `Prices` + `usage_from_calls` (calls, network vs cached, re-asks, tokens, cost), `generator_usage`, `win_rate` (order-swapped pair verdicts, (wins + 0.5 ties)/valid pairs, bootstrap CI over per-pair scores). **Overall and pass/fail are recomputed from the stored scores with `rubric.yaml`** (pass rule 4 / 3 / 3.5 untouched, pinned by a test); a stored value that disagrees is listed in `stored_mismatch_cases`.
+- **`judge.compare`:** pairs by case id (only cases scored under BOTH configs; dropped ids listed), differences are **A minus B**, win rate is **A over B**. Decision rule (docstring + `decide`): (1) 95% CI of the mean paired overall difference must exclude 0, else "no significant difference"; (2) the pairwise win rate must lean the same way (>0.5 for A, <0.5 for B; exactly 0.5 or the opposite lean -> no significant difference); (3) no pairwise results -> no winner. My reading of "win rate consistent" is a direction check; whether the win-rate CI excludes 0.5 is reported (`win_rate_ci_excludes_half`) but not part of the rule. Also reports per-criterion paired differences (no multiplicity correction; descriptive), paired pass counts (A-only / B-only), win rate over all 20 pairs and over the 14 differing pairs.
+- **CLI:** `judge run [--config A B]` (= `pointwise` per config + `results/report_<cfg>.json`; an incomplete run writes no report), `judge compare --a A --b B` (offline, zero judge calls; writes `results/compare_A_vs_B.{json,md}`). `--price-in/--price-out` (USD per 1M tokens) turn on cost; **unset = cost null**, because the free-tier judge has no bill and I did not invent a list price. `make run`, `make compare`. `cmd_pointwise` was refactored into `_pointwise_core` (same behaviour).
+- **Tests: 195 passed** (was 168; +27 in `tests/test_aggregate.py`): percentile and normal-approximation CI hand checks, float-noise guard, pass/fail by each threshold ((5,2,5)=3.95 fails on instruction-following, (4,3,2)=3.15 on overall, (3,5,5)=4.20 on faithfulness), thresholds read from the rubric object, tampered stored verdict flagged, cost arithmetic, win rate 0.625, every branch of the decision rule, A-minus-B sign convention, dropped-case handling, usage totals.
+- **Live run (judge gemini-3.5-flash-lite, JSON mode off):** 29 new network calls, 0 INVALID, 0 re-asks (A: 20 strict; B: 19 strict + 1 repair `inner_quotes`, c33). pointwise_mitigated spent 34/46. `judge replay` over both: 20/20 identical, 0 API calls.
+
+| | A (prompt v1) | B (prompt v2) | A - B paired, N=20 |
+|---|---|---|---|
+| mean overall | 4.610 [4.133, 4.947] | 4.612 [4.175, 4.938] | -0.003 [-0.362, +0.325] |
+| faithfulness | 4.60 [4.00, 5.00] | 4.50 [3.90, 5.00] | +0.10 [-0.50, +0.70] |
+| instruction-following | 4.70 [4.30, 5.00] | 4.75 [4.35, 5.00] | -0.05 [-0.35, +0.25] |
+| completeness | 4.50 [3.90, 4.95] | 4.60 [4.10, 4.95] | -0.10 [-0.60, +0.30] |
+| pass rate | 18/20 = 0.90 [0.75, 1.00] | 17/20 = 0.85 [0.70, 1.00] | +0.05 [-0.10, +0.20] |
+
+  Win rate A over B (mitigated, order-swapped, N=20): 0.550 [0.450, 0.650], A 3 / B 1 / tie 16, flip rate 0 (14 differing pairs: 0.571 [0.429, 0.714]). **Decision: no significant difference** (CI of the overall difference spans 0). Judge usage for the comparison (pointwise A+B plus the J4 pairwise calls): 80 calls, 200,400 tokens in / 26,185 out, cost not priced.
+- **What drives it:** 14 of 20 cases have identical overall under A and B. The six that differ: c02 -0.70, c09 -2.60 (A fails faithfulness 1), c23 +1.50 (B's 4 bullets instead of 3), c39 -0.35, c40 +1.60 (B faithfulness 1), c41 +0.50. They cancel (mean -0.003). c09/c23/c40/c41 agree in direction with the pairwise winners from J4.
+
+## Caveats / open items (J5)
+- **A tie, not equality:** N=20 and a mean overall CI of about +-0.34 can only detect a large difference; per-case effects are large and in both directions (-2.6 to +1.6), so it is mostly two or three cases deciding the sign. The temptation cases (c41-c44) did not separate the configs in generation or judging, as recorded in J2.
+- **Judge leniency still unresolved:** 15 of 20 A cases and 14 of 20 B cases score 5/5/5-ish; the J3 standing instruction (investigate if probes also score near 5) stays open for J6.
+- **Identical-text cases are not independent evidence:** 6 pairs (c14 c15 c16 c19 c24 c44) have the same answer under A and B; the judge prompt is identical, so the second pointwise call is a cache hit with the same verdict (difference exactly 0 by construction). They still count in N=20 and shrink the CI width; the 14-pair numbers are in the compare JSON.
+- Pairwise numbers come from the J4 run (`results/position_bias.json`); `compare` does not run judge calls.
+- Pass-rate CI is a bootstrap on 20 binary values (ends can hit 1.0); no Wilson interval.
+- Time spent: not recorded; fill in.
