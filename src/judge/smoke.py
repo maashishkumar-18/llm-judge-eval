@@ -46,6 +46,8 @@ async def run() -> int:
                 f"tokens_in={r['tokens_in']} tokens_out={r['tokens_out']} reply={r['text'].strip()[:40]!r}"
             )
             # plumbing check only: a non-empty reply with counted tokens (models may not echo exactly)
+            if c.ledger is not None:
+                print(f"          judge ledger: {c.ledger.used_today()}/{c.ledger.daily_cap} non-cached calls today (Pacific)")
             if not r["text"].strip() or r["tokens_in"] <= 0 or r["tokens_out"] <= 0:
                 print(f"FAIL {role}: empty reply or missing token counts")
                 ok = False

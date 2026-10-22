@@ -1,0 +1,44 @@
+# Lean judge-call budget (j0c). One judge call returns ALL criteria in one JSON.
+# planned = sum over `terms` of the product of each term's factors.
+# cap     = planned + ~15% headroom for parse-ladder re-asks (a re-ask is a real judge call).
+# `judge budget` prints this table; ledger.py enforces each cap at run time (non-cached calls only).
+# All small-N probe results (probes, controls, self_preference, test_retest, clustering) are EXPLORATORY:
+# report N next to every number.
+suite_cases: 20   # roadmap J2 said ~30; lean plan uses 20
+experiments:
+  pointwise_mitigated:
+    desc: mitigated pointwise, 20 cases x configs A,B
+    terms: [[20, 2]]
+    cap: 46
+  pairwise_mitigated:
+    desc: mitigated pairwise A vs B, 20 cases x both orders
+    terms: [[20, 2]]
+    cap: 46
+  pairwise_naive:
+    desc: naive pairwise, 12 pairs x both orders
+    terms: [[12, 2]]
+    cap: 28
+  controls:
+    desc: identical-answer controls, 6 pairs x (naive, mitigated), one order each
+    terms: [[6, 2]]
+    cap: 14
+  probes:
+    desc: 6 base cases x {padded, confidently-wrong, terse-correct, verbose-wrong} pointwise x (naive, mitigated), plus 6 naive originals
+    terms: [[6, 4, 2], [6]]
+    cap: 62
+  clustering_naive:
+    desc: naive pointwise on 12 suite cases (score clustering baseline)
+    terms: [[12]]
+    cap: 14
+  self_preference:
+    desc: 6 pairs (gpt-oss answer vs Gemini-authored answer) x both orders
+    terms: [[6, 2]]
+    cap: 14
+  test_retest:
+    desc: 10 cases x 2 reruns, cache bypassed via nonce
+    terms: [[10, 2]]
+    cap: 23
+  kappa_adversarial:
+    desc: kappa vs ~20 hand labels and adversarial summary reuse existing verdicts
+    terms: []
+    cap: 0

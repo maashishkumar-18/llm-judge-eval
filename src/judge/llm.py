@@ -18,8 +18,10 @@ from typing import Any
 
 import httpx
 
+from judge.budget import load_budget
 from judge.cache import DiskCache, make_key, prompt_hash
 from judge.config import Settings
+from judge.ledger import JudgeLedger, RateLimiter
 
 RETRYABLE = {429, 500, 502, 503, 504}
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
@@ -79,6 +81,9 @@ class LLMClient:
         log_name: str | None = None,
         transport: httpx.AsyncBaseTransport | None = None,
         sleep=asyncio.sleep,
+        experiment: str | None = None,
+        ledger: JudgeLedger | None = None,
+        limiter: RateLimiter | None = None,
     ):
         if role not in ("judge", "generator"):
             raise ValueError(role)
@@ -101,6 +106,15 @@ class LLMClient:
         self._sem = asyncio.Semaphore(conc)
         self._sleep = sleep
         self._http = httpx.AsyncClient(timeout=settings.request_timeout_seconds, transport=transport)
+        # Judge-only quota guards (Gemini free tier). The generator has no ledger or limiter.
+        self.experiment = experiment
+        self.ledger = self.limiter = None
+        if role == "judge":
+            budget = load_budget()
+            if experiment is not None:
+                budget.get(experiment)  # typo guard: unknown experiment names fail at construction
+            self.ledger = ledger or JudgeLedger(settings.ledger_path, settings.judge_daily_cap, budget.caps)
+            self.limiter = limiter or RateLimiter(settings.judge_rpm_limit)
 
     async def aclose(self) -> None:
         await self._http.aclose()
@@ -186,6 +200,8 @@ class LLMClient:
     async def _post_with_backoff(self, url: str, headers: dict, body: dict) -> dict[str, Any]:
         s = self.s
         for attempt in range(s.max_retries):
+            if self.limiter is not None:
+                await self.limiter.acquire()  # every HTTP attempt, retries included, counts toward RPM
             try:
                 r = await self._http.post(url, headers=headers, json=body)
             except (httpx.TimeoutException, httpx.TransportError) as exc:
@@ -222,6 +238,8 @@ class LLMClient:
         response_schema: dict | None = None,
     ) -> dict[str, Any]:
         temp = self.default_temp if temperature is None else temperature
+        if max_tokens is None and self.role == "judge":
+            max_tokens = self.s.judge_max_tokens
         params = self._params(temp, max_tokens, response_schema)
         key = make_key(self.model, params, f"{system or ''}\x00{prompt}", nonce)
         t0 = time.perf_counter()
@@ -233,6 +251,9 @@ class LLMClient:
             result = {**cached, "cached": True}
         else:
             url, headers, body = self._build(prompt, system, params)
+            if self.ledger is not None:
+                # raises DailyCapReached / ExperimentCapReached BEFORE any request; cache hits never get here
+                self.ledger.reserve(self.experiment)
             async with self._sem:
                 data = await self._post_with_backoff(url, headers, body)
             self.counters.network_calls += 1

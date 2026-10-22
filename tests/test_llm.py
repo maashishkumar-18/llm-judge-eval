@@ -9,8 +9,9 @@ def make_settings(tmp_path, **over) -> Settings:
     base = dict(
         _env_file=None,
         gemini_api_key="g-test", groq_api_key="q-test",
-        gen_provider="groq", gen_model="openai/gpt-oss-120b", gen_temperature=0.0,
-        judge_provider="gemini", judge_model="gemini-3.8-flash", judge_temperature=0.0,
+        gen_provider="groq", gen_model="openai/gpt-oss-20b", gen_temperature=0.0,
+        judge_provider="gemini", judge_model="gemini-3.5-flash-lite", judge_temperature=0.0,
+        judge_rpm_limit=1000, judge_daily_cap=450, ledger_path=str(tmp_path / "ledger.json"),
         cache_dir=str(tmp_path / "cache"), log_dir=str(tmp_path / "logs"),
         backoff_base_seconds=0.01, backoff_max_seconds=0.02, max_retries=4,
     )
@@ -198,7 +199,7 @@ def test_unknown_family_refused(tmp_path):
 def test_family_of():
     assert family_of("openai/gpt-oss-120b") == "openai"
     assert family_of("meta-llama/llama-4") == "meta"
-    assert family_of("gemini-3.8-flash") == "google"
+    assert family_of("gemini-3.5-flash-lite") == "google"
     assert family_of("gemma-4-31b-it") == "google"  # Gemma is Google family
 
 
@@ -208,7 +209,9 @@ def test_gen_and_judge_settings_are_independent(tmp_path):
 
 
 def test_swapped_role_defaults(tmp_path):
-    s = Settings(_env_file=None, judge_model="gemini-3.8-flash", cache_dir=str(tmp_path), log_dir=str(tmp_path))
+    s = Settings(_env_file=None, cache_dir=str(tmp_path), log_dir=str(tmp_path))
     assert (s.gen_provider, s.gen_model, s.gen_reasoning_effort, s.gen_strip_reasoning) == (
-        "groq", "openai/gpt-oss-120b", "low", True)
-    assert (s.judge_provider, s.judge_json_mode) == ("gemini", False)
+        "groq", "openai/gpt-oss-20b", "low", True)
+    assert (s.judge_provider, s.judge_model, s.judge_json_mode) == ("gemini", "gemini-3.5-flash-lite", False)
+    assert (s.judge_rpm_limit, s.judge_daily_cap, s.judge_concurrency) == (12, 450, 2)
+    assert s.enforce_family_guard() == ("openai", "google")

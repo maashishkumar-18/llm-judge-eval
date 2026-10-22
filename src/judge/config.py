@@ -46,17 +46,23 @@ class Settings(BaseSettings):
 
     # generator: Groq-hosted gpt-oss (OpenAI family). Roles were swapped in j0b; see CLAUDE.md A1/A8.
     gen_provider: str = "groq"
-    gen_model: str = "openai/gpt-oss-120b"
+    gen_model: str = "openai/gpt-oss-20b"
     gen_temperature: float = 0.0
     gen_concurrency: int = 2
     gen_reasoning_effort: str = "low"  # low | medium | high (gpt-oss only)
     gen_strip_reasoning: bool = True  # drop the `reasoning` field; keep only final `content`
 
-    # judge: Gemini (Google family). JUDGE_MODEL has no default: the strongest free model changes.
+    # judge: Gemini (Google family). gemini-3.5-flash-lite is FINAL for this project (never change it
+    # mid-project: validation numbers are only valid for the judge that produced them).
     judge_provider: str = "gemini"
-    judge_model: str
+    judge_model: str = "gemini-3.5-flash-lite"
     judge_temperature: float = 0.0
     judge_concurrency: int = 2
+    # Free-tier limits (AI Studio): 15 RPM, 250K TPM, 500 RPD. We stay under them:
+    judge_rpm_limit: int = 12  # requests/min, sliding window, applies to every HTTP attempt
+    judge_daily_cap: int = 450  # hard cap on NON-cached judge calls per Pacific day (persistent ledger)
+    judge_max_tokens: int = 8192  # generous: Gemini thinking tokens count against max output
+    ledger_path: str = ".cache/judge_ledger.json"
     # Provider JSON/schema mode for judge calls. OFF = prompt-only JSON, so the parse ladder is exercised.
     judge_json_mode: bool = False
 
