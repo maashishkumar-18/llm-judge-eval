@@ -13,9 +13,14 @@ import random
 import statistics
 from collections import Counter
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+import yaml
+
 from judge.schemas import CRITERIA, Rubric, load_rubric
+
+PRICING_PATH = Path(__file__).with_name("pricing.yaml")
 
 BOOTSTRAP_RESAMPLES = 10_000
 BOOTSTRAP_SEED = 5150  # fixed so a report is reproducible; changing it moves CI ends by a few thousandths
@@ -114,24 +119,56 @@ def aggregate_pointwise(doc: Mapping[str, Any], rubric: Rubric | None = None) ->
 
 @dataclass(frozen=True)
 class Prices:
-    """USD per 1M tokens. None = no price configured: cost is reported as null, never guessed."""
+    """USD per 1M tokens. None = no price configured: cost is reported as null, never guessed.
+    `free_tier` = the key bills nothing, so the actual cost is 0 and the list price is only an equivalent."""
 
     input_per_m: float | None = None
     output_per_m: float | None = None
+    free_tier: bool = False
+    source_url: str = ""
+    retrieved: str = ""
+    tier: str = ""
 
     @property
     def known(self) -> bool:
         return self.input_per_m is not None and self.output_per_m is not None
 
     def cost(self, tokens_in: int, tokens_out: int) -> float | None:
+        """List-price cost of these tokens (what a paid key would be billed)."""
         if not self.known:
             return None
         return round((tokens_in * self.input_per_m + tokens_out * self.output_per_m) / 1_000_000, 6)  # type: ignore[operator]
 
+    def describe(self) -> dict[str, Any]:
+        return {
+            "input_usd_per_1m": self.input_per_m, "output_usd_per_1m": self.output_per_m, "free_tier": self.free_tier,
+            "source_url": self.source_url, "retrieved": self.retrieved, "tier": self.tier,
+        }
+
+
+def load_prices(path: str | Path = PRICING_PATH) -> Prices:
+    d = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    return Prices(
+        d["input_usd_per_1m"], d["output_usd_per_1m"], d["billing"] == "free_tier",
+        d["source_url"], str(d["retrieved"]), d["tier"],
+    )
+
+
+def cost_fields(prices: Prices, net_in: int, net_out: int, all_in: int, all_out: int) -> dict[str, Any]:
+    """actual = what this key was billed (0 on a free tier); list_equivalent = the same network tokens at list price;
+    if_uncached = every call, cache hits included, at list price."""
+    eq = prices.cost(net_in, net_out)
+    return {
+        "cost_usd_actual": 0.0 if prices.free_tier else eq,
+        "cost_usd_list_equivalent": eq,
+        "cost_usd_if_uncached": prices.cost(all_in, all_out),
+        "priced": prices.known,
+    }
+
 
 def usage_from_calls(calls: Sequence[Mapping[str, Any]], prices: Prices | None = None) -> dict[str, Any]:
     """Calls are CallRecord dicts. `network` = calls that really hit the API (what the quota and a bill count);
-    cache hits are reported separately. Cost is for the network tokens; `cost_usd_if_uncached` prices every call."""
+    cache hits are reported separately. Costs: see cost_fields."""
     prices = prices or Prices()
     net = [c for c in calls if not c["cached"]]
     t_in, t_out = sum(c["tokens_in"] for c in calls), sum(c["tokens_out"] for c in calls)
@@ -143,9 +180,7 @@ def usage_from_calls(calls: Sequence[Mapping[str, Any]], prices: Prices | None =
         "reasks": sum(1 for c in calls if c["tag"].endswith("|reask")),
         "tokens_in": t_in, "tokens_out": t_out,
         "network_tokens_in": n_in, "network_tokens_out": n_out,
-        "cost_usd": prices.cost(n_in, n_out),
-        "cost_usd_if_uncached": prices.cost(t_in, t_out),
-        "priced": prices.known,
+        **cost_fields(prices, n_in, n_out, t_in, t_out),
     }
 
 

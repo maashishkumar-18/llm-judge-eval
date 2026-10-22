@@ -18,7 +18,7 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 from judge.aggregate import (
-    Prices, aggregate_pointwise, generator_usage, mean_ci, pairwise_calls, pointwise_calls, score_rows,
+    Prices, aggregate_pointwise, cost_fields, generator_usage, mean_ci, pairwise_calls, pointwise_calls, score_rows,
     usage_from_calls, win_rate,
 )
 from judge.schemas import CRITERIA, Rubric, load_rubric
@@ -119,6 +119,7 @@ def compare_configs(
             for a, b in both
         ],
         "usage": usage,
+        "pricing": (prices or Prices()).describe(),
         "reports": {name_a: aggregate_pointwise(doc_a, rubric), name_b: aggregate_pointwise(doc_b, rubric)},
     }
 
@@ -126,10 +127,7 @@ def compare_configs(
 def _sum_usage(parts: Sequence[Mapping[str, Any]], prices: Prices | None) -> dict[str, Any]:
     keys = ("calls", "network_calls", "cached_calls", "reasks", "tokens_in", "tokens_out", "network_tokens_in", "network_tokens_out")
     tot = {k: sum(p[k] for p in parts) for k in keys}
-    prices = prices or Prices()
-    tot["cost_usd"] = prices.cost(tot["network_tokens_in"], tot["network_tokens_out"])
-    tot["cost_usd_if_uncached"] = prices.cost(tot["tokens_in"], tot["tokens_out"])
-    tot["priced"] = prices.known
+    tot.update(cost_fields(prices or Prices(), tot["network_tokens_in"], tot["network_tokens_out"], tot["tokens_in"], tot["tokens_out"]))
     return tot
 
 
@@ -146,6 +144,7 @@ def config_report(
         "cases_file": doc.get("cases_file", ""),
         "pointwise": aggregate_pointwise(doc, rubric),
         "judge_usage": usage_from_calls(pointwise_calls(doc), prices),
+        "pricing": (prices or Prices()).describe(),
         "generator_usage": generator_usage(gen_cases),
     }
 
@@ -193,7 +192,15 @@ def render_markdown(c: Mapping[str, Any]) -> str:
         wd = c["win_rate_differing_pairs_only"]
         lines.append(f"Differing answers only (N={wd['n']}): {_ci(wd, key='win_rate')}; {a} {wd['wins_x']} / {b} {wd['wins_y']} / tie {wd['ties']}.")
     u = c["usage"]["judge_total"]
-    cost = f"${u['cost_usd']:.4f}" if u["priced"] else "not priced (free tier, no price configured)"
+    pr = c["pricing"]
+    if u["priced"]:
+        cost = (
+            f"${u['cost_usd_actual']:.2f} actual ({'free tier' if pr['free_tier'] else 'billed'}); "
+            f"${u['cost_usd_list_equivalent']:.4f} at list price ({pr['tier']} tier, ${pr['input_usd_per_1m']}/${pr['output_usd_per_1m']} per 1M in/out, "
+            f"{pr['source_url']}, retrieved {pr['retrieved']})"
+        )
+    else:
+        cost = "not priced (no price configured)"
     lines += [
         "",
         f"Judge usage: {u['calls']} calls ({u['network_calls']} network, {u['cached_calls']} cached, {u['reasks']} re-asks), "

@@ -1,0 +1,35 @@
+{
+  "what": "First real repair-rung event: the judge's raw reply for c33 under config B was invalid JSON; the parse ladder fixed it with the 'inner_quotes' repair. Raw reply kept verbatim.",
+  "case_id": "c33",
+  "config": "B",
+  "judge_model": "gemini-3.5-flash-lite",
+  "prompt_hash": "e7fab74fee77a54c",
+  "tokens_in": 3256,
+  "tokens_out": 351,
+  "strict_error": "Expecting ',' delimiter: line 9 column 272 (char 844)",
+  "error_position": 844,
+  "text_around_error": "ng, whereas the instruction specifies staying within 80 words (which is met). Wait, 53 words is within 80 words. Let's check constraints: apologise once (met: \"I'm sorry\"), no \"unfortunately\" (met), within 80 words (met:",
+  "ladder_status": "repair",
+  "repairs_applied": [
+    "inner_quotes"
+  ],
+  "raw_response": "{\n  \"faithfulness\": {\n    \"evidence\": \"We’ll send a replacement right away and offer a 20 % discount on your next purchase as a gesture of goodwill.\",\n    \"rationale\": \"Since there is no source policy text or reference answer provided to restrict specific company actions, the claims about replacements, discounts, and refunds are standard customer service statements and are not contradicted or invented in a way that violates faithfulness.\",\n    \"score\": 5\n  },\n  \"instruction_following\": {\n    \"evidence\": \"I’m sorry your order was late and the packaging was damaged.\",\n    \"rationale\": \"The answer apologises once and does not use the word \\\"unfortunately\\\", but it is 53 words long, whereas the instruction specifies staying within 80 words (which is met). Wait, 53 words is within 80 words. Let's check constraints: apologise once (met: \"I'm sorry\"), no \"unfortunately\" (met), within 80 words (met: 53 words). All constraints met.\",\n    \"score\": 5\n  },\n  \"completeness\": {\n    \"evidence\": \"We’ll send a replacement right away and offer a 20 % discount on your next purchase as a gesture of goodwill. Please let us know if you’d prefer a refund instead.\",\n    \"rationale\": \"The customer asked what is going to be done about a late and dented birthday order; the answer fully addresses this by offering a replacement, a refund alternative, and a discount.\",\n    \"score\": 5\n  }\n}",
+  "parsed_verdict_after_repair": {
+    "faithfulness": {
+      "evidence": "We’ll send a replacement right away and offer a 20 % discount on your next purchase as a gesture of goodwill.",
+      "rationale": "Since there is no source policy text or reference answer provided to restrict specific company actions, the claims about replacements, discounts, and refunds are standard customer service statements and are not contradicted or invented in a way that violates faithfulness.",
+      "score": 5
+    },
+    "instruction_following": {
+      "evidence": "I’m sorry your order was late and the packaging was damaged.",
+      "rationale": "The answer apologises once and does not use the word \"unfortunately\", but it is 53 words long, whereas the instruction specifies staying within 80 words (which is met). Wait, 53 words is within 80 words. Let's check constraints: apologise once (met: \"I'm sorry\"), no \"unfortunately\" (met), within 80 words (met: 53 words). All constraints met.",
+      "score": 5
+    },
+    "completeness": {
+      "evidence": "We’ll send a replacement right away and offer a 20 % discount on your next purchase as a gesture of goodwill. Please let us know if you’d prefer a refund instead.",
+      "rationale": "The customer asked what is going to be done about a late and dented birthday order; the answer fully addresses this by offering a replacement, a refund alternative, and a discount.",
+      "score": 5
+    }
+  },
+  "model_output_judged": "I’m sorry your order was late and the packaging was damaged. We’ll send a replacement right away and offer a 20 % discount on your next purchase as a gesture of goodwill. Please let us know if you’d prefer a refund instead. We’ll track the new shipment and keep you updated. Thank you for your patience."
+}

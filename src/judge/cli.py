@@ -178,9 +178,17 @@ def cmd_pointwise(args: argparse.Namespace) -> int:
 
 
 def _prices(args: argparse.Namespace):
-    from judge.aggregate import Prices
+    """Recorded list price (src/judge/pricing.yaml); --price-in/--price-out override it (and drop the source)."""
+    from dataclasses import replace
 
-    return Prices(args.price_in, args.price_out)
+    from judge.aggregate import load_prices
+
+    base = load_prices()
+    if args.price_in is None and args.price_out is None:
+        return base
+    if args.price_in is None or args.price_out is None:
+        raise SystemExit("give both --price-in and --price-out")
+    return replace(base, input_per_m=args.price_in, output_per_m=args.price_out, source_url="cli override", retrieved="", tier="")
 
 
 def cmd_run(args: argparse.Namespace) -> int:
@@ -193,11 +201,14 @@ def cmd_run(args: argparse.Namespace) -> int:
     sys.stdout.reconfigure(errors="replace")
     rc = 0
     for config in args.config:
-        out = _pointwise_core(args, config, config)
-        if isinstance(out, int):
-            return out
-        doc, remaining, n = out
-        _print_pointwise(doc, remaining, n, config)
+        if args.report_only:  # rebuild from the saved results: no judge call, no budget use
+            doc, remaining = json.loads(Path(f"results/pointwise_{config}.json").read_text(encoding="utf-8")), []
+        else:
+            out = _pointwise_core(args, config, config)
+            if isinstance(out, int):
+                return out
+            doc, remaining, n = out
+            _print_pointwise(doc, remaining, n, config)
         if remaining:
             rc = 2
             continue  # an incomplete run gets no report: a partial suite must not look like a result
@@ -396,7 +407,8 @@ def main(argv: list[str] | None = None) -> None:
     ru.add_argument("--experiment", default="pointwise_mitigated")
     ru.add_argument("--nonce", default="")
     ru.add_argument("--fresh", action="store_true")
-    ru.add_argument("--price-in", type=float, default=None, help="USD per 1M judge input tokens (unset = cost not computed)")
+    ru.add_argument("--report-only", action="store_true", help="rebuild results/report_<cfg>.json from saved results (no judge calls)")
+    ru.add_argument("--price-in", type=float, default=None, help="USD per 1M judge input tokens (default: pricing.yaml)")
     ru.add_argument("--price-out", type=float, default=None, help="USD per 1M judge output tokens")
     ru.set_defaults(fn=cmd_run)
     cp = sub.add_parser("compare", help="A/B decision from saved results: paired bootstrap, win rate (no judge calls)")

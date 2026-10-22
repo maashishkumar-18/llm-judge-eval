@@ -135,13 +135,15 @@ def test_usage_counts_network_vs_cached_and_prices_network_tokens():
     u = usage_from_calls(calls, Prices(1.0, 2.0))  # USD per 1M tokens
     assert (u["calls"], u["network_calls"], u["cached_calls"], u["reasks"]) == (3, 2, 1, 1)
     assert (u["tokens_in"], u["tokens_out"], u["network_tokens_in"], u["network_tokens_out"]) == (3500, 600, 3000, 500)
-    assert u["cost_usd"] == pytest.approx((3000 * 1 + 500 * 2) / 1e6)  # 0.004
+    assert u["cost_usd_list_equivalent"] == pytest.approx((3000 * 1 + 500 * 2) / 1e6)  # 0.004
+    assert u["cost_usd_actual"] == pytest.approx(0.004)  # a paid key is billed the list price
     assert u["cost_usd_if_uncached"] == pytest.approx((3500 + 1200) / 1e6)  # 0.0047
 
 
 def test_unpriced_usage_reports_null_cost_never_a_guess():
     u = usage_from_calls([call()], Prices())
-    assert u["cost_usd"] is None and u["cost_usd_if_uncached"] is None and u["priced"] is False
+    assert u["cost_usd_actual"] is None and u["cost_usd_list_equivalent"] is None and u["cost_usd_if_uncached"] is None
+    assert u["priced"] is False
     assert Prices(1.0, None).known is False
 
 
@@ -259,7 +261,7 @@ def test_compare_usage_adds_pointwise_and_pairwise_judge_calls():
     u = compare_configs(a, b, [p], prices=Prices(1.0, 1.0))["usage"]
     assert u["pairwise"]["calls"] == 2 and u["judge_total"]["calls"] == 5 and u["judge_total"]["cached_calls"] == 1
     assert u["judge_total"]["tokens_in"] == 360 and u["judge_total"]["network_tokens_in"] == 340
-    assert u["judge_total"]["cost_usd"] == pytest.approx((340 + 34) / 1e6)  # out: 1 + 3 + 10 + 20 = 34
+    assert u["judge_total"]["cost_usd_list_equivalent"] == pytest.approx((340 + 34) / 1e6)  # out: 1 + 3 + 10 + 20 = 34
 
 
 def test_compare_win_rate_split_between_all_pairs_and_differing_pairs():
@@ -280,3 +282,18 @@ def test_config_report_and_markdown_render():
     c = compare_configs(five([S555] * 5), five([S555] * 5), pairs_for(["TIE"] * 5))
     md = render_markdown(c)
     assert "no significant difference" in md and "Config A vs B" in md and "not priced" in md
+
+
+def test_free_tier_reports_zero_actual_next_to_the_list_price_equivalent():
+    p = Prices(0.30, 2.50, free_tier=True)
+    u = usage_from_calls([call(tin=1_000_000, tout=100_000)], p)
+    assert u["cost_usd_actual"] == 0.0
+    assert u["cost_usd_list_equivalent"] == pytest.approx(0.30 + 0.25)  # 1M in at $0.30 + 0.1M out at $2.50
+
+
+def test_recorded_price_file_has_a_source_and_date():
+    from judge.aggregate import load_prices
+
+    p = load_prices()
+    assert (p.input_per_m, p.output_per_m, p.free_tier) == (0.30, 2.50, True)
+    assert p.source_url.startswith("https://ai.google.dev/") and p.retrieved == "2026-10-23" and p.tier == "standard"
