@@ -78,6 +78,78 @@ Correct grading:
 
 ## Example 2
 <system_prompt>
+You are Northwind's support assistant. Be accurate and concise.
+</system_prompt>
+
+<input>
+Policy: Electronics carry a 12-month limited warranty covering manufacturing defects. Accidental damage and water damage are not covered. Warranty claims require proof of purchase.
+
+Question: My Northwind speaker stopped working after I dropped it 8 months ago. Is it covered?
+</input>
+
+<answer>
+Yes, absolutely! Northwind's premium 24-month warranty fully covers drops and accidents, so you're covered. Just send it in and we'll replace it free of charge, no receipt needed.
+</answer>
+
+Correct grading:
+{
+  "faithfulness": {
+    "evidence": "premium 24-month warranty fully covers drops and accidents",
+    "rationale": "The policy gives a 12-month limited warranty that excludes accidental damage, and requires proof of purchase; the answer invents a 24-month warranty that covers drops.",
+    "score": 1
+  },
+  "instruction_following": {
+    "evidence": "no receipt needed",
+    "rationale": "The answer is concise, but the system prompt also demands accuracy and this contradicts the proof-of-purchase requirement.",
+    "score": 2
+  },
+  "completeness": {
+    "evidence": "so you're covered",
+    "rationale": "The correct conclusion is that a drop is accidental damage and is not covered; the answer reaches the opposite conclusion despite its confident tone.",
+    "score": 1
+  }
+}
+
+## Example 3
+<system_prompt>
+You are Northwind's support assistant. Answer in one or two sentences.
+</system_prompt>
+
+<input>
+Policy: Northwind matches a competitor's lower price on an identical, in-stock item if the request is made within 14 days of purchase. Sale and clearance prices are excluded.
+
+Question: I bought a blender 10 days ago for $80 and saw the same one for $65 at a competitor's store. Can I get a price match?
+</input>
+
+<reference_answer>
+Yes. You are within the 14-day window, so Northwind will match the $65 price, provided the competitor's blender is identical, in stock, and not a sale or clearance price.
+</reference_answer>
+
+<answer>
+Yes, Northwind will price-match, since you are within the 30-day window and the competitor's price is lower.
+</answer>
+
+Correct grading:
+{
+  "faithfulness": {
+    "evidence": "you are within the 30-day window",
+    "rationale": "The reference and the policy give a 14-day window, not 30; the conclusion happens to be right but one material detail is wrong.",
+    "score": 3
+  },
+  "instruction_following": {
+    "evidence": "Yes, Northwind will price-match, since you are within the 30-day window and the competitor's price is lower.",
+    "rationale": "It is a single sentence that answers the question directly, as required.",
+    "score": 5
+  },
+  "completeness": {
+    "evidence": "the competitor's price is lower",
+    "rationale": "It gives the right yes/no but omits the conditions in the reference (identical item, in stock, sale and clearance prices excluded), so the user cannot tell whether the match will actually apply.",
+    "score": 3
+  }
+}
+
+## Example 4
+<system_prompt>
 You are Northwind's shipping assistant. Answer as a short bulleted list.
 </system_prompt>
 
@@ -110,37 +182,71 @@ Correct grading:
   }
 }
 
-## Example 3
+## Example 5
 <system_prompt>
-You are Northwind's support assistant. Be accurate and concise.
+You are Northwind's rewards assistant. Answer in at most two sentences.
 </system_prompt>
 
 <input>
-Policy: Electronics carry a 12-month limited warranty covering manufacturing defects. Accidental damage and water damage are not covered. Warranty claims require proof of purchase.
+Policy: Rewards members earn 1 point per $1 spent. Every 100 points can be redeemed for a $5 reward. Points expire after 12 months of account inactivity.
 
-Question: My Northwind speaker stopped working after I dropped it 8 months ago. Is it covered?
+Question: How many points do I get for a $240 purchase, and what are they worth?
 </input>
 
 <answer>
-Yes, absolutely! Northwind's premium 24-month warranty fully covers drops and accidents, so you're covered. Just send it in and we'll replace it free of charge, no receipt needed.
+A $240 purchase earns 240 points. That is enough for two $5 rewards, with 40 points left over. Your points expire after 12 months of account inactivity.
 </answer>
 
 Correct grading:
 {
   "faithfulness": {
-    "evidence": "premium 24-month warranty fully covers drops and accidents",
-    "rationale": "The policy gives a 12-month limited warranty that excludes accidental damage, and requires proof of purchase; the answer invents a 24-month warranty that covers drops.",
-    "score": 1
+    "evidence": "enough for two $5 rewards, with 40 points left over",
+    "rationale": "240 points at 1 point per $1 is right, and 100 points per $5 reward gives two rewards and 40 points remaining; the expiry sentence also matches the policy.",
+    "score": 5
   },
   "instruction_following": {
-    "evidence": "no receipt needed",
-    "rationale": "The answer is concise, but the system prompt also demands accuracy and this contradicts the proof-of-purchase requirement.",
-    "score": 2
+    "evidence": "Your points expire after 12 months of account inactivity.",
+    "rationale": "This is a third sentence; the system prompt allowed at most two. The content is correct, but an explicit length constraint is broken.",
+    "score": 3
   },
   "completeness": {
-    "evidence": "so you're covered",
-    "rationale": "The correct conclusion is that a drop is accidental damage and is not covered; the answer reaches the opposite conclusion despite its confident tone.",
-    "score": 1
+    "evidence": "A $240 purchase earns 240 points ... two $5 rewards",
+    "rationale": "Both parts of the question are answered, the points earned and what they are worth.",
+    "score": 5
+  }
+}
+
+## Example 6
+<system_prompt>
+You are Northwind's support assistant. Answer in a short paragraph, ideally under 40 words.
+</system_prompt>
+
+<input>
+Policy: Gift wrap costs $4 per item and is free on orders over $100. Wrapped items ship in a gift box with a message card; messages can be up to 150 characters. Gift wrap cannot be added after the order ships.
+
+Question: I'm ordering two scarves at $45 each as a gift and want a card with a message. Do I pay for wrapping, and when must I decide?
+</input>
+
+<answer>
+Your order is $90, under the $100 free-wrap threshold, so wrapping costs $4 per item, or $8 for both scarves. Each wrapped item comes with a free message card. Add the wrapping before your order ships, since it can't be added afterwards.
+</answer>
+
+Correct grading:
+{
+  "faithfulness": {
+    "evidence": "comes with a free message card",
+    "rationale": "The $90 total, the $4 per item charge and the shipping deadline are all right; calling the card \"free\" is a small unsupported detail, since the policy only says wrapped items include one.",
+    "score": 4
+  },
+  "instruction_following": {
+    "evidence": "Add the wrapping before your order ships, since it can't be added afterwards.",
+    "rationale": "It is a short paragraph, but at 42 words it is slightly over the soft 40-word target.",
+    "score": 4
+  },
+  "completeness": {
+    "evidence": "Each wrapped item comes with a free message card",
+    "rationale": "It answers whether the user pays, how much, and the deadline, but leaves out the 150-character limit on the card message, a minor point.",
+    "score": 4
   }
 }
 

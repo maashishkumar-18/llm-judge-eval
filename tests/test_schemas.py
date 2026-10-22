@@ -126,10 +126,24 @@ def test_case_blank_reference_means_reference_free():
 
 
 def test_anchors_load_span_the_scale_and_quote_verbatim():
-    anchors = load_anchors()
-    overalls = sorted(a.verdict.overall() for a in anchors)
-    # 0.40*1 + 0.35*2 + 0.25*1 = 1.35 ; 0.40*4 + 0.35*3 + 0.25*2 = 3.15 ; all fives = 5.0
-    assert overalls == pytest.approx([1.35, 3.15, 5.0])
-    assert [a.verdict.passes() for a in anchors].count(True) == 1
-    for a in anchors:  # Anchor validation already enforces this; assert it stays enforced
+    anchors = {a.id: a for a in load_anchors()}
+    assert len(anchors) >= 6
+    # hand-computed with weights 0.40 / 0.35 / 0.25
+    expected = {
+        "anchor-high": 5.00,  # 2.00 + 1.75 + 1.25
+        "anchor-low": 1.35,  # 0.40 + 0.70 + 0.25
+        "anchor-ref-price": 3.70,  # 1.20 + 1.75 + 0.75
+        "anchor-mid": 3.15,  # 1.60 + 1.05 + 0.50
+        "anchor-format": 4.30,  # 2.00 + 1.05 + 1.25
+        "anchor-good": 4.00,  # 1.60 + 1.40 + 1.00
+    }
+    assert {i: a.verdict.overall() for i, a in anchors.items()} == pytest.approx(expected)
+    passing = {i for i, a in anchors.items() if a.verdict.passes()}
+    # ref-price has overall 3.7 >= 3.5 but fails on faithfulness 3 < 4
+    assert passing == {"anchor-high", "anchor-format", "anchor-good"}
+    assert any(a.case.reference_based for a in anchors.values())
+    for c in CRITERIA:  # every criterion has a low (<=2), a middle (3) and a high (>=4) example
+        s = [a.verdict.scores[c] for a in anchors.values()]
+        assert min(s) <= 2 and 3 in s and max(s) >= 4
+    for a in anchors.values():  # Anchor validation already enforces this; assert it stays enforced
         assert a.verdict.unsupported_high_scores(a.case.model_output) == []

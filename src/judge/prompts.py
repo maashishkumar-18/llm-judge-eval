@@ -105,9 +105,12 @@ def _anchors_block(anchors: Sequence[Anchor]) -> str:
     ]
     for i, a in enumerate(anchors, 1):
         verdict = json.dumps(a.verdict.model_dump(), indent=2, ensure_ascii=False)
+        reference = (
+            f"<reference_answer>\n{a.case.expected_output}\n</reference_answer>\n\n" if a.case.reference_based else ""
+        )
         out.append(
             f"## Example {i}\n<system_prompt>\n{a.case.system_prompt}\n</system_prompt>\n\n"
-            f"<input>\n{a.case.input}\n</input>\n\n<answer>\n{a.case.model_output}\n</answer>\n\n"
+            f"<input>\n{a.case.input}\n</input>\n\n{reference}<answer>\n{a.case.model_output}\n</answer>\n\n"
             f"Correct grading:\n{verdict}\n"
         )
     return "\n".join(out) + "\n"
@@ -154,10 +157,13 @@ def render_pointwise(
 ) -> RenderedPrompt:
     """Mitigated pointwise prompt; reference-based when the case has an expected_output, else reference-free.
 
-    anchors=None uses anchors.yaml; pass () to switch the anchors off.
+    anchors=None uses anchors.yaml; pass () to switch the anchors off. The reference-free prompt only shows
+    reference-free anchors, so it never cites a reference answer the judge was not given.
     """
     rubric = rubric or load_rubric()
     anchors = load_anchors() if anchors is None else anchors
+    if not case.reference_based:
+        anchors = [a for a in anchors if not a.case.reference_based]
     values = {
         "rubric": render_rubric(rubric, case.reference_based),
         "rules": render_rules(rubric),

@@ -114,8 +114,14 @@ def test_reference_selects_template_and_block():
 
 
 def test_anchors_included_by_default_and_switchable():
+    n = len(load_anchors())
+    n_free = sum(not a.case.reference_based for a in load_anchors())
+    assert n == 6 and n_free == 5
     on = render_pointwise(REF).user
-    assert on.count("Correct grading:") == len(load_anchors()) == 3
+    assert on.count("Correct grading:") == n
+    assert on.count("<reference_answer>") == 1 + (n - n_free)  # the case's own + the reference-based anchor
+    free = render_pointwise(FREE).user
+    assert free.count("Correct grading:") == n_free and "<reference_answer>" not in free
     assert "Correct grading:" not in render_pointwise(REF, anchors=()).user
 
 
