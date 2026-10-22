@@ -27,7 +27,7 @@
 ## Open items / risks carried forward
 - (updated j0b) Groq now only generates, so its 8K TPM / 200K TPD limits matter less; confirm plan limits in the Groq console anyway.
 - (done in j0c) Gemini judge limits recorded in CLAUDE.md section 5.
-- Keys were copied from Problem 1's `.env` into this repo's gitignored `.env`.
+- API keys live only in this repo's gitignored `.env` (see `.env.example` for names).
 - Time spent above is an estimate; record the real number.
 
 ## J0b — role swap (generator = Groq gpt-oss-120b, judge = Gemini gemini-3.8-flash)

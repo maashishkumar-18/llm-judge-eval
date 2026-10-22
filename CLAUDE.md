@@ -1,4 +1,4 @@
-# CLAUDE.md — llm-judge-eval (Problem 2: LLM-as-Judge Evaluation Pipeline)
+# CLAUDE.md — llm-judge-eval (LLM-as-Judge Evaluation Pipeline)
 
 Memory across sessions lives here (rarely changed) and in PROGRESS.md (updated every session).
 Read both first. One session = one sub-phase (J0–J10). Commit at the end of every session.
@@ -35,11 +35,11 @@ Scoring: pipeline 20 · judging design 20 · bias handling 25 · judge validatio
 - Rubric (A2): faithfulness 0.40, instruction-following 0.35, completeness 0.25; length/confident tone earn no credit.
 - Modes (A3): pointwise (reference-based if expected_output else reference-free) + pairwise (order swap).
 - Two judge configs (A6): **naive** (holistic 1–10, no anchors/length rule/grounding) and **mitigated**. Every bias row reports both.
-- Suite quality known by construction (A7); context = Northwind passages inside `input`; anchors in a separate file from cases NOT in the eval suite.
+- Suite quality known by construction (A7); the suite is just structured test cases (`input`, `system_prompt`, `model_output`, `expected_output?`), no external corpus or data from any other project, any context written inline in `input`; anchors in a separate file from cases NOT in the eval suite.
 
 **Amendments revised by the swap**
 - **A1 (judge choice) — superseded.** Original: judge = gpt-oss-120b because Llama is not served on the free Groq tier. Now: judge = Gemini `gemini-3.5-flash-lite`, generator = gpt-oss-20b. What matters is unchanged: judge and generator are different families (Google vs OpenAI). Llama remains unavailable (Groq lists 11 models, none a Llama chat model).
-- **A8 (repo/generator) — revised.** Separate repo `llm-judge-eval`, copy (don't import) Problem 1 modules, both links in the template field. The original clause "keep generator A/B on Gemini so the judge never grades its own family" becomes **"keep generator A/B on gpt-oss-20b (Groq) so the Gemini judge never grades Google-family output"**. Consequence: the main A/B experiments judge only OpenAI-family answers with a Google-family judge; the only Google-authored answers the judge sees are the 6 deliberate self-preference pairs.
+- **A8 (repo/generator) — revised.** Standalone repo `llm-judge-eval`: self-contained, imports no other project's code or data. The original clause "keep generator A/B on Gemini so the judge never grades its own family" becomes **"keep generator A/B on gpt-oss-20b (Groq) so the Gemini judge never grades Google-family output"**. Consequence: the main A/B experiments judge only OpenAI-family answers with a Google-family judge; the only Google-authored answers the judge sees are the 6 deliberate self-preference pairs.
 
 **Family guard rationale.** Self-enhancement bias: a judge tends to prefer outputs from its own family. `Settings.enforce_family_guard()` runs at every `LLMClient` construction and refuses judge family == generator family (and any unidentifiable family) unless `ALLOW_SAME_FAMILY=1` (which logs a warning). Gemma counts as Google. With gen = gpt-oss-20b (openai) and judge = gemini-3.5-flash-lite (google) the guard passes; `openai/gpt-oss-120b` or `-safeguard` as judge, or any Gemini/Gemma as generator, is refused. It is a structural mitigation, not a measurement; J7 measures the residual preference.
 
