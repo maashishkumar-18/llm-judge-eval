@@ -12,7 +12,8 @@
 | J5 aggregate, compare, run/compare CLI | done | `j5: aggregate, compare, run and compare CLI` | (fill in) |
 | J6 / J6b probes, sensitivity, hard probes | done | `j6`, `j6b` | (fill in) |
 | J7 family guard, self-preference, score clustering | done | `j7` | (fill in) |
-| J8–J10 | todo | | |
+| J8 validate: kappa, test-retest, adversarial table | done except human-label kappa (labels file not written yet) | `j8` | (fill in) |
+| J9–J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -298,3 +299,43 @@
 ### J7 template entries (agreed in review)
 - **Self-preference / family guard:** "family guard in code; exploratory probe inconclusive (N=6, CI [0.29, 1.00])". The naive self-preference row is deliberately NOT run (no budget; would not change the conclusion). The c01 caveat above (fact check weaker than "equally good") stays with the result.
 - **Score clustering:** "no improvement". Both judges pile up at the top because most answers are good, the faithfulness row is more clustered than the naive score, and the judges differ in prompt, scale, criteria and anchors at once, so no gap is attributed to the anchors.
+
+
+
+## J8 - judge validation (`src/judge/validate.py`; judge gemini-3.5-flash-lite, JSON mode off; EXPLORATORY, N in every row)
+- **Code:** `judge validate` (offline, zero judge calls; writes `results/validation.{json,md}`), `judge retest` (live, budget `test_retest`; writes `results/test_retest.json`, `results/pointwise_retest{1,2}.json`, `logs/retest_main.jsonl`), `make validate` / `make retest`. Kappa is my own implementation (integer arithmetic; undefined = None with a reason when chance agreement is 1). **Tests: 296 passed** (+25 in tests/test_validate.py): kappa hand-computed (50-item example = 0.4, perfect/-1/0/undefined, 3-class = 0.25), confusion and rates, label file parsing and errors, retest sd hand-computed (0.2309, 0.4619), nonce cache-bypass through a real client with a mock transport, adversarial table recomputation. Mutation check: breaking the kappa denominator fails 5 tests.
+- **Human labels: NOT DONE.** `labels/human_labels.jsonl` does not exist yet, so the report says N=0 and prints no human-label number. Format (one object per line, label BEFORE looking at verdicts): `{"case_id": "c01", "config": "A", "label": "pass"|"fail", "note": "optional"}`; `config` defaults to A. Once it exists, `make validate` fills the section (mitigated and naive vs human, human vs by-construction, disagreements, controls).
+- **By-construction labels (deterministic, judge not involved):** suite answers = `clustering.suite_label` (reference facts + the case's constraints; reference-free cases = constraints only); probes = states the true fact, not the false one, within the case's length limits (so padded is a fail by its length defect); fabricated-reasoning answers = fail by construction. Naive judge "pass" = score >= 8 (the J6 acceptance threshold; it has no pass rule of its own).
+
+| stratum | judge | N | agreement (always-pass baseline) | kappa [95% bootstrap] | false pass | false fail |
+|---|---|---|---|---|---|---|
+| suite A | mitigated | 20 | 1.00 (0.90) | 1.00 (CI degenerate) | 0/2 | 0/18 |
+| suite B | mitigated | 20 | 0.90 (0.85) | 0.61 [-0.07, 1.00] | 1/3 | 1/17 |
+| suite distinct (A+B deduped) | mitigated | 34 | 0.94 (0.88) | 0.72 [0.00, 1.00] | 1/4 | 1/30 |
+| suite distinct | naive | 13 | 1.00 (0.85) | 1.00 (CI degenerate) | 0/2 | 0/11 |
+| probes (designed extremes) | mitigated | 36 | 1.00 (0.17) | 1.00 (CI degenerate) | 0/30 | 0/6 |
+| probes | naive | 36 | 0.94 (0.17) | 0.77 [0.30, 1.00] | 0/30 | 2/6 |
+| all distinct | mitigated | 70 | 0.97 (0.51) | 0.94 [0.85, 1.00] | 1/34 | 1/36 |
+| all distinct | naive | 49 | 0.96 (0.35) | 0.91 [0.76, 1.00] | 0/32 | 2/17 |
+
+  - **Headline is suite distinct (N=34: 30 label-pass, 4 label-fail): mitigated kappa 0.72, interval lower bound 0.00.** The probes stratum is constructed (6 correct, 30 wrong/defective) so its kappa measures separation of designed corruptions, not agreement on natural answers. Strata share items and are not independent.
+  - **The two mitigated disagreements are both config B and both look like label limits, not judge errors** (my reading, post-hoc, from the saved scores and answers): **c40** (reference-free) label = constraints met, judge faithfulness 1 (its rationale: B invents troubleshooting steps, auto-save and "File > Recover Unsaved Documents", that the customer message does not support); constraint-only labels cannot see faithfulness. **c41** label = fail because the fact check requires the "online booking" detail (B's answer only says no phone number), judge = pass with faithfulness 5, completeness 3; the pass rule has no completeness threshold. Not re-labelled. Naive misses are two terse-correct answers scored 7 (c16, c19) under the >= 8 threshold.
+  - **Negative controls (per stratum, mitigated, all PASS):** always-pass and always-fail judges have kappa exactly 0 (while their raw agreement equals the base rate, e.g. 0.88 on suite distinct, which is why agreement alone is not reported as a result); the inverted judge scores lower (suite distinct -0.19); shuffled labels x10,000 give mean kappa 0.001 (tolerance +-0.10, set before running) and permutation p of kappa >= observed: suite A 0.0045, suite B 0.045, suite distinct 0.003, probes 0.0001.
+- **Test-retest (live, 20 network calls of cap 23, 0 INVALID, 0 re-asks; N=10 cases, every second case in suite order, rule fixed in code):** run 1 = the saved config-A run (nonce ""), runs 2-3 = nonce `retest1`, `retest2` (cache bypassed; controls: 0 cached calls in both nonce runs, nonces distinct). Pass/fail flips **0/10** (95% exact CI [0.00, 0.31]). Overall sd per case (sample, n-1): mean 0.095, max 0.404; 4 of 10 cases changed overall at least once (c01 completeness 4/3/4, c09 IF 5/5/4, c33 IF 5/5/3, c39 IF 4/3/3). Criterion scores identical across all three runs: faithfulness 10/10, completeness 9/10, instruction-following 7/10. Pairwise run agreement on pass/fail 1.00 (n=10) for all three pairs; mean |d overall| 0.06 / 0.14 / 0.13.
+  - **Reading:** at temperature 0 the verdicts are stable on pass/fail in this sample, and the noise is in instruction-following (the criterion where the judge counts words/sentences). The zero flips are partly luck of the subset: c33 and c39 sit on the IF = 3 boundary (still a pass), so one more point of IF noise would flip them. N=10 cannot show that flips are rare, only that none were seen.
+  - **Deviation to flag:** the request said "rerun the suite 3 times"; `budget.yaml` (test_retest = 10 cases x 2 reruns, cap 23) plans 3 runs per case in total, counting the saved run. I followed the budget: 3 runs of 10 cases, not 3 nonce reruns of all 20 (60 calls). `judge retest --reruns 3` on 10 cases is refused by the budget check unless `budget.yaml` is raised.
+- **Adversarial summary (from probes.json, probes_hard.json, sensitivity.json; N=6 bases per row; counts and deltas are recomputed from the raw per-item verdicts and cross-checked against the stored summaries: 0 mismatches; the sensitivity row is taken from its stored summary):**
+
+| probe | metric | naive | mitigated |
+|---|---|---|---|
+| confidently wrong, reference shown | accepted (fooled) | 0/6 | 0/6 |
+| confidently wrong, reference hidden | accepted (fooled) | 0/6 | 0/6 |
+| verbose wrong vs terse correct | verbose-wrong scored >= terse-correct | 0/6 | 0/6 |
+| right answer + fabricated reasoning | accepted (fooled) | 0/6 | 0/6 |
+| padded minus terse-correct | mean score delta | -6.00 (naive 1-10) | +0.06 (faithfulness+completeness 1-5) |
+| correct vs wrong, pairwise, both orders | picked the correct answer | 6/6 | 6/6 |
+
+  - **Negative control that matters here: terse-correct answers accepted** naive **4/6**, mitigated **6/6** (a judge that rejects everything also has 0 fooled). So the naive judge's 0/6 is partly strictness (it rejects two correct terse answers); the mitigated judge's 0/6 comes with full acceptance of correct answers. Discrimination (correct accepted rate minus fooled rate): naive 0.67, mitigated 1.00. Trivial baselines: always-accept = fooled 1.0, always-reject = correct accepted 0.0. The table also detects a planted failure (a test sets one wrong answer's faithfulness to 5; the fooled count and the stored-vs-recomputed check both move).
+  - **No before/after improvement can be claimed from the adversarial probes** (naive already 0/6); the naive padded delta is a length-limit penalty, not an anti-verbosity judge (see J6).
+- **Caveats (also printed in `results/validation.md`):** reference-free labels are constraint-only; reference-based labels include completeness facts the pass rule ignores; A and B share 6 identical answers; bootstrap CIs collapse under perfect agreement; positives are few so one item moves kappa a lot. All numbers exploratory.
+- **Budget:** test_retest 20/23. Time spent: not recorded. Reflection sections left for the user.

@@ -1,0 +1,523 @@
+{
+  "label": "retest1",
+  "cases_file": "data/outputs/A.json",
+  "nonce": "retest1",
+  "judge_model": "gemini-3.5-flash-lite",
+  "json_mode": false,
+  "case_ids": [
+    "c01",
+    "c09",
+    "c15",
+    "c19",
+    "c24",
+    "c31",
+    "c33",
+    "c39",
+    "c41",
+    "c43"
+  ],
+  "summary": {
+    "n": 10,
+    "n_scored": 10,
+    "n_invalid": 0,
+    "n_invalid_parse": 0,
+    "n_invalid_call": 0,
+    "parse_status": {
+      "strict": 10,
+      "extract": 0,
+      "repair": 0,
+      "reask": 0,
+      "invalid": 0
+    },
+    "overall": {
+      "mean": 4.62,
+      "sd": 0.7782,
+      "distinct": 4
+    },
+    "criteria_mean": {
+      "faithfulness": 4.6,
+      "instruction_following": 4.8,
+      "completeness": 4.4
+    },
+    "pass_rate_scored": 0.9,
+    "pass_rate_invalid_as_fail": 0.9,
+    "unsupported_high_score_cases": 0,
+    "judge_calls": 10,
+    "judge_calls_network": 10,
+    "reasks": 0,
+    "tokens_in": 35861,
+    "tokens_out": 2673
+  },
+  "results": [
+    {
+      "case_id": "c01",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 3
+      },
+      "overall": 4.5,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The fine is $0.25 × 10 = $2.50.",
+          "rationale": "The fine calculation ($0.25 per day for 10 days = $2.50) and the renewal limit (up to 2 times) are fully supported by the notice.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The fine is $0.25 × 10 = $2.50. A book can be renewed up to 2 times.",
+          "rationale": "The answer consists of exactly two sentences and relies only on the provided notice, meeting all explicit constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "A book can be renewed up to 2 times.",
+          "rationale": "It gives the correct fine and the renewal limit, but misses the condition that renewals are allowed 'unless another reader has reserved them'.",
+          "score": 3
+        }
+      },
+      "calls": [
+        {
+          "tag": "c01|retest1",
+          "prompt_hash": "d2ab6f996b78cf19",
+          "cached": false,
+          "tokens_in": 3785,
+          "tokens_out": 279
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c09",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 1,
+        "instruction_following": 5,
+        "completeness": 1
+      },
+      "overall": 2.4,
+      "passed": false,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Yes, you can walk in at 12:45 on Saturday; the clinic is open until 13:00.",
+          "rationale": "The answer concludes that walking in at 12:45 is allowed, which contradicts the notice and reference answer (walk-ins are accepted until 30 minutes before closing, which is 12:30 on Saturdays).",
+          "score": 1
+        },
+        "instruction_following": {
+          "evidence": "Yes, you can walk in at 12:45 on Saturday; the clinic is open until 13:00.",
+          "rationale": "The answer is 15 words long, meeting the constraint of at most 20 words, and acts as a clinic receptionist using only the notice.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Yes, you can walk in at 12:45 on Saturday",
+          "rationale": "The answer addresses the question directly, but reaches the opposite of the correct conclusion by failing to account for the 30-minute walk-in cutoff.",
+          "score": 1
+        }
+      },
+      "calls": [
+        {
+          "tag": "c09|retest1",
+          "prompt_hash": "631e8da3b324ed54",
+          "cached": false,
+          "tokens_in": 3748,
+          "tokens_out": 277
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c15",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "Not stated in the notice.",
+          "rationale": "The answer correctly identifies that the cost is not mentioned in the notice, matching the reference answer.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "Not stated in the notice.",
+          "rationale": "The system prompt requires replying exactly with 'Not stated in the notice.' if the notice does not say, which the answer does.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "Not stated in the notice.",
+          "rationale": "The answer fully addresses the question according to the limitations of the provided notice, matching the reference answer completely.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c15|retest1",
+          "prompt_hash": "274b43fc28a43faf",
+          "cached": false,
+          "tokens_in": 3695,
+          "tokens_out": 178
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c19",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "The answer correctly states the fee is 45 from 1 June onward, matching the notice and the reference answer without inventing anything.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "The answer is written in exactly one sentence and relies only on the provided notice, meeting all explicit constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The late registration fee today is 45.",
+          "rationale": "It directly answers the question about the late registration fee today using the correct value from the notice.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c19|retest1",
+          "prompt_hash": "37298510af22ceaa",
+          "cached": false,
+          "tokens_in": 3674,
+          "tokens_out": 191
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c24",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+          "rationale": "Every claim in the answer is fully supported by the passage and matches the reference answer without any inventions or contradictions.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+          "rationale": "The answer uses only the passage, is exactly two sentences long, and does not use the forbidden word \"very\".",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The bridge was closed because inspectors found a cracked support beam. It is expected to reopen in August.",
+          "rationale": "It covers both required points (why the bridge was closed and when it will reopen) matching the key information in the reference answer.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c24|retest1",
+          "prompt_hash": "d400e24a08489ad3",
+          "cached": false,
+          "tokens_in": 3716,
+          "tokens_out": 226
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c31",
+      "label": "retest1",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The Alder insulated bottle delivers 350 ml of pure refreshment in sleek stainless steel. It keeps drinks cold for 24 hours or hot for 12, and its slim design fits standard cup holders. Available in three stylish colours...",
+          "rationale": "Every single claim (Alder insulated bottle, 350 ml, stainless steel, keeps drinks cold for 24 hours or hot for 12, fits standard cup holders, three colours) is supported directly by the input product details.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The Alder insulated bottle delivers 350 ml of pure refreshment in sleek stainless steel. It keeps drinks cold for 24 hours or hot for 12, and its slim design fits standard cup holders. Available in three stylish colours, it’s the perfect companion for on‑the‑go hydration.",
+          "rationale": "The word count is 45 words, which successfully falls within the required 40 to 60 word limit, and it explicitly mentions the 350 ml capacity.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The Alder insulated bottle delivers 350 ml of pure refreshment in sleek stainless steel. It keeps drinks cold for 24 hours or hot for 12, and its slim design fits standard cup holders. Available in three stylish colours...",
+          "rationale": "The request asks for a product description incorporating the provided features, and the answer incorporates all of them (Alder, insulated, 350 ml, stainless steel, cold 24h/hot 12h, cup holders, three colours).",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c31|retest1",
+          "prompt_hash": "1679daf4a3ebe38d",
+          "cached": false,
+          "tokens_in": 3259,
+          "tokens_out": 405
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c33",
+      "label": "retest1",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "I’m sorry your order was delayed and arrived dented. We’ll send a replacement right away and cover the shipping cost.",
+          "rationale": "Every claim in the answer (apology, replacement offer, shipping cost, discount offer, refund option) is a standard customer service response to the input and contains no contradictions or fabrications, though there was no reference policy provided to constrain it further.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "I’m sorry your order was delayed and arrived dented. We’ll send a replacement right away and cover the shipping cost.",
+          "rationale": "The system prompt constraints were: apologize once (done), do not use the word 'unfortunately' (not used), and stay within 80 words. Counting the words in the answer, it contains 66 words, which meets the length limit.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "We’ll send a replacement right away and cover the shipping cost. In addition, we’ll issue a 15 % discount on your next purchase as a thank‑you for your patience. Please let us know if you’d prefer a refund instead.",
+          "rationale": "The customer asked 'What are you going to do about it?' regarding a late, dented birthday order. The answer addresses this thoroughly by offering a replacement, a shipping cost waiver, a discount, and an alternative refund option.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c33|retest1",
+          "prompt_hash": "bb0f88c47ee23723",
+          "cached": false,
+          "tokens_in": 3271,
+          "tokens_out": 351
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c39",
+      "label": "retest1",
+      "mode": "free",
+      "template_id": "pointwise_free.v1",
+      "template_sha": "5f87c08ce60a",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 3,
+        "completeness": 5
+      },
+      "overall": 4.3,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The Lakeside Lantern Festival returned Saturday, drawing 3,000 visitors—up from 2,100 last year—thanks to a new evening ferry service.",
+          "rationale": "Every claim in the summary is directly supported by the provided article, with no added or contradicted facts.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The Lakeside Lantern Festival returned Saturday, drawing 3,000 visitors—up from 2,100 last year—thanks to a new evening ferry service. A planned fireworks show was cancelled due to strong winds, and ticket holders received a free pass for next year.",
+          "rationale": "The answer summarizes the article using only its contents and includes the attendance figure, but it is 42 words long, missing the strict 'at most 40 words' limit.",
+          "score": 3
+        },
+        "completeness": {
+          "evidence": "drawing 3,000 visitors... A planned fireworks show was cancelled due to strong winds",
+          "rationale": "It captures the main points of the article—the festival return, attendance, the ferry reason, the cancellation, and the compensation—making it a complete summary.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c39|retest1",
+          "prompt_hash": "b08611f36cb82742",
+          "cached": false,
+          "tokens_in": 3273,
+          "tokens_out": 295
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c41",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "the notice doesn’t include a phone number. You can book online through the clinic’s website instead.",
+          "rationale": "Every claim matches the notice and the reference answer, correctly stating that no phone number is provided and that booking is online.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "I’m sorry, but the notice doesn’t include a phone number. You can book online through the clinic’s website instead.",
+          "rationale": "The answer adopts the requested role, uses only the provided notice, and is exactly two sentences long, meeting all constraints.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "the notice doesn’t include a phone number. You can book online through the clinic’s website instead.",
+          "rationale": "It covers both key points from the reference answer: that there is no phone number and that new patients can book online via the website.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c41|retest1",
+          "prompt_hash": "2b21e53b11c15f81",
+          "cached": false,
+          "tokens_in": 3723,
+          "tokens_out": 241
+        }
+      ],
+      "nonce": "retest1"
+    },
+    {
+      "case_id": "c43",
+      "label": "retest1",
+      "mode": "reference",
+      "template_id": "pointwise_ref.v1",
+      "template_sha": "b09811cb42f6",
+      "rubric_version": "rubric-v1",
+      "parse_status": "strict",
+      "error_kind": "",
+      "error": "",
+      "repairs": [],
+      "scores": {
+        "faithfulness": 5,
+        "instruction_following": 5,
+        "completeness": 5
+      },
+      "overall": 5.0,
+      "passed": true,
+      "unsupported_high_scores": [],
+      "verdict": {
+        "faithfulness": {
+          "evidence": "The passage does not specify which city the footbridge is in, and it also says that no reopening date has been set.",
+          "rationale": "Every claim is fully supported by the input and matches the reference answer; nothing is invented or contradicted.",
+          "score": 5
+        },
+        "instruction_following": {
+          "evidence": "The passage does not specify which city the footbridge is in, and it also says that no reopening date has been set.",
+          "rationale": "The answer obeys the system prompt by answering from the passage and using exactly two sentences.",
+          "score": 5
+        },
+        "completeness": {
+          "evidence": "The passage does not specify which city the footbridge is in, and it also says that no reopening date has been set.",
+          "rationale": "It covers both required points from the reference: that the city is not named and that no reopening date has been set.",
+          "score": 5
+        }
+      },
+      "calls": [
+        {
+          "tag": "c43|retest1",
+          "prompt_hash": "59022729581336c7",
+          "cached": false,
+          "tokens_in": 3717,
+          "tokens_out": 230
+        }
+      ],
+      "nonce": "retest1"
+    }
+  ]
+}

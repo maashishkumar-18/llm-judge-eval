@@ -623,6 +623,73 @@ def cmd_replay(args: argparse.Namespace) -> int:
     return 0 if same == len(rows) else 1
 
 
+def cmd_retest(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from judge.llm import LLMClient
+    from judge.validate import analyze_retest, retest_ids, run_retest
+
+    sys.stdout.reconfigure(errors="replace")
+    s = load_settings()
+    cases_file = f"data/outputs/{args.config}.json"
+    cases = _load_cases(cases_file)
+    ids = args.ids or retest_ids(cases)
+    missing = set(ids) - {c.id for c in cases}
+    if missing:
+        print(f"unknown case ids: {sorted(missing)}")
+        return 1
+    baseline = json.loads(Path(f"results/pointwise_{args.config}.json").read_text(encoding="utf-8"))
+    budget = load_budget()
+    ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
+    try:  # upper bound: nonce draws already in the cache from an earlier run cost nothing
+        budget.check_run("test_retest", len(ids) * args.reruns, spent=ledger.used_experiment("test_retest"))
+    except BudgetExceeded as e:
+        print(e)
+        return 1
+
+    async def run():
+        async with LLMClient(s, "judge", log_name="retest_main.jsonl", experiment="test_retest") as client:
+            docs, left = await run_retest(client, cases, ids, args.reruns, cases_file=cases_file, fresh=args.fresh)
+            return docs, left, client.model, client.json_mode
+
+    docs, left, model, json_mode = asyncio.run(run())
+    if left:
+        print(f"STOPPED with {len(left)} cases left (quota cap); re-run the same command to resume: {left}")
+        return 2
+    keep = set(ids)
+    base = {**baseline, "results": [r for r in baseline["results"] if r["case_id"] in keep]}
+    analysis = analyze_retest([base, *docs])
+    doc = {"judge_model": model, "json_mode": json_mode, "judge_temperature": s.judge_temperature, "exploratory": True,
+           "config": args.config, "case_ids": ids, "reruns": args.reruns,
+           "design": "run 1 = the saved config-%s pointwise run (nonce ''); runs 2.. = reruns with nonce retest<k> (cache bypassed)" % args.config,
+           **analysis}
+    Path(args.out).write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    pf, sd = analysis["pass_flips"], analysis["overall_sd"]
+    print(f"{analysis['n_cases']} cases x {analysis['n_runs']} runs | pass flips {pf['k']}/{pf['n']} {pf['cases']} | overall sd mean {sd['mean']} max {sd['max']} | invalid {analysis['n_invalid_per_run']}")
+    for c in analysis["negative_controls"]:
+        print(f"  control {'PASS' if c['ok'] else 'FAIL'}: {c['name']} -> {c['observed']}")
+    print(f"wrote {args.out}")
+    return 0
+
+
+def cmd_validate(args: argparse.Namespace) -> int:
+    from judge.validate import LabelError, run_validation, write_outputs
+
+    sys.stdout.reconfigure(errors="replace")
+    try:
+        doc = run_validation(labels_path=args.labels)
+    except LabelError as e:
+        print(f"label file error: {e}")
+        return 1
+    write_outputs(doc, args.out, args.out.replace(".json", ".md"))
+    from judge.validate import render_markdown
+
+    print(render_markdown(doc))
+    print(f"wrote {args.out} and {args.out.replace('.json', '.md')} (0 judge calls)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="judge")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -706,7 +773,18 @@ def main(argv: list[str] | None = None) -> None:
     cl.add_argument("--nonce", default="")
     cl.add_argument("--fresh", action="store_true")
     cl.set_defaults(fn=cmd_clustering)
-    rp = sub.add_parser("replay", help="reproduce saved pointwise verdicts from the call log, zero API calls")
+    rt = sub.add_parser("retest", help="test-retest: re-judge a subset with a nonce per rerun (cache bypassed; live judge calls, budget test_retest)")
+    rt.add_argument("--config", default="A")
+    rt.add_argument("--ids", nargs="+", help="default: every second case in suite order (10 of 20)")
+    rt.add_argument("--reruns", type=int, default=2, help="nonce reruns; the saved run counts as run 1, so 2 reruns = 3 runs (the budget); 3 reruns on 10 cases exceeds the cap")
+    rt.add_argument("--out", default="results/test_retest.json")
+    rt.add_argument("--fresh", action="store_true")
+    rt.set_defaults(fn=cmd_retest)
+    va = sub.add_parser("validate", help="kappa/agreement vs by-construction and human labels, test-retest, adversarial table (no judge calls)")
+    va.add_argument("--labels", default=None, help="human labels JSONL (default labels/human_labels.jsonl)")
+    va.add_argument("--out", default="results/validation.json")
+    va.set_defaults(fn=cmd_validate)
+    rp = sub.add_parser("replay",help="reproduce saved pointwise verdicts from the call log, zero API calls")
     rp.add_argument("--results", default="results/pointwise_A.json")
     rp.add_argument("--log", default="", help="call log (default logs/pointwise_<label>.jsonl)")
     rp.add_argument("--cases-file", default="")

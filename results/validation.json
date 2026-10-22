@@ -1,0 +1,1453 @@
+{
+  "judge_model": "gemini-3.5-flash-lite",
+  "rubric_version": "rubric-v1",
+  "exploratory": true,
+  "pass_rule": "mitigated = rubric pass rule recomputed from stored scores; naive = score >= 8 of 10",
+  "by_construction": {
+    "suite_A": {
+      "n_items": 20,
+      "label_pass": 18,
+      "label_fail": 2,
+      "mitigated": {
+        "n": 20,
+        "agree": 20,
+        "agreement": 1.0,
+        "agreement_ci95_exact": [
+          0.8316,
+          1.0
+        ],
+        "kappa": 1.0,
+        "confusion": {
+          "tp": 18,
+          "fp": 0,
+          "fn": 0,
+          "tn": 2
+        },
+        "label_pass": 18,
+        "judge_pass": 18,
+        "always_pass_agreement": 0.9,
+        "false_pass": {
+          "k": 0,
+          "n": 2
+        },
+        "false_fail": {
+          "k": 0,
+          "n": 18
+        },
+        "kappa_ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "undefined_resamples": 1239
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.9,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.2195,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": 0.0008,
+            "ok": true,
+            "p_perm_ge_observed": 0.0045
+          }
+        ],
+        "disagreements": []
+      },
+      "naive": {
+        "n": 13,
+        "agree": 13,
+        "agreement": 1.0,
+        "agreement_ci95_exact": [
+          0.7529,
+          1.0
+        ],
+        "kappa": 1.0,
+        "confusion": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "tn": 2
+        },
+        "label_pass": 11,
+        "judge_pass": 11,
+        "always_pass_agreement": 0.8462,
+        "false_pass": {
+          "k": 0,
+          "n": 2
+        },
+        "false_fail": {
+          "k": 0,
+          "n": 11
+        },
+        "kappa_ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "undefined_resamples": 1210
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.8462,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1538,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.352,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0006,
+            "ok": true,
+            "p_perm_ge_observed": 0.0138
+          }
+        ],
+        "disagreements": []
+      }
+    },
+    "suite_B": {
+      "n_items": 20,
+      "label_pass": 17,
+      "label_fail": 3,
+      "mitigated": {
+        "n": 20,
+        "agree": 18,
+        "agreement": 0.9,
+        "agreement_ci95_exact": [
+          0.683,
+          0.9877
+        ],
+        "kappa": 0.6078,
+        "confusion": {
+          "tp": 16,
+          "fp": 1,
+          "fn": 1,
+          "tn": 2
+        },
+        "label_pass": 17,
+        "judge_pass": 17,
+        "always_pass_agreement": 0.85,
+        "false_pass": {
+          "k": 1,
+          "n": 3
+        },
+        "false_fail": {
+          "k": 1,
+          "n": 17
+        },
+        "kappa_ci95": {
+          "low": -0.0714,
+          "high": 1.0,
+          "undefined_resamples": 117
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.85,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.15,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.2081,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0003,
+            "ok": true,
+            "p_perm_ge_observed": 0.0451
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c40",
+            "origin": "suite:B",
+            "label": true,
+            "judge_pass": false,
+            "scores": {
+              "faithfulness": 1,
+              "instruction_following": 5,
+              "completeness": 5
+            }
+          },
+          {
+            "case_id": "c41",
+            "origin": "suite:B",
+            "label": false,
+            "judge_pass": true,
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 3
+            }
+          }
+        ]
+      },
+      "naive": {
+        "n": 0,
+        "agree": 0,
+        "agreement": null,
+        "agreement_ci95_exact": null,
+        "kappa": null,
+        "confusion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 0,
+          "tn": 0
+        },
+        "label_pass": 0,
+        "judge_pass": 0,
+        "always_pass_agreement": null,
+        "false_pass": {
+          "k": 0,
+          "n": 0
+        },
+        "false_fail": {
+          "k": 0,
+          "n": 0
+        },
+        "kappa_undefined_reason": "no items",
+        "kappa_ci95": null,
+        "n_invalid": 0,
+        "negative_controls": [],
+        "disagreements": []
+      }
+    },
+    "suite_distinct": {
+      "n_items": 34,
+      "label_pass": 30,
+      "label_fail": 4,
+      "mitigated": {
+        "n": 34,
+        "agree": 32,
+        "agreement": 0.9412,
+        "agreement_ci95_exact": [
+          0.8032,
+          0.9928
+        ],
+        "kappa": 0.7167,
+        "confusion": {
+          "tp": 29,
+          "fp": 1,
+          "fn": 1,
+          "tn": 3
+        },
+        "label_pass": 30,
+        "judge_pass": 30,
+        "always_pass_agreement": 0.8824,
+        "false_pass": {
+          "k": 1,
+          "n": 4
+        },
+        "false_fail": {
+          "k": 1,
+          "n": 30
+        },
+        "kappa_ci95": {
+          "low": 0.0,
+          "high": 1.0,
+          "undefined_resamples": 36
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.8824,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1176,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.1878,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": 0.0013,
+            "ok": true,
+            "p_perm_ge_observed": 0.0027
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c40",
+            "origin": "suite:B",
+            "label": true,
+            "judge_pass": false,
+            "scores": {
+              "faithfulness": 1,
+              "instruction_following": 5,
+              "completeness": 5
+            }
+          },
+          {
+            "case_id": "c41",
+            "origin": "suite:B",
+            "label": false,
+            "judge_pass": true,
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 3
+            }
+          }
+        ]
+      },
+      "naive": {
+        "n": 13,
+        "agree": 13,
+        "agreement": 1.0,
+        "agreement_ci95_exact": [
+          0.7529,
+          1.0
+        ],
+        "kappa": 1.0,
+        "confusion": {
+          "tp": 11,
+          "fp": 0,
+          "fn": 0,
+          "tn": 2
+        },
+        "label_pass": 11,
+        "judge_pass": 11,
+        "always_pass_agreement": 0.8462,
+        "false_pass": {
+          "k": 0,
+          "n": 2
+        },
+        "false_fail": {
+          "k": 0,
+          "n": 11
+        },
+        "kappa_ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "undefined_resamples": 1210
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.8462,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1538,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.352,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0006,
+            "ok": true,
+            "p_perm_ge_observed": 0.0138
+          }
+        ],
+        "disagreements": []
+      }
+    },
+    "probes": {
+      "n_items": 36,
+      "label_pass": 6,
+      "label_fail": 30,
+      "mitigated": {
+        "n": 36,
+        "agree": 36,
+        "agreement": 1.0,
+        "agreement_ci95_exact": [
+          0.9026,
+          1.0
+        ],
+        "kappa": 1.0,
+        "confusion": {
+          "tp": 6,
+          "fp": 0,
+          "fn": 0,
+          "tn": 30
+        },
+        "label_pass": 6,
+        "judge_pass": 6,
+        "always_pass_agreement": 0.1667,
+        "false_pass": {
+          "k": 0,
+          "n": 30
+        },
+        "false_fail": {
+          "k": 0,
+          "n": 6
+        },
+        "kappa_ci95": {
+          "low": 1.0,
+          "high": 1.0,
+          "undefined_resamples": 12
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1667,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.8333,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.3846,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0014,
+            "ok": true,
+            "p_perm_ge_observed": 0.0001
+          }
+        ],
+        "disagreements": []
+      },
+      "naive": {
+        "n": 36,
+        "agree": 34,
+        "agreement": 0.9444,
+        "agreement_ci95_exact": [
+          0.8134,
+          0.9932
+        ],
+        "kappa": 0.7692,
+        "confusion": {
+          "tp": 4,
+          "fp": 0,
+          "fn": 2,
+          "tn": 30
+        },
+        "label_pass": 6,
+        "judge_pass": 4,
+        "always_pass_agreement": 0.1667,
+        "false_pass": {
+          "k": 0,
+          "n": 30
+        },
+        "false_fail": {
+          "k": 2,
+          "n": 6
+        },
+        "kappa_ci95": {
+          "low": 0.301,
+          "high": 1.0,
+          "undefined_resamples": 12
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1667,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.8333,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.2439,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0008,
+            "ok": true,
+            "p_perm_ge_observed": 0.0001
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c16",
+            "origin": "probe:ref:terse",
+            "label": true,
+            "judge_pass": false,
+            "scores": 7
+          },
+          {
+            "case_id": "c19",
+            "origin": "probe:ref:terse",
+            "label": true,
+            "judge_pass": false,
+            "scores": 7
+          }
+        ]
+      }
+    },
+    "all_distinct": {
+      "n_items": 70,
+      "label_pass": 36,
+      "label_fail": 34,
+      "mitigated": {
+        "n": 70,
+        "agree": 68,
+        "agreement": 0.9714,
+        "agreement_ci95_exact": [
+          0.9006,
+          0.9965
+        ],
+        "kappa": 0.9428,
+        "confusion": {
+          "tp": 35,
+          "fp": 1,
+          "fn": 1,
+          "tn": 33
+        },
+        "label_pass": 36,
+        "judge_pass": 36,
+        "always_pass_agreement": 0.5143,
+        "false_pass": {
+          "k": 1,
+          "n": 34
+        },
+        "false_fail": {
+          "k": 1,
+          "n": 36
+        },
+        "kappa_ci95": {
+          "low": 0.855,
+          "high": 1.0,
+          "undefined_resamples": 0
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.5143,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.4857,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.9413,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0004,
+            "ok": true,
+            "p_perm_ge_observed": 0.0001
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c40",
+            "origin": "suite:B",
+            "label": true,
+            "judge_pass": false,
+            "scores": {
+              "faithfulness": 1,
+              "instruction_following": 5,
+              "completeness": 5
+            }
+          },
+          {
+            "case_id": "c41",
+            "origin": "suite:B",
+            "label": false,
+            "judge_pass": true,
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 3
+            }
+          }
+        ]
+      },
+      "naive": {
+        "n": 49,
+        "agree": 47,
+        "agreement": 0.9592,
+        "agreement_ci95_exact": [
+          0.8602,
+          0.995
+        ],
+        "kappa": 0.9074,
+        "confusion": {
+          "tp": 15,
+          "fp": 0,
+          "fn": 2,
+          "tn": 32
+        },
+        "label_pass": 17,
+        "judge_pass": 15,
+        "always_pass_agreement": 0.3469,
+        "false_pass": {
+          "k": 0,
+          "n": 32
+        },
+        "false_fail": {
+          "k": 2,
+          "n": 17
+        },
+        "kappa_ci95": {
+          "low": 0.7581,
+          "high": 1.0,
+          "undefined_resamples": 0
+        },
+        "n_invalid": 0,
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.3469,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.6531,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.7148,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": 0.0015,
+            "ok": true,
+            "p_perm_ge_observed": 0.0001
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c16",
+            "origin": "probe:ref:terse",
+            "label": true,
+            "judge_pass": false,
+            "scores": 7
+          },
+          {
+            "case_id": "c19",
+            "origin": "probe:ref:terse",
+            "label": true,
+            "judge_pass": false,
+            "scores": 7
+          }
+        ]
+      }
+    }
+  },
+  "dedupe_conflicts": 0,
+  "caveats": [
+    "By-construction labels for the reference-free suite cases check the case's own constraints only, so they cannot see a faithfulness failure; a judge that flags one will look like a disagreement.",
+    "By-construction labels for reference-based cases also require the reference's key facts (a completeness matter), but the pass rule has no completeness threshold, so a terse-but-faithful answer can be label-fail and judge-pass.",
+    "The 'probes' stratum is a set of designed extremes (6 correct, 30 wrong or defective): kappa there measures separation of constructed corruptions, not agreement on natural answers; the headline is suite_distinct.",
+    "Configs A and B share 6 identical answers, so suite_A and suite_B overlap; suite_distinct removes the duplicates. Strata share items, so they are not independent evidence.",
+    "Perfect agreement collapses the bootstrap interval to a point ('CI degenerate'); use the exact interval on agreement and the N.",
+    "Positives are few (suite: 4 label-fail of 34), so one item moves kappa a lot; every kappa here is exploratory."
+  ],
+  "human": {
+    "status": "labels file not found",
+    "path": "labels\\human_labels.jsonl",
+    "n_labelled": 0,
+    "format": "one JSON object per line: {\"case_id\": \"c01\", \"config\": \"A\", \"label\": \"pass\" or \"fail\", \"note\": \"optional\"}; config defaults to A"
+  },
+  "test_retest": {
+    "judge_model": "gemini-3.5-flash-lite",
+    "json_mode": false,
+    "judge_temperature": 0.0,
+    "exploratory": true,
+    "config": "A",
+    "case_ids": [
+      "c01",
+      "c09",
+      "c15",
+      "c19",
+      "c24",
+      "c31",
+      "c33",
+      "c39",
+      "c41",
+      "c43"
+    ],
+    "reruns": 2,
+    "design": "run 1 = the saved config-A pointwise run (nonce ''); runs 2.. = reruns with nonce retest<k> (cache bypassed)",
+    "n_cases": 10,
+    "n_runs": 3,
+    "run_labels": [
+      "A",
+      "retest1",
+      "retest2"
+    ],
+    "n_comparable": 10,
+    "n_complete": 10,
+    "n_invalid_per_run": {
+      "A": 0,
+      "retest1": 0,
+      "retest2": 0
+    },
+    "pass_flips": {
+      "k": 0,
+      "n": 10,
+      "rate": 0.0,
+      "ci95_exact": [
+        0.0,
+        0.3085
+      ],
+      "cases": []
+    },
+    "overall_sd": {
+      "mean": 0.0953,
+      "max": 0.4041,
+      "cases_with_any_difference": 4,
+      "n": 10,
+      "sd_kind": "sample (n-1)"
+    },
+    "criterion_exact_agreement": {
+      "faithfulness": {
+        "k": 10,
+        "n": 10
+      },
+      "instruction_following": {
+        "k": 7,
+        "n": 10
+      },
+      "completeness": {
+        "k": 9,
+        "n": 10
+      }
+    },
+    "run_pairs": {
+      "A~retest1": {
+        "n": 10,
+        "pass_agreement": 1.0,
+        "mean_abs_overall_diff": 0.06
+      },
+      "A~retest2": {
+        "n": 10,
+        "pass_agreement": 1.0,
+        "mean_abs_overall_diff": 0.14
+      },
+      "retest1~retest2": {
+        "n": 10,
+        "pass_agreement": 1.0,
+        "mean_abs_overall_diff": 0.13
+      }
+    },
+    "per_case": [
+      {
+        "case_id": "c01",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 4
+            },
+            "overall": 4.75,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 3
+            },
+            "overall": 4.5,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 4
+            },
+            "overall": 4.75,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.14433756729740643,
+        "overall_range": 0.25,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": false
+        }
+      },
+      {
+        "case_id": "c09",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 1,
+              "instruction_following": 5,
+              "completeness": 1
+            },
+            "overall": 2.4,
+            "passed": false
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 1,
+              "instruction_following": 5,
+              "completeness": 1
+            },
+            "overall": 2.4,
+            "passed": false
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 1,
+              "instruction_following": 4,
+              "completeness": 1
+            },
+            "overall": 2.05,
+            "passed": false
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.20207259421636906,
+        "overall_range": 0.3500000000000001,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": false,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c15",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.0,
+        "overall_range": 0.0,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c19",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.0,
+        "overall_range": 0.0,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c24",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.0,
+        "overall_range": 0.0,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c31",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.0,
+        "overall_range": 0.0,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c33",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 3,
+              "completeness": 5
+            },
+            "overall": 4.3,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.4041451884327381,
+        "overall_range": 0.7000000000000002,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": false,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c39",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 4,
+              "completeness": 5
+            },
+            "overall": 4.65,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 3,
+              "completeness": 5
+            },
+            "overall": 4.3,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 3,
+              "completeness": 5
+            },
+            "overall": 4.3,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.20207259421636933,
+        "overall_range": 0.35000000000000053,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": false,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c41",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.0,
+        "overall_range": 0.0,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": true
+        }
+      },
+      {
+        "case_id": "c43",
+        "runs": [
+          {
+            "run": "A",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest1",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          },
+          {
+            "run": "retest2",
+            "scores": {
+              "faithfulness": 5,
+              "instruction_following": 5,
+              "completeness": 5
+            },
+            "overall": 5.0,
+            "passed": true
+          }
+        ],
+        "n_scored": 3,
+        "pass_flip": false,
+        "overall_sd": 0.0,
+        "overall_range": 0.0,
+        "criteria_identical": {
+          "faithfulness": true,
+          "instruction_following": true,
+          "completeness": true
+        }
+      }
+    ],
+    "negative_controls": [
+      {
+        "name": "nonce runs bypass the cache",
+        "expect": "0 cached calls in every nonce run (a re-run of the same command re-serves its saved draws and shows >0)",
+        "observed": {
+          "retest1": 0,
+          "retest2": 0
+        },
+        "ok": true
+      },
+      {
+        "name": "nonces distinct and non-empty",
+        "expect": "baseline '' and each rerun its own nonce",
+        "observed": [
+          "",
+          "retest1",
+          "retest2"
+        ],
+        "ok": true
+      }
+    ],
+    "note": "temperature and model fixed; the only change between runs is the nonce, so differences are the judge's own sampling noise"
+  },
+  "adversarial": {
+    "n_bases": 6,
+    "exploratory": true,
+    "rows": [
+      {
+        "probe": "confidently wrong, reference shown",
+        "tests": "sycophancy (wrong answer accepted)",
+        "metric": "accepted (fooled)",
+        "naive": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0,
+          "cases": []
+        },
+        "mitigated": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0,
+          "cases": []
+        }
+      },
+      {
+        "probe": "confidently wrong, reference hidden",
+        "tests": "sycophancy without a reference",
+        "metric": "accepted (fooled)",
+        "naive": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0,
+          "cases": []
+        },
+        "mitigated": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0,
+          "cases": []
+        }
+      },
+      {
+        "probe": "verbose wrong vs terse correct",
+        "tests": "verbosity + sycophancy",
+        "metric": "verbose-wrong scored >= terse-correct",
+        "naive": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0
+        },
+        "mitigated": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0
+        }
+      },
+      {
+        "probe": "right answer + fabricated reasoning",
+        "tests": "sycophancy toward plausible justification",
+        "metric": "accepted (fooled)",
+        "naive": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0,
+          "cases": []
+        },
+        "mitigated": {
+          "k": 0,
+          "n": 6,
+          "n_invalid": 0,
+          "cases": []
+        }
+      },
+      {
+        "probe": "padded minus terse-correct",
+        "tests": "verbosity (score delta; naive 1-10, mitigated faithfulness+completeness 1-5)",
+        "metric": "mean score delta",
+        "naive": {
+          "n": 6,
+          "mean": -6.0,
+          "n_invalid": 0
+        },
+        "mitigated": {
+          "n": 6,
+          "mean": 0.0641,
+          "n_invalid": 0
+        }
+      },
+      {
+        "probe": "correct vs confidently wrong, pairwise",
+        "tests": "sensitivity (does the judge still pick a winner)",
+        "metric": "picked the correct answer (both orders)",
+        "naive": {
+          "k": 6,
+          "n": 6,
+          "n_invalid": 0,
+          "source": "stored summary"
+        },
+        "mitigated": {
+          "k": 6,
+          "n": 6,
+          "n_invalid": 0,
+          "source": "stored summary"
+        }
+      }
+    ],
+    "correct_accepted_terse": {
+      "naive": {
+        "k": 4,
+        "n": 6,
+        "n_invalid": 0,
+        "cases": [
+          "c01",
+          "c09",
+          "c24",
+          "c44"
+        ]
+      },
+      "mitigated": {
+        "k": 6,
+        "n": 6,
+        "n_invalid": 0,
+        "cases": [
+          "c01",
+          "c09",
+          "c16",
+          "c19",
+          "c24",
+          "c44"
+        ]
+      }
+    },
+    "discrimination_correct_accepted_minus_fooled": {
+      "naive": 0.6667,
+      "mitigated": 1.0
+    },
+    "baselines": {
+      "always_accept": {
+        "fooled_rate": 1.0,
+        "correct_accepted_rate": 1.0
+      },
+      "always_reject": {
+        "fooled_rate": 0.0,
+        "correct_accepted_rate": 0.0
+      }
+    },
+    "negative_controls": [
+      {
+        "name": "naive: terse-correct answers accepted",
+        "expect": "most correct answers accepted (else 'fooled 0' only means 'rejects everything')",
+        "observed": "4/6",
+        "ok": true
+      },
+      {
+        "name": "mitigated: terse-correct answers accepted",
+        "expect": "most correct answers accepted (else 'fooled 0' only means 'rejects everything')",
+        "observed": "6/6",
+        "ok": true
+      }
+    ],
+    "stored_mismatch": [],
+    "thresholds": {
+      "mitigated_accepted": "faithfulness >= 4",
+      "naive_accepted": "score >= 8 of 10"
+    }
+  }
+}
