@@ -98,3 +98,19 @@
 - Correctness against `expected_output` was not checked deterministically (only constraints); the judge and the ~20 hand labels do that.
 - The curated suite (20) is not frozen yet; after curation, record the final ids here and commit `candidates.yaml`.
 - Time spent: not recorded; fill in.
+
+## J2 (curation) — locked suite, config C probe, decision rule
+- **Interrupted work:** a previous request (j2b: temptation cases c41-c50 + identical A/B pair handling + budget notes) was interrupted by a shell error before anything was applied and then superseded by this request. It is NOT done: no c41-c50, no pair script, `budget.yaml` unchanged (still 214 planned). Re-request it if wanted.
+- **Curation applied (user's list):** reference-based c01 c02 c03 c05 c09 c14 c15 c16 c19 c23 c24 c26 c27 (13); reference-free c28 c31 c32 c33 c38 c39 c40 (7). All other candidates have `meta.drop: true` in `candidates.yaml`. Probe bases (`meta.probe_base`): c01 c09 c16 c19 c24 c27. **Locked suite: `data/suite.yaml`** (20 cases). `generate` and `judge generate` now default to it; `data/outputs/{A,B}.json` were rewritten for the 20 cases (the other 20 candidates' outputs remain in the cache/checkpoint).
+- **Config C = qwen/qwen3.8-27b, config A's prompt, no judge calls.** Findings: docs table 30 RPM / 1K RPD / 8K TPM / 200K TPD, but the live key also has **OTPM 1000/min** (max_tokens 1024 rejected; parallel requests hit 429, one run failed after 6 retries) -> C uses concurrency 1, max_tokens 600 (`GenConfig.concurrency/max_tokens/gen_model`). Thinking: no params = answers without thinking; `reasoning_effort=low` + `reasoning_format=hidden` drops it server-side (reasoning tokens still in `completion_tokens`); we also strip `<think>` client-side (tested). 0 `<think>` tags and 0 non-empty reasoning fields in C's outputs/logs.
+- **Result (`judge genreport` -> `results/gen_check.json`):**
+
+| config | constraint pass (20) | ref-based constraint (13) | exact-match (13) | mean out tokens |
+|---|---|---|---|---|
+| A gpt-oss-20b v1 | 20/20 (100%) | 13/13 | 6/13 (46%) | 64 |
+| B gpt-oss-20b v2 | 19/20 (95%) | 12/13 | 6/13 (46%) | 76 |
+| C qwen3.8-27b v1 | 19/20 (95%) | 12/13 | 6/13 (46%) | 225 |
+
+  Both B and C fail c23 (4 bullets instead of 3). C - A = -5.0 pts constraint, +0.0 pts exact-match, below the 10-pt threshold -> **per the rule in CLAUDE.md section 2b the main A/B is prompt v1 vs v2 on gpt-oss-20b.** C is dropped from the main experiment.
+- **Caveats:** the check set is coarse (N=20 / N=13; one case = 5 / 7.7 pts) and exact-match is deliberately strict, so many correct free-text answers count as misses (7 of 13 ref-based). "Either check" is my reading of "those checks" (documented). Qwen was run at temperature 0, below its recommended 0.7-1.0. C is much more verbose (225 vs 64 tokens, includes hidden reasoning tokens); that is itself relevant to the verbosity probe later. Both A and B sit at ceiling on hard constraints, so the A/B contrast will come from correctness/faithfulness judged by the judge.
+- **Tests: 74 passed** (was 70): locked suite = curation, exact_match hand-computed, config C prompt == A, qwen request params + think-stripping.

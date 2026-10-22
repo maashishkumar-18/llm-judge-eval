@@ -43,6 +43,16 @@ Scoring: pipeline 20 · judging design 20 · bias handling 25 · judge validatio
 
 **Family guard rationale.** Self-enhancement bias: a judge tends to prefer outputs from its own family. `Settings.enforce_family_guard()` runs at every `LLMClient` construction and refuses judge family == generator family (and any unidentifiable family) unless `ALLOW_SAME_FAMILY=1` (which logs a warning). Gemma counts as Google. With gen = gpt-oss-20b (openai) and judge = gemini-3.5-flash-lite (google) the guard passes; `openai/gpt-oss-120b` or `-safeguard` as judge, or any Gemini/Gemma as generator, is refused. It is a structural mitigation, not a measurement; J7 measures the residual preference.
 
+## 2b. Decision rule: what the main A/B contrast is (pre-registered in j2, before any judge call)
+Suite locked in `data/suite.yaml` (20 cases: 13 reference-based, 7 reference-free; 6 probe bases). Generator configs: **A** = gpt-oss-20b + prompt v1,
+**B** = gpt-oss-20b + prompt v2, **C** = qwen/qwen3.8-27b (Alibaba) + prompt v1 (same prompt as A), generated with NO judge calls.
+Checks (`judge genreport`, written to `results/gen_check.json`): (1) deterministic constraint-check pass rate over the 20 cases;
+(2) strict exact-match rate over the 13 reference-based cases (`checks.exact_match`: NFKC, whitespace, case, one trailing period; JSON compared parsed).
+- **If C differs from A by >= 10 percentage points on EITHER check, the main A/B is model A (gpt-oss-20b) vs model B (qwen), same prompt.**
+- **Otherwise the main A/B is prompt v1 vs prompt v2 on gpt-oss-20b (A vs B), and C is dropped.**
+Interpretation notes: "either check" is my reading of "those checks"; with N=20 / N=13 one case is 5 / 7.7 points, so the threshold is crossed by 2 constraint
+cases or 1-2 exact-match cases. The rule is a coarse screen, not a significance test. Result (j2): C - A = -5.0 pts constraint, +0.0 pts exact-match -> **prompt v1 vs v2 (A vs B)**.
+
 ## 3. Metric definitions (lock before any experiment; thresholds pre-registered in rubric.yaml)
 | Quantity | Definition |
 |---|---|
@@ -79,6 +89,7 @@ Scoring: pipeline 20 · judging design 20 · bias handling 25 · judge validatio
 
 **Groq / `openai/gpt-oss-20b` (the GENERATOR)** (console.groq.com/docs/rate-limits): 30 RPM, 1K RPD, 8K TPM, 200K TPD — identical to gpt-oss-120b in the table; the page labels these "Developer plan" base limits and does not show the Free-plan column, so confirm at console.groq.com/settings/limits. 429 carries `retry-after`; cached tokens don't count. Generation is ~40 suite outputs plus probe/self-preference answers (tens to low hundreds of calls), so 8K TPM is the only limit that can bite on long passages; keep GEN_CONCURRENCY=2 and lean on the cache. Smoke: 78 in / 20 out.
 - Reasoning is returned in message field `reasoning` (separate from `content`); `reasoning_format` is NOT supported for gpt-oss; `include_reasoning` true/false; `reasoning_effort` low|medium|high. We send `include_reasoning=false` and also drop the field client-side. Reasoning tokens still count in `completion_tokens`.
+- **qwen/qwen3.8-27b (config C, generator-side only; docs + live probe 2026-10-23):** 30 RPM / 1K RPD / 8K TPM / 200K TPD in the docs table, but the live key also enforces **OTPM = 1000 output tokens/min** (a request with max_tokens 1024 got 429; parallel requests collide), so C runs with concurrency 1 and max_tokens 600. Reasoning: `reasoning_effort` none|low|medium|high|default and `reasoning_format` hidden|parsed. With neither param the model answered without thinking (6 tokens); with `low` + `hidden` the thinking is dropped server-side (`message.reasoning` absent, counted in `completion_tokens_details.reasoning_tokens`). We send low + hidden and also strip any `<think>...</think>` client-side. Qwen's own docs recommend temperature 0.7-1.0; we keep GEN_TEMPERATURE=0 for parity with A.
 - Models served on this Groq key (11): allam-2-7b, canopylabs/orpheus-arabic-saudi, canopylabs/orpheus-v1-english, meta-llama/llama-prompt-guard-2-22m, meta-llama/llama-prompt-guard-2-86m, openai/gpt-oss-120b, openai/gpt-oss-20b, openai/gpt-oss-safeguard-20b, qwen/qwen3.8-27b, whisper-large-v3, whisper-large-v3-turbo. No Llama chat model.
 
 ## 6. Lean judge-call budget (j0c; source of truth is `src/judge/budget.yaml`; `judge budget` prints it)

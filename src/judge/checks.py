@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from dataclasses import dataclass
 from typing import Any, Callable
 
@@ -140,3 +141,18 @@ def run_checks(output: str, specs: list[dict[str, Any]]) -> list[CheckResult]:
 
 def complies(output: str, specs: list[dict[str, Any]]) -> bool:
     return all(r.passed for r in run_checks(output, specs))
+
+
+def _norm(text: str) -> str:
+    t = unicodedata.normalize("NFKC", text)  # U+202F, U+2011 etc. -> plain space / hyphen
+    return re.sub(r"\s+", " ", t).strip().casefold().rstrip(".").strip()
+
+
+def exact_match(output: str, expected: str) -> bool:
+    """Strict equality after NFKC, whitespace collapse, casefold and one trailing period removed. If both sides
+    are JSON, the parsed values are compared (spacing in a JSON object does not matter). Free-text references
+    rarely match this way: it is a deliberately strict baseline, not a quality score."""
+    try:
+        return json.loads(output) == json.loads(expected)
+    except (json.JSONDecodeError, TypeError):
+        return _norm(output) == _norm(expected)

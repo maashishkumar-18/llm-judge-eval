@@ -6,12 +6,12 @@ import yaml
 from judge.checks import complies, run_checks, validate_spec
 from judge.generate import generate_config
 from judge.llm import LLMClient
-from judge.suite import GenConfig, load_candidates, summarize
+from judge.suite import CANDIDATES_PATH, SUITE_PATH, GenConfig, load_candidates, load_config, summarize
 from tests.test_llm import groq_ok, make_settings
 
 
 def test_candidate_pool_shape():
-    rows = load_candidates(include_dropped=True)  # also validates every check spec
+    rows = load_candidates(CANDIDATES_PATH, include_dropped=True)  # also validates every check spec
     assert summarize(rows) == {"cases": 40, "reference_based": 27, "reference_free": 13}
     assert all(r["system_prompt"].strip() for r in rows)
     text = " ".join(r["input"] for r in rows)
@@ -71,3 +71,45 @@ async def test_generate_prompt_assembly_resume_and_files(tmp_path):
     assert saved[0]["model_output"] == "two words"  # reasoning field dropped, content only
     assert saved[0]["system_prompt"] == "Reply in one word."  # the judge sees the case prompt, not the preamble
     assert saved[0]["meta"]["config"] == "T" and saved[0]["meta"]["constraint_results"][0]["passed"] is False
+
+
+def test_locked_suite_matches_curation():
+    locked = load_candidates(SUITE_PATH)
+    pool = load_candidates(CANDIDATES_PATH)  # drops meta.drop cases
+    assert [r["id"] for r in locked] == [r["id"] for r in pool]
+    assert summarize(locked) == {"cases": 20, "reference_based": 13, "reference_free": 7}
+    probes = [r["id"] for r in locked if r["meta"].get("probe_base")]
+    assert probes == ["c01", "c09", "c16", "c19", "c24", "c27"]
+    assert all(r.get("expected_output") for r in locked if r["id"] in probes)
+
+
+def test_exact_match_hand_computed():
+    from judge.checks import exact_match
+
+    assert exact_match("Billing.", "billing")
+    assert exact_match("a b", "A  B")  # narrow no-break space, case, whitespace
+    assert exact_match('{"a":1, "b":2}', '{"b": 2, "a": 1}')  # JSON compared parsed
+    assert not exact_match("The fine is 2.50.", "The fine is 2.50. Renew twice.")
+    assert not exact_match("400", "400 euros")
+
+
+def test_config_c_uses_config_a_prompt():
+    a, c = load_config("A"), load_config("C")
+    assert c.preamble == a.preamble and c.prompt_version == a.prompt_version
+    assert c.gen_model == "qwen/qwen3.8-27b" and a.gen_model is None
+
+
+async def test_qwen_sends_reasoning_params_and_strips_think(tmp_path):
+    seen = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(json.loads(request.content))
+        return httpx.Response(200, json={"choices": [{"message": {"content": "<think>hmm</think>\n11:05", "reasoning": "x"}}],
+                                         "usage": {"prompt_tokens": 5, "completion_tokens": 9}})
+
+    s = make_settings(tmp_path, gen_model="qwen/qwen3.8-27b")
+    async with LLMClient(s, "generator", run_id="q", transport=httpx.MockTransport(handler)) as c:
+        r = await c.complete("t", system="s", max_tokens=600)
+    assert r["text"] == "11:05" and r["reasoning"] == ""
+    assert seen[0]["reasoning_effort"] == "low" and seen[0]["reasoning_format"] == "hidden"
+    assert "include_reasoning" not in seen[0] and seen[0]["max_completion_tokens"] == 600

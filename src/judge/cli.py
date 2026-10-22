@@ -69,6 +69,30 @@ def cmd_generate(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_genreport(args: argparse.Namespace) -> int:
+    import json
+    from pathlib import Path
+
+    from judge.generate import summarize_outputs
+    from judge.schemas import Case
+
+    rep = {}
+    for name in args.config:
+        cases = [Case(**d) for d in json.loads(Path(f"data/outputs/{name}.json").read_text(encoding="utf-8"))]
+        r = rep[name] = summarize_outputs(cases)
+        print(f"{name}: constraint {r['constraint_pass']}/{r['n']} ({r['constraint_pass_rate']:.0%}) | ref-based: "
+              f"constraint {r['constraint_pass_ref']}/{r['n_ref']}, exact-match {r['exact_match']}/{r['n_ref']} "
+              f"({r['exact_match_rate']:.0%}) | empty {r['empty']} | mean out tokens {r['mean_tokens_out']:.0f}")
+    for name in (n for n in list(rep) if n != "A" and "A" in rep):
+        dc = 100 * (rep[name]["constraint_pass_rate"] - rep["A"]["constraint_pass_rate"])
+        de = 100 * (rep[name]["exact_match_rate"] - rep["A"]["exact_match_rate"])
+        print(f"{name} - A: constraint {dc:+.1f} pts, exact-match {de:+.1f} pts")
+        rep[f"{name}_minus_A_pts"] = {"constraint": dc, "exact_match": de}
+    Path("results").mkdir(exist_ok=True)
+    Path("results/gen_check.json").write_text(json.dumps(rep, indent=2) + "\n", encoding="utf-8")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="judge")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -78,10 +102,13 @@ def main(argv: list[str] | None = None) -> None:
     b.set_defaults(fn=cmd_budget)
     g = sub.add_parser("generate", help="generate model_output for the suite under generator config(s) A/B")
     g.add_argument("--config", nargs="+", default=["A", "B"])
-    g.add_argument("--suite", default="data/suite/candidates.yaml")
+    g.add_argument("--suite", default="data/suite.yaml")
     g.add_argument("--limit", type=int, default=0, help="only the first N cases (smoke)")
     g.add_argument("--sample", type=int, default=5, help="print this many first lines per config")
     g.set_defaults(fn=cmd_generate)
+    r = sub.add_parser("genreport", help="constraint pass rate and exact-match per generator config (no LLM calls)")
+    r.add_argument("--config", nargs="+", default=["A", "B", "C"])
+    r.set_defaults(fn=cmd_genreport)
     args = ap.parse_args(argv)
     sys.exit(args.fn(args))
 

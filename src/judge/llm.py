@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import json
 import random
+import re
 import time
 import uuid
 from dataclasses import asdict, dataclass, field
@@ -140,6 +141,9 @@ class LLMClient:
         if self.provider == "groq" and "gpt-oss" in self.model and self.role == "generator":
             p["reasoning_effort"] = self.s.gen_reasoning_effort
             p["include_reasoning"] = not self.strip_reasoning
+        elif self.provider == "groq" and "qwen" in self.model and self.role == "generator":
+            p["reasoning_effort"] = self.s.gen_reasoning_effort
+            p["reasoning_format"] = "hidden" if self.strip_reasoning else "parsed"
         if self.json_mode:
             p["json_mode"] = True
             if response_schema is not None:
@@ -170,7 +174,10 @@ class LLMClient:
                 body["max_completion_tokens"] = params["max_tokens"]
             if "reasoning_effort" in params:
                 body["reasoning_effort"] = params["reasoning_effort"]
+            if "include_reasoning" in params:
                 body["include_reasoning"] = params["include_reasoning"]
+            if "reasoning_format" in params:
+                body["reasoning_format"] = params["reasoning_format"]
             if params.get("json_mode"):
                 body["response_format"] = {"type": "json_object"}
             return f"{GROQ_BASE}/chat/completions", {"Authorization": f"Bearer {self.api_key}"}, body
@@ -190,8 +197,12 @@ class LLMClient:
             }
         msg = (data.get("choices") or [{}])[0].get("message", {})
         u = data.get("usage", {})
+        text = msg.get("content") or ""
+        if self.strip_reasoning:  # belt and braces: a model may inline its thinking as <think>...</think>
+            text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+            text = re.sub(r"^.*?</think>", "", text, flags=re.DOTALL).strip()
         return {
-            "text": msg.get("content") or "",
+            "text": text,
             "reasoning": "" if self.strip_reasoning else (msg.get("reasoning") or ""),
             "tokens_in": u.get("prompt_tokens", 0) or 0,
             "tokens_out": u.get("completion_tokens", 0) or 0,

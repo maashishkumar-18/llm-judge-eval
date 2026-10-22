@@ -1,0 +1,43 @@
+{
+  "A": {
+    "n": 20,
+    "constraint_pass": 20,
+    "constraint_pass_rate": 1.0,
+    "n_ref": 13,
+    "exact_match": 6,
+    "exact_match_rate": 0.46153846153846156,
+    "constraint_pass_ref": 13,
+    "empty": 0,
+    "mean_tokens_out": 63.7
+  },
+  "B": {
+    "n": 20,
+    "constraint_pass": 19,
+    "constraint_pass_rate": 0.95,
+    "n_ref": 13,
+    "exact_match": 6,
+    "exact_match_rate": 0.46153846153846156,
+    "constraint_pass_ref": 12,
+    "empty": 0,
+    "mean_tokens_out": 75.8
+  },
+  "C": {
+    "n": 20,
+    "constraint_pass": 19,
+    "constraint_pass_rate": 0.95,
+    "n_ref": 13,
+    "exact_match": 6,
+    "exact_match_rate": 0.46153846153846156,
+    "constraint_pass_ref": 12,
+    "empty": 0,
+    "mean_tokens_out": 225.45
+  },
+  "B_minus_A_pts": {
+    "constraint": -5.000000000000004,
+    "exact_match": 0.0
+  },
+  "C_minus_A_pts": {
+    "constraint": -5.000000000000004,
+    "exact_match": 0.0
+  }
+}

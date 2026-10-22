@@ -1,0 +1,255 @@
+# LOCKED eval suite (J2): the 20 cases curated by the user from data/suite/candidates.yaml (13 reference-based,
+# 7 reference-free; 6 are probe base cases, meta.probe_base). Do not edit after the A/B run starts.
+# model_output is not stored here: generate.py fills it per config into data/outputs/<config>.json.
+cases:
+- id: c01
+  system_prompt: You are a library assistant. Answer only from the notice. Reply in at most two sentences.
+  input: 'Notice: Books are lent for 21 days and can be renewed up to 2 times unless another reader has reserved them. The overdue fine is 0.25 per day per book, capped at 10.00. DVDs are lent for 7 days.
+
+
+    Question: A book is 10 days overdue. What is the fine, and how many times can a book be renewed?'
+  expected_output: The fine is 2.50 (10 days at 0.25 per day). A book can be renewed up to 2 times unless it has been reserved.
+  meta:
+    probe_base: true
+    kind: qa
+    checks:
+    - type: max_sentences
+      n: 2
+- id: c02
+  system_prompt: You are a gym front-desk assistant. Use only the price sheet. Start your reply with the final amount as a number, then give one sentence of working.
+  input: 'Price sheet: Basic costs 25 per month. Plus costs 40 per month and includes classes. If you pay for a full year up front you get 2 months free.
+
+
+    Question: What is the total cost of one year of Plus paid up front?'
+  expected_output: '400. Plus is 40 per month, two months are free, so you pay for 10 months: 10 x 40 = 400.'
+  meta:
+    kind: compute
+    checks:
+    - type: regex
+      pattern: ^\$?\d
+- id: c03
+  system_prompt: Extract fields from the message. Output only a JSON object with exactly the keys name, date and amount. The date must be YYYY-MM-DD and the amount a number. No prose, no code fence.
+  input: Hi, this is Priya Raman. I paid the invoice on 14 March 2026, total 1,250.00 EUR. Please confirm.
+  expected_output: '{"name": "Priya Raman", "date": "2026-03-14", "amount": 1250.0}'
+  meta:
+    kind: extract
+    checks:
+    - type: json_keys
+      keys:
+      - name
+      - date
+      - amount
+- id: c05
+  system_prompt: Reply with only the date in the form DD Month YYYY, for example 05 January 2026. No other text.
+  input: A parcel ships on Tuesday 3 February 2026 and takes 5 business days (Monday to Friday, shipping day not counted). On which date does it arrive?
+  expected_output: 10 February 2026
+  meta:
+    kind: compute
+    checks:
+    - type: regex
+      pattern: ^\d{1,2} [A-Z][a-z]+ \d{4}$
+- id: c09
+  system_prompt: You are a clinic receptionist. Answer only from the notice, in at most 20 words.
+  input: 'Notice: The clinic is open Monday to Friday 08:00-18:00 and Saturday 09:00-13:00. It is closed on Sundays and public holidays. Walk-in patients are accepted until 30 minutes before closing.
+
+
+    Question: Can I walk in at 12:45 on a Saturday?'
+  expected_output: No. On Saturday the clinic closes at 13:00 and walk-ins stop at 12:30.
+  meta:
+    probe_base: true
+    kind: qa
+    checks:
+    - type: max_words
+      n: 20
+- id: c14
+  system_prompt: Answer with a numbered list ("1.", "2.", ...) in alphabetical order and nothing else.
+  input: 'Stock table (item: in stock / reorder level)
+
+    Bolt M6: 120 / 100
+
+    Washer 8mm: 40 / 80
+
+    Nut M6: 75 / 75
+
+    Screw 4x20: 10 / 50
+
+    Anchor 10mm: 200 / 150
+
+
+    Which items are strictly below their reorder level?'
+  expected_output: '1. Screw 4x20
+
+    2. Washer 8mm'
+  meta:
+    kind: extract
+    checks:
+    - type: all_lines_match
+      pattern: ^\d+\. .+$
+- id: c15
+  system_prompt: 'You are a pool receptionist. Answer only from the notice. If the notice does not say, reply exactly: Not stated in the notice.'
+  input: 'Notice: The pool opens at 07:00 and closes at 21:00 daily. Children under 8 must be accompanied by an adult. Lane swimming is reserved for members until 09:00.
+
+
+    Question: How much does a day ticket cost?'
+  expected_output: Not stated in the notice.
+  meta:
+    kind: qa
+    checks:
+    - type: one_of
+      options:
+      - Not stated in the notice.
+- id: c16
+  system_prompt: 'You are a pool receptionist. Answer only from the notice. If the notice does not say, reply exactly: Not stated in the notice.'
+  input: 'Notice: The pool opens at 07:00 and closes at 21:00 daily. Children under 8 must be accompanied by an adult. Lane swimming is reserved for members until 09:00.
+
+
+    Question: Can a non-member use the lanes at 08:30?'
+  expected_output: No, lane swimming is reserved for members until 09:00.
+  meta:
+    probe_base: true
+    kind: qa
+    checks:
+    - type: max_sentences
+      n: 2
+- id: c19
+  system_prompt: Answer in exactly one sentence, using only the notice.
+  input: 'Notice: The late registration fee was 30 until 31 May. From 1 June the late registration fee is 45.
+
+
+    Question: Today is 12 June. What is the late registration fee today?'
+  expected_output: The late registration fee today is 45.
+  meta:
+    probe_base: true
+    kind: qa
+    checks:
+    - type: max_sentences
+      n: 1
+- id: c23
+  system_prompt: 'List the deadlines as bullets, one per line, in the form "- <date>: <what>", in date order. Only deadlines, no other text.'
+  input: 'Memo: Applications open on 2 March. The first draft is due on 15 April, the reviewers meet on 20 April (this is a meeting, not a deadline), the final report is due on 30 May, and the invoice must be submitted by 10 June.'
+  expected_output: '- 15 April: first draft
+
+    - 30 May: final report
+
+    - 10 June: invoice'
+  meta:
+    kind: extract
+    checks:
+    - type: exact_bullets
+      n: 3
+- id: c24
+  system_prompt: Answer only from the passage, in at most two sentences, and do not use the word "very".
+  input: 'Passage: The Mill Road bridge was closed on 3 May after inspectors found a cracked support beam. Repairs are scheduled for July and the bridge is expected to reopen in August. Buses are being diverted via Station Street.
+
+
+    Question: Why was the bridge closed and when will it reopen?'
+  expected_output: Inspectors found a cracked support beam on 3 May. The bridge is expected to reopen in August.
+  meta:
+    probe_base: true
+    kind: qa
+    checks:
+    - type: max_sentences
+      n: 2
+    - type: must_not_include
+      words:
+      - very
+- id: c26
+  system_prompt: 'Reply with one sentence that contains the total in the form "Total: X.XX".'
+  input: 'Shipping rates: up to and including 1 kg costs 4.00; over 1 kg and up to and including 5 kg costs 7.50; over 5 kg costs 12.00. One parcel weighs 5.0 kg and another weighs 5.2 kg. What is the total shipping cost for both?'
+  expected_output: 'Total: 19.50'
+  meta:
+    kind: compute
+    checks:
+    - type: regex_dotall
+      pattern: 'Total: \d+\.\d{2}'
+    - type: max_sentences
+      n: 1
+- id: c27
+  system_prompt: Start with Yes or No followed by a colon, then give one sentence of justification using only the rule.
+  input: 'Rule: Staff may work remotely up to 2 days a week, with manager approval.
+
+
+    Question: Can an employee with manager approval work remotely 3 days a week?'
+  expected_output: 'No: remote work is capped at 2 days a week even with manager approval.'
+  meta:
+    probe_base: true
+    kind: qa
+    checks:
+    - type: regex
+      pattern: '^(Yes|No): '
+    - type: max_sentences
+      n: 1
+- id: c28
+  system_prompt: Summarise the passage in exactly 3 bullet points, each starting with "- " and at most 20 words. No other text.
+  input: 'Passage: The town of Harlow launched a kerbside recycling scheme in January. Households receive three coloured bins: blue for paper, green for glass and grey for plastics and cans. Collection is fortnightly, alternating between paper and the other two bins. In the first three months, the share of household waste recycled rose from 21% to 38%. The council says contamination, mostly food-stained cardboard, remains the main problem, and it will send leaflets to every home in April.'
+  meta:
+    kind: write
+    checks:
+    - type: exact_bullets
+      n: 3
+- id: c31
+  system_prompt: Write a product description of between 40 and 60 words. It must mention the 350 ml capacity.
+  input: 'Product: the Alder insulated bottle, 350 ml, stainless steel, keeps drinks cold for 24 hours or hot for 12, fits standard cup holders, comes in three colours.'
+  meta:
+    kind: write
+    checks:
+    - type: min_words
+      n: 40
+    - type: max_words
+      n: 60
+    - type: must_include
+      words:
+      - 350 ml
+- id: c32
+  system_prompt: 'Start with the line "Action items:" and then list each action as a bullet "- <owner>: <task>". Only actions that were assigned to a named person.'
+  input: 'Notes: Sam will update the pricing page by Friday. We all agreed the launch date looks tight. Dana to email the vendor about the delayed shipment. Someone should probably look at the logo at some point. Luis will book the venue.'
+  meta:
+    kind: extract
+    checks:
+    - type: starts_with
+      text: 'Action items:'
+    - type: exact_bullets
+      n: 3
+- id: c33
+  system_prompt: You write customer support replies. Apologise once, do not use the word "unfortunately", and stay within 80 words.
+  input: 'Customer message: My order arrived four days late and the box was dented. I needed it for a birthday. What are you going to do about it?'
+  meta:
+    kind: write
+    checks:
+    - type: max_words
+      n: 80
+    - type: must_not_include
+      words:
+      - unfortunately
+- id: c38
+  system_prompt: Rewrite the clause in plain English in at most 2 sentences. Keep every number and deadline.
+  input: 'Clause: The Lessee shall, within thirty (30) days of receipt of written notice from the Lessor, remedy any breach of this Agreement, failing which the Lessor may terminate the Agreement forthwith upon written notice.'
+  meta:
+    kind: rewrite
+    checks:
+    - type: max_sentences
+      n: 2
+    - type: must_include
+      words:
+      - 30 days
+- id: c39
+  system_prompt: Summarise using only the article, in at most 40 words, and include the attendance figure. Do not add facts that are not in the article.
+  input: 'Article: The Lakeside Lantern Festival returned on Saturday with 3,000 visitors, up from 2,100 last year. Organisers credited a new evening ferry service. A planned fireworks show was cancelled because of strong winds, and ticket holders were offered a free pass for next year.'
+  meta:
+    kind: write
+    checks:
+    - type: max_words
+      n: 40
+    - type: must_include
+      words:
+      - 3,000
+- id: c40
+  system_prompt: Begin your reply with the exact phrase "Thanks for reaching out." and keep it to at most 50 words.
+  input: 'Customer message: Your app logged me out three times today and I lost my unsaved work each time. This is really frustrating.'
+  meta:
+    kind: write
+    checks:
+    - type: starts_with
+      text: Thanks for reaching out.
+    - type: max_words
+      n: 50

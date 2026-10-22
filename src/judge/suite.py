@@ -10,7 +10,8 @@ from pydantic import BaseModel
 
 from judge.checks import validate_spec
 
-SUITE_PATH = Path("data/suite/candidates.yaml")
+SUITE_PATH = Path("data/suite.yaml")  # the locked, curated suite; the full pool is CANDIDATES_PATH
+CANDIDATES_PATH = Path("data/suite/candidates.yaml")
 CONFIG_DIR = Path("data/configs")
 
 
@@ -18,6 +19,9 @@ class GenConfig(BaseModel):
     name: str
     prompt_version: str
     preamble: str
+    gen_model: str | None = None  # None = the GEN_MODEL setting
+    max_tokens: int | None = None  # None = generate.GEN_MAX_TOKENS
+    concurrency: int | None = None  # None = GEN_CONCURRENCY
 
     def system_for(self, case_system_prompt: str) -> str:
         return f"{self.preamble}\n\n{case_system_prompt}".strip()

@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from judge.checks import run_checks
+from judge.checks import exact_match, run_checks
 from judge.checkpoint import RunStatus, run_checkpointed
 from judge.config import Settings
 from judge.llm import LLMClient
@@ -31,19 +31,21 @@ async def generate_config(
 ) -> tuple[list[Case], RunStatus]:
     out_dir.mkdir(parents=True, exist_ok=True)
     by_id = {r["id"]: r for r in rows}
+    if config.gen_model:  # e.g. config C = qwen; the family guard runs again in the client constructor
+        settings = settings.model_copy(update={"gen_model": config.gen_model})
     own = client is None
     client = client or LLMClient(settings, "generator", run_id=f"gen_{config.name}", log_name=f"generate_{config.name}.jsonl")
 
     async def one(case_id: str) -> dict[str, Any]:
         r = by_id[case_id]
         res = await client.complete(
-            r["input"], case_id=case_id, system=config.system_for(r.get("system_prompt", "")), max_tokens=GEN_MAX_TOKENS
+            r["input"], case_id=case_id, system=config.system_for(r.get("system_prompt", "")), max_tokens=config.max_tokens or GEN_MAX_TOKENS
         )
         return {"model_output": res["text"].strip(), "tokens_in": res["tokens_in"], "tokens_out": res["tokens_out"]}
 
     try:
         status = await run_checkpointed(
-            list(by_id), one, out_dir / f".{config.name}.checkpoint.jsonl", concurrency=settings.gen_concurrency
+            list(by_id), one, out_dir / f".{config.name}.checkpoint.jsonl", concurrency=config.concurrency or settings.gen_concurrency
         )
     finally:
         if own:
@@ -70,3 +72,17 @@ async def generate_config(
         json.dumps([c.model_dump() for c in cases], indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )
     return cases, status
+
+
+def summarize_outputs(cases: list[Case]) -> dict[str, Any]:
+    """Constraint-check pass rate (all cases) and exact-match rate (reference-based cases) for one config."""
+    ok = [all(r["passed"] for r in c.meta["constraint_results"]) for c in cases]
+    ref = [c for c in cases if c.expected_output]
+    em = [exact_match(c.model_output, c.expected_output) for c in ref]
+    return {
+        "n": len(cases), "constraint_pass": sum(ok), "constraint_pass_rate": sum(ok) / len(cases) if cases else 0.0,
+        "n_ref": len(ref), "exact_match": sum(em), "exact_match_rate": sum(em) / len(ref) if ref else 0.0,
+        "constraint_pass_ref": sum(o for o, c in zip(ok, cases) if c.expected_output),
+        "empty": sum(1 for c in cases if not c.model_output.strip()),
+        "mean_tokens_out": sum(c.meta.get("tokens_out", 0) for c in cases) / len(cases) if cases else 0.0,
+    }
