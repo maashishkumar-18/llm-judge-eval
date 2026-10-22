@@ -6,7 +6,8 @@
 | J0b role swap (gen=gpt-oss/Groq, judge=Gemini) | done | `j0b: swap generator and judge roles` | ~30 min (estimate) |
 | J0c models + lean call budget | done | `j0c: models and lean call budget` | ~40 min (estimate) |
 | J1 schemas, rubric, prompts, anchors | done | `j1: schemas, rubric, prompts, anchors` | (fill in real time) |
-| J2–J10 | todo | | |
+| J2 candidate pool (40), checks, generate A/B | done, curation pending (user) | `j2: candidate pool, constraint checks, generate A/B` | (fill in real time) |
+| J3–J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -77,3 +78,23 @@
 - Renderer: anchors with a reference show it in `pointwise_ref`; `pointwise_free` shows only the 5 reference-free anchors (it must not cite a reference the judge was not given). Prompt templates unchanged (no version bump); the snapshots changed because anchors are data. Tests: 66 passed (anchor test now pins all six hand-computed overalls, pass set, per-criterion coverage, and the 5-vs-6 anchor counts per prompt).
 - `README.md` created with a Known limitations entry: few anchors can pull scores toward their own levels.
 - **TODO at the START of J3 (not done yet; no judge calls so far):** spend ~5 live judge calls on the mitigated prompts (pointwise ref + free, pairwise in both orders) with `JUDGE_JSON_MODE=0`. Check (a) valid JSON out of the box, (b) every evidence quote verbatim (`unsupported_high_scores` empty, no near-miss paraphrases), (c) the judge does not copy anchor wording/scores, (d) thinking tokens fit in `JUDGE_MAX_TOKENS`. Fix the prompts (bump `VERSIONS`, regenerate snapshots) BEFORE any budgeted experiment. Run them under `judge budget` accounting (they count against the daily cap; use a scratch experiment name or log them as smoke-type calls) and record the outcome here.
+
+## J2 — candidate pool, deterministic constraint checks, generation for configs A / B
+- **Decisions (asked, user confirmed):** generator stays gpt-oss-20b via Groq (NOT Gemini; the request said Gemini, which would break the family guard and the locked judge/generator split); suite is curated from 40 candidates to **20** (not ~30), matching `budget.yaml`.
+- **`data/suite/candidates.yaml`:** 40 cases, 27 reference-based / 13 reference-free, each with a plain-words constraint in `system_prompt` and a machine-checkable `meta.checks`. To curate: set `meta.drop: true` (or delete). Target ~13 reference-based + ~7 reference-free. All context inline; no anchor passage reused (tested). **Curation is the user's job and is not done.**
+- **`judge.checks`:** 14 deterministic check types (max/min words, max sentences, exact bullets/lines, regex, all_lines_match, one_of, json_keys, starts_with, all_lowercase, must_include/must_not_include). They test hard constraints only, not correctness; they will give by-construction instruction-following labels later.
+- **`data/configs/{A,B}.yaml`:** same model and settings, only the generator preamble differs (A = v1 "helpful assistant"; B = v2 stricter: exact format, use only given info, do arithmetic first). The preamble is prepended to the case system_prompt for generation; the saved `Case.system_prompt` is the case's own, so the judge is held to the case requirements only.
+- **`judge.generate` + `judge generate` / `make generate`:** one generator call per case, checkpointed (`data/outputs/.<cfg>.checkpoint.jsonl`, gitignored), cached, logged to `logs/generate_<cfg>.jsonl`; writes `data/outputs/<cfg>.json` (Case-shaped, `meta` has config, prompt_version, tokens, constraint results). Generator calls are not in the judge ledger.
+- **Results (all 40 candidates, both configs; cached, so curating later costs no calls):** A 40/40 outputs, 0 empty, constraint-compliant 40/40. B 40/40 outputs, 0 empty, compliant 39/40 (c23: 4 bullets instead of 3). Output tokens 2466 (A) vs 2954 (B). Zero judge calls made.
+- **Tests: 70 passed** (was 66): checks hand-computed, bad spec rejected, candidate-pool shape (40/27/13, anchors not leaked), generate prompt assembly + resume + file contents.
+
+## Bugs and fixes / observations (raw material for 2.5)
+- My first B preamble said "output only the final answer", which overrode c02's request for a sentence of working (B returned just "400" plus a parenthetical). Caught from the 5-line sample, reworded the preamble, regenerated B. Lesson: a generic preamble can silently conflict with case instructions.
+- First check run falsely failed c31 ("350 ml") because gpt-oss emits U+202F (narrow no-break space) between number and unit (4 of 40 A outputs, 2 of 40 B). The check now normalises whitespace for `must_include`. Worth remembering for the judge's verbatim-quote check (lenient on whitespace already) and for any exact-match logic.
+- Windows console (cp1252) crashed on those characters while printing samples; CLI now prints with `errors="replace"`.
+
+## Caveats / open items (J2)
+- **Constraint compliance is near ceiling for both configs (40/40 vs 39/40), so A vs B differ little on hard constraints.** Any A/B difference will come from correctness/faithfulness/completeness (reference-based cases) or style; the judge may find "no significant difference", which is a legitimate result. Not tuned post-hoc.
+- Correctness against `expected_output` was not checked deterministically (only constraints); the judge and the ~20 hand labels do that.
+- The curated suite (20) is not frozen yet; after curation, record the final ids here and commit `candidates.yaml`.
+- Time spent: not recorded; fill in.

@@ -1,8 +1,9 @@
-"""judge CLI. Only `budget` exists so far (j0c); later sessions add run/compare/replay/probes/validate."""
+"""judge CLI: `budget` (j0c) and `generate` (j2); later sessions add run/compare/replay/probes/validate."""
 
 from __future__ import annotations
 
 import argparse
+import asyncio
 import sys
 
 from judge.budget import BudgetExceeded, load_budget
@@ -44,6 +45,30 @@ def cmd_budget(args: argparse.Namespace) -> int:
     return 1 if budget.validate() else 0
 
 
+def cmd_generate(args: argparse.Namespace) -> int:
+    from pathlib import Path
+
+    from judge.generate import generate_config
+    from judge.suite import load_candidates, load_config, summarize
+
+    sys.stdout.reconfigure(errors="replace")  # model text may hold characters the Windows console cannot encode
+    s = load_settings()
+    rows = load_candidates(Path(args.suite))
+    if args.limit:
+        rows = rows[: args.limit]
+    print(f"suite {args.suite}: {summarize(rows)}")
+    for name in args.config:
+        cases, status = asyncio.run(generate_config(s, rows, load_config(name)))
+        empty = sum(1 for c in cases if not c.model_output)
+        ok = sum(all(r["passed"] for r in c.meta["constraint_results"]) for c in cases)
+        print(f"config {name}: {len(cases)}/{len(rows)} outputs (new {status.ran}, resumed {status.skipped}), "
+              f"empty {empty}, constraint-compliant {ok}/{len(cases)}")
+        for c in cases[: args.sample]:
+            first = (c.model_output.splitlines() or [""])[0][:90]
+            print(f"  {c.id} [{'ok ' if all(r['passed'] for r in c.meta['constraint_results']) else 'BAD'}] {first}")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> None:
     ap = argparse.ArgumentParser(prog="judge")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -51,6 +76,12 @@ def main(argv: list[str] | None = None) -> None:
     b.add_argument("--check", metavar="EXPERIMENT", help="refuse (exit 1) if EXPERIMENT cannot run --calls more calls")
     b.add_argument("--calls", type=int, default=0)
     b.set_defaults(fn=cmd_budget)
+    g = sub.add_parser("generate", help="generate model_output for the suite under generator config(s) A/B")
+    g.add_argument("--config", nargs="+", default=["A", "B"])
+    g.add_argument("--suite", default="data/suite/candidates.yaml")
+    g.add_argument("--limit", type=int, default=0, help="only the first N cases (smoke)")
+    g.add_argument("--sample", type=int, default=5, help="print this many first lines per config")
+    g.set_defaults(fn=cmd_generate)
     args = ap.parse_args(argv)
     sys.exit(args.fn(args))
 

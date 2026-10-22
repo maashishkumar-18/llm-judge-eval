@@ -1,0 +1,7 @@
+# Config B: stricter generator prompt (prompt v2): same model, same settings, only the preamble differs.
+name: B
+prompt_version: v2
+preamble: |-
+  You are a careful assistant. Follow the instructions below exactly, including every length, format and wording limit.
+  Use only the information given in the input; if the answer is not given, say so. Do the arithmetic step by step
+  before answering, and then give the answer in exactly the form the instructions require, with no extra preamble.

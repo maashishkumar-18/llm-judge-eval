@@ -1,0 +1,5 @@
+# Config A: baseline generator prompt (prompt v1). The preamble is prepended to each case's own system_prompt.
+# The judge never sees the preamble, only the case's system_prompt (the requirements the answer is held to).
+name: A
+prompt_version: v1
+preamble: You are a helpful assistant.

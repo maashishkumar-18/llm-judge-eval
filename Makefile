@@ -1,6 +1,6 @@
 PY ?= python
 
-.PHONY: install smoke test budget
+.PHONY: install smoke test budget generate
 
 install:
 	$(PY) -m pip install -e ".[dev]"
@@ -13,3 +13,6 @@ test:
 
 budget:
 	$(PY) -m judge.cli budget
+
+generate:
+	$(PY) -m judge.cli generate

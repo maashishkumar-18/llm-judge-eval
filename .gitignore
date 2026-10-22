@@ -9,3 +9,4 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 scratch/
+data/outputs/.*.checkpoint.jsonl
