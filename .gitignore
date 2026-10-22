@@ -1,0 +1,11 @@
+# secrets
+.env
+
+# caches / scratch (results/ and logs/ ARE committed: graders have no API keys)
+.cache/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+scratch/
