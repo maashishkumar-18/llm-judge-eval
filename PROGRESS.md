@@ -200,7 +200,7 @@
 
 ## Caveats / open items (J5)
 - **A tie, not equality:** N=20 and a mean overall CI of about +-0.34 can only detect a large difference; per-case effects are large and in both directions (-2.6 to +1.6), so it is mostly two or three cases deciding the sign. The temptation cases (c41-c44) did not separate the configs in generation or judging, as recorded in J2.
-- **Judge leniency still unresolved:** 15 of 20 A cases and 14 of 20 B cases score 5/5/5-ish; the J3 standing instruction (investigate if probes also score near 5) stays open for J6.
+- **Judge leniency still unresolved:** 14 of 20 cases under A and 14 of 20 under B score exactly 5/5/5; the J3 standing instruction (investigate if probes also score near 5) stays open for J6.
 - **Identical-text cases are not independent evidence:** 6 pairs (c14 c15 c16 c19 c24 c44) have the same answer under A and B; the judge prompt is identical, so the second pointwise call is a cache hit with the same verdict (difference exactly 0 by construction). They still count in N=20 and shrink the CI width; the 14-pair numbers are in the compare JSON.
 - Pairwise numbers come from the J4 run (`results/position_bias.json`); `compare` does not run judge calls.
 - Pass-rate CI is a bootstrap on 20 binary values (ends can hit 1.0); no Wilson interval.
