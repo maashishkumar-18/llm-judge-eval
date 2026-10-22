@@ -21,17 +21,20 @@ async def run() -> int:
         return 1
     print(f"family guard OK: generator={s.gen_model} ({gf}) | judge={s.judge_model} ({jf})")
 
-    # 1. the ids must actually be served
-    if s.judge_provider == "groq":
-        served = await list_groq_models(s)
-        if s.judge_model not in served:
-            print(f"FAIL judge model {s.judge_model!r} not served by Groq. Served: {sorted(served)}")
-            return 1
-        print(f"judge model served by Groq ({len(served)} models listed)")
-    if s.gen_provider == "gemini" and not await gemini_model_exists(s, s.gen_model):
-        print(f"FAIL generator model {s.gen_model!r} not found on Gemini")
-        return 1
-    print("generator model served by Gemini")
+    # 1. the ids must actually be served (checked per role's provider)
+    served_groq: list[str] | None = None
+    for role, provider, model in (("generator", s.gen_provider, s.gen_model), ("judge", s.judge_provider, s.judge_model)):
+        if provider == "groq":
+            served_groq = served_groq if served_groq is not None else await list_groq_models(s)
+            if model not in served_groq:
+                print(f"FAIL {role} model {model!r} not served by Groq. Served: {sorted(served_groq)}")
+                return 1
+            print(f"{role} model served by Groq ({len(served_groq)} models listed)")
+        elif provider == "gemini":
+            if not await gemini_model_exists(s, model):
+                print(f"FAIL {role} model {model!r} not found on Gemini")
+                return 1
+            print(f"{role} model served by Gemini")
 
     # 2. one call each
     ok = True
@@ -39,7 +42,7 @@ async def run() -> int:
         async with LLMClient(s, role, run_id="smoke", log_name=f"smoke_{role}.jsonl") as c:
             r = await c.complete(PROMPT, case_id="smoke", max_tokens=1024)
             print(
-                f"{role:9s} {c.model:24s} cached={r['cached']!s:5s} "
+                f"{role:9s} {c.model:24s} json_mode={c.json_mode!s:5s} cached={r['cached']!s:5s} "
                 f"tokens_in={r['tokens_in']} tokens_out={r['tokens_out']} reply={r['text'].strip()[:40]!r}"
             )
             # plumbing check only: a non-empty reply with counted tokens (models may not echo exactly)

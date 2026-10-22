@@ -44,18 +44,21 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     groq_api_key: str = ""
 
-    # generator
-    gen_provider: str
-    gen_model: str
-    gen_temperature: float
+    # generator: Groq-hosted gpt-oss (OpenAI family). Roles were swapped in j0b; see CLAUDE.md A1/A8.
+    gen_provider: str = "groq"
+    gen_model: str = "openai/gpt-oss-120b"
+    gen_temperature: float = 0.0
     gen_concurrency: int = 2
+    gen_reasoning_effort: str = "low"  # low | medium | high (gpt-oss only)
+    gen_strip_reasoning: bool = True  # drop the `reasoning` field; keep only final `content`
 
-    # judge
-    judge_provider: str
+    # judge: Gemini (Google family). JUDGE_MODEL has no default: the strongest free model changes.
+    judge_provider: str = "gemini"
     judge_model: str
-    judge_temperature: float
+    judge_temperature: float = 0.0
     judge_concurrency: int = 2
-    judge_reasoning_effort: str = "medium"
+    # Provider JSON/schema mode for judge calls. OFF = prompt-only JSON, so the parse ladder is exercised.
+    judge_json_mode: bool = False
 
     allow_same_family: bool = False
 

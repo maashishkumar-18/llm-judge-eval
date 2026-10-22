@@ -112,10 +112,24 @@ class LLMClient:
         await self.aclose()
 
     # ---- request building / response parsing per provider ----
-    def _params(self, temperature: float, max_tokens: int | None) -> dict[str, Any]:
+    @property
+    def json_mode(self) -> bool:
+        """Provider-side JSON mode is a judge-only flag (JUDGE_JSON_MODE); default OFF."""
+        return self.role == "judge" and self.s.judge_json_mode
+
+    @property
+    def strip_reasoning(self) -> bool:
+        return self.role == "generator" and self.s.gen_strip_reasoning
+
+    def _params(self, temperature: float, max_tokens: int | None, response_schema: dict | None) -> dict[str, Any]:
         p: dict[str, Any] = {"temperature": temperature, "max_tokens": max_tokens}
-        if self.provider == "groq":
-            p["reasoning_effort"] = self.s.judge_reasoning_effort
+        if self.provider == "groq" and "gpt-oss" in self.model and self.role == "generator":
+            p["reasoning_effort"] = self.s.gen_reasoning_effort
+            p["include_reasoning"] = not self.strip_reasoning
+        if self.json_mode:
+            p["json_mode"] = True
+            if response_schema is not None:
+                p["response_schema"] = response_schema
         return p
 
     def _build(self, prompt: str, system: str | None, params: dict[str, Any]):
@@ -126,6 +140,10 @@ class LLMClient:
             }
             if params["max_tokens"]:
                 body["generationConfig"]["maxOutputTokens"] = params["max_tokens"]
+            if params.get("json_mode"):
+                body["generationConfig"]["responseMimeType"] = "application/json"
+                if params.get("response_schema"):
+                    body["generationConfig"]["responseJsonSchema"] = params["response_schema"]
             if system:
                 body["systemInstruction"] = {"parts": [{"text": system}]}
             return f"{GEMINI_BASE}/models/{self.model}:generateContent", {"x-goog-api-key": self.api_key}, body
@@ -136,8 +154,11 @@ class LLMClient:
             body = {"model": self.model, "messages": msgs, "temperature": params["temperature"]}
             if params["max_tokens"]:
                 body["max_completion_tokens"] = params["max_tokens"]
-            if "gpt-oss" in self.model:
+            if "reasoning_effort" in params:
                 body["reasoning_effort"] = params["reasoning_effort"]
+                body["include_reasoning"] = params["include_reasoning"]
+            if params.get("json_mode"):
+                body["response_format"] = {"type": "json_object"}
             return f"{GROQ_BASE}/chat/completions", {"Authorization": f"Bearer {self.api_key}"}, body
         raise ValueError(f"unknown provider {self.provider!r}")
 
@@ -157,7 +178,7 @@ class LLMClient:
         u = data.get("usage", {})
         return {
             "text": msg.get("content") or "",
-            "reasoning": msg.get("reasoning") or "",
+            "reasoning": "" if self.strip_reasoning else (msg.get("reasoning") or ""),
             "tokens_in": u.get("prompt_tokens", 0) or 0,
             "tokens_out": u.get("completion_tokens", 0) or 0,
         }
@@ -198,9 +219,10 @@ class LLMClient:
         temperature: float | None = None,
         max_tokens: int | None = None,
         nonce: str = "",
+        response_schema: dict | None = None,
     ) -> dict[str, Any]:
         temp = self.default_temp if temperature is None else temperature
-        params = self._params(temp, max_tokens)
+        params = self._params(temp, max_tokens, response_schema)
         key = make_key(self.model, params, f"{system or ''}\x00{prompt}", nonce)
         t0 = time.perf_counter()
         self.counters.calls += 1
