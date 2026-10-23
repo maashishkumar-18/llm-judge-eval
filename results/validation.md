@@ -54,7 +54,23 @@ Negative controls (per stratum, mitigated judge):
 
 ## Agreement and kappa vs human labels
 
-N=0: labels file not found (labels\human_labels.jsonl). Format: one JSON object per line: {"case_id": "c01", "config": "A", "label": "pass" or "fail", "note": "optional"}; config defaults to A. No human-label number is reported.
+N=0: no usable labels. No human-label number is reported.
+
+## Agreement and kappa vs Claude (an LLM rater, NOT human) labels
+
+N=20 labelled (18 pass / 2 fail; 20 distinct texts; 0 blank skipped; unmatched []).
+
+| pair | N | agreement | kappa [95% bootstrap] | false pass | false fail | INVALID |
+|---|---|---|---|---|---|---|
+| mitigated judge vs Claude (an LLM rater, NOT human) | 20 | 1.00 (20/20; always-pass 0.90) | 1.00 [CI degenerate] | 0/2 | 0/18 | 0 |
+| naive judge vs Claude (an LLM rater, NOT human) | 13 | 1.00 (13/13; always-pass 0.85) | 1.00 [CI degenerate] | 0/2 | 0/11 | 0 |
+| by-construction vs Claude (an LLM rater, NOT human) | 20 | 1.00 (20/20; always-pass 0.90) | 1.00 [CI degenerate] | 0/2 | 0/18 | 0 |
+
+- PASS always-pass judge: expected kappa = 0 (no information); observed 0.0
+- PASS always-fail judge: expected kappa = 0 (no information); observed 0.0
+- PASS inverted judge: expected kappa below the real judge's (sign check); observed -0.2195
+- PASS labels shuffled x10000: expected mean kappa within +-0.1 of 0; observed 0.0008 (permutation p of >= observed: 0.0045)
+- disagreements (mitigated vs Claude (an LLM rater, NOT human)): []
 
 ## Test-retest (cache bypassed by nonce)
 

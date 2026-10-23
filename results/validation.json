@@ -735,10 +735,15 @@
     "Positives are few (suite: 4 label-fail of 34), so one item moves kappa a lot; every kappa here is exploratory."
   ],
   "human": {
-    "status": "labels file not found",
-    "path": "labels\\human_labels.jsonl",
+    "status": "no usable labels",
     "n_labelled": 0,
-    "format": "one JSON object per line: {\"case_id\": \"c01\", \"config\": \"A\", \"label\": \"pass\" or \"fail\", \"note\": \"optional\"}; config defaults to A"
+    "n_skipped_blank": 20,
+    "unmatched": [],
+    "n_distinct_texts": 0,
+    "human_label_pass": 0,
+    "human_label_fail": 0,
+    "mitigated": null,
+    "naive": null
   },
   "test_retest": {
     "judge_model": "gemini-3.5-flash-lite",
@@ -1286,6 +1291,174 @@
       }
     ],
     "note": "temperature and model fixed; the only change between runs is the nonce, so differences are the judge's own sampling noise"
+  },
+  "claude_labelled": {
+    "status": "ok",
+    "n_labelled": 20,
+    "n_skipped_blank": 0,
+    "unmatched": [],
+    "n_distinct_texts": 20,
+    "human_label_pass": 18,
+    "human_label_fail": 2,
+    "mitigated": {
+      "n": 20,
+      "agree": 20,
+      "agreement": 1.0,
+      "agreement_ci95_exact": [
+        0.8316,
+        1.0
+      ],
+      "kappa": 1.0,
+      "confusion": {
+        "tp": 18,
+        "fp": 0,
+        "fn": 0,
+        "tn": 2
+      },
+      "label_pass": 18,
+      "judge_pass": 18,
+      "always_pass_agreement": 0.9,
+      "false_pass": {
+        "k": 0,
+        "n": 2
+      },
+      "false_fail": {
+        "k": 0,
+        "n": 18
+      },
+      "kappa_ci95": {
+        "low": 1.0,
+        "high": 1.0,
+        "undefined_resamples": 1239
+      },
+      "n_invalid": 0,
+      "negative_controls": [
+        {
+          "name": "always-pass judge",
+          "expect": "kappa = 0 (no information)",
+          "observed": 0.0,
+          "agreement": 0.9,
+          "ok": true
+        },
+        {
+          "name": "always-fail judge",
+          "expect": "kappa = 0 (no information)",
+          "observed": 0.0,
+          "agreement": 0.1,
+          "ok": true
+        },
+        {
+          "name": "inverted judge",
+          "expect": "kappa below the real judge's (sign check)",
+          "observed": -0.2195,
+          "ok": true
+        },
+        {
+          "name": "labels shuffled x10000",
+          "expect": "mean kappa within +-0.1 of 0",
+          "observed": 0.0008,
+          "ok": true,
+          "p_perm_ge_observed": 0.0045
+        }
+      ],
+      "disagreements": []
+    },
+    "naive": {
+      "n": 13,
+      "agree": 13,
+      "agreement": 1.0,
+      "agreement_ci95_exact": [
+        0.7529,
+        1.0
+      ],
+      "kappa": 1.0,
+      "confusion": {
+        "tp": 11,
+        "fp": 0,
+        "fn": 0,
+        "tn": 2
+      },
+      "label_pass": 11,
+      "judge_pass": 11,
+      "always_pass_agreement": 0.8462,
+      "false_pass": {
+        "k": 0,
+        "n": 2
+      },
+      "false_fail": {
+        "k": 0,
+        "n": 11
+      },
+      "kappa_ci95": {
+        "low": 1.0,
+        "high": 1.0,
+        "undefined_resamples": 1210
+      },
+      "n_invalid": 0,
+      "negative_controls": [
+        {
+          "name": "always-pass judge",
+          "expect": "kappa = 0 (no information)",
+          "observed": 0.0,
+          "agreement": 0.8462,
+          "ok": true
+        },
+        {
+          "name": "always-fail judge",
+          "expect": "kappa = 0 (no information)",
+          "observed": 0.0,
+          "agreement": 0.1538,
+          "ok": true
+        },
+        {
+          "name": "inverted judge",
+          "expect": "kappa below the real judge's (sign check)",
+          "observed": -0.352,
+          "ok": true
+        },
+        {
+          "name": "labels shuffled x10000",
+          "expect": "mean kappa within +-0.1 of 0",
+          "observed": -0.0006,
+          "ok": true,
+          "p_perm_ge_observed": 0.0138
+        }
+      ],
+      "disagreements": []
+    },
+    "by_construction_vs_human": {
+      "n": 20,
+      "agree": 20,
+      "agreement": 1.0,
+      "agreement_ci95_exact": [
+        0.8316,
+        1.0
+      ],
+      "kappa": 1.0,
+      "confusion": {
+        "tp": 18,
+        "fp": 0,
+        "fn": 0,
+        "tn": 2
+      },
+      "label_pass": 18,
+      "judge_pass": 18,
+      "always_pass_agreement": 0.9,
+      "false_pass": {
+        "k": 0,
+        "n": 2
+      },
+      "false_fail": {
+        "k": 0,
+        "n": 18
+      },
+      "kappa_ci95": {
+        "low": 1.0,
+        "high": 1.0,
+        "undefined_resamples": 1239
+      },
+      "disagreements": []
+    }
   },
   "adversarial": {
     "n_bases": 6,
