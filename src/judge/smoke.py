@@ -6,7 +6,7 @@ from __future__ import annotations
 import asyncio
 import sys
 
-from judge.config import FamilyGuardError, load_settings
+from judge.config import FamilyGuardError, MissingKeyError, load_settings
 from judge.llm import LLMClient, gemini_model_exists, list_groq_models
 
 PROMPT = "Reply with exactly one word: pong"
@@ -20,6 +20,13 @@ async def run() -> int:
         print(f"FAIL family guard: {e}")
         return 1
     print(f"family guard OK: generator={s.gen_model} ({gf}) | judge={s.judge_model} ({jf})")
+
+    try:
+        for provider in {s.gen_provider, s.judge_provider}:
+            s.api_key_for(provider)
+    except MissingKeyError as e:
+        print(f"FAIL {e}")
+        return 1
 
     # 1. the ids must actually be served (checked per role's provider)
     served_groq: list[str] | None = None

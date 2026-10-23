@@ -29,6 +29,10 @@ class FamilyGuardError(RuntimeError):
     pass
 
 
+class MissingKeyError(ValueError):
+    """The provider's API key is not set; the message names the .env variable to fill in."""
+
+
 def family_of(model_id: str) -> str | None:
     m = model_id.lower()
     for needle, fam in _FAMILY_PATTERNS:
@@ -82,7 +86,10 @@ class Settings(BaseSettings):
         if key is None:
             raise ValueError(f"unknown provider {provider!r}")
         if not key:
-            raise ValueError(f"no API key configured for provider {provider!r}")
+            raise MissingKeyError(
+                f"no API key configured for provider {provider!r}: set {provider.upper()}_API_KEY in .env "
+                "(copy .env.example to .env first)"
+            )
         return key
 
     def enforce_family_guard(self) -> tuple[str, str]:

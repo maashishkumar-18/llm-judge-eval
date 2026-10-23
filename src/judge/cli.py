@@ -7,7 +7,7 @@ import asyncio
 import sys
 
 from judge.budget import BudgetExceeded, load_budget
-from judge.config import load_settings
+from judge.config import MissingKeyError, load_settings
 from judge.ledger import JudgeLedger
 
 
@@ -790,7 +790,12 @@ def main(argv: list[str] | None = None) -> None:
     rp.add_argument("--cases-file", default="")
     rp.set_defaults(fn=cmd_replay)
     args = ap.parse_args(argv)
-    sys.exit(args.fn(args))
+    try:
+        code = args.fn(args)
+    except MissingKeyError as e:
+        print(f"error: {e}", file=sys.stderr)
+        code = 2
+    sys.exit(code)
 
 
 if __name__ == "__main__":

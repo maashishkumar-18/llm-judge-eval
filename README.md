@@ -91,7 +91,10 @@ python scripts/make_report_tables.py                    # regenerate the tables 
 
 ## Run the experiments live
 
-Needs a Gemini key (judge) and a Groq key (generator).
+Needs a Gemini key (judge) and a Groq key (generator). **These commands overwrite the committed `data/outputs/`,
+`results/` and `logs/`.** Run them on a branch or in a copy of the repo, and `git checkout -- data results logs`
+restores the reported run. Without a key, `python -m judge.smoke` and the live commands stop with a message naming the
+missing variable.
 
 ```bash
 cp .env.example .env               # then fill GEMINI_API_KEY and GROQ_API_KEY
@@ -111,8 +114,9 @@ python -m judge.cli validate                          # offline
 python scripts/make_report_tables.py
 ```
 
-The whole plan is about 250 judge calls (cap 289), 56% of one day's guard of 450 on the Gemini free tier
-(15 requests per minute, 500 per day; the client limits itself to 12 per minute). Each experiment has its own cap in
+The whole plan is 262 judge calls (cap 303; `judge budget` prints the split), 58% of the client's daily guard of 450
+on the Gemini free tier (15 requests per minute, 500 per day; the client limits itself to 12 per minute), about 22
+minutes of wall time. Each experiment has its own cap in
 `src/judge/budget.yaml`; a run that would pass its cap is refused, and batch runs checkpoint so they resume without
 repeating work. Responses are cached under `.cache/`, which a fresh clone does not have, so a live re-run of an
 experiment spends real calls and, because the model is not perfectly deterministic, can give slightly different

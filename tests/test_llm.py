@@ -215,3 +215,28 @@ def test_swapped_role_defaults(tmp_path):
     assert (s.judge_provider, s.judge_model, s.judge_json_mode) == ("gemini", "gemini-3.5-flash-lite", False)
     assert (s.judge_rpm_limit, s.judge_daily_cap, s.judge_concurrency) == (12, 450, 2)
     assert s.enforce_family_guard() == ("openai", "google")
+
+
+def test_missing_key_names_the_env_variable(tmp_path):
+    from judge.config import MissingKeyError
+
+    s = make_settings(tmp_path, gemini_api_key="")
+    with pytest.raises(MissingKeyError, match="GEMINI_API_KEY"):
+        s.api_key_for("gemini")
+    with pytest.raises(MissingKeyError, match="GEMINI_API_KEY"):
+        LLMClient(s, "judge")
+    assert s.api_key_for("groq") == "q-test"
+
+
+def test_cli_reports_a_missing_key_without_a_traceback(tmp_path, monkeypatch, capsys):
+    from judge import cli
+    from judge.config import MissingKeyError
+
+    def boom(_args):
+        raise MissingKeyError("no API key configured for provider 'groq': set GROQ_API_KEY in .env")
+
+    monkeypatch.setattr(cli, "cmd_budget", boom)
+    with pytest.raises(SystemExit) as e:
+        cli.main(["budget"])
+    assert e.value.code == 2
+    assert "GROQ_API_KEY" in capsys.readouterr().err
