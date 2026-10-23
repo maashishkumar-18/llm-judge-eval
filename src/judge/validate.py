@@ -40,7 +40,6 @@ PERMUTATIONS = 10_000
 PERM_SEED = 8
 PERM_MEAN_TOL = 0.10  # pre-registered: mean kappa under shuffled labels must be within +-0.10 of 0
 LABELS_PATH = "labels/human_labels.jsonl"
-CLAUDE_LABELS_PATH = "labels/claude_labels.jsonl"  # an LLM rater, reported separately and never as human labels
 LABEL_FORMAT ='one JSON object per line: {"case_id": "c01", "config": "A", "label": "pass" or "fail", "note": "optional"}; config defaults to A'
 
 
@@ -519,8 +518,7 @@ def _load(path: str | Path) -> Any:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def run_validation(*, root: str | Path = ".", labels_path: str | None = None, retest_path: str | None = None,
-                   claude_path: str | None = None) -> dict[str, Any]:
+def run_validation(*, root: str | Path = ".", labels_path: str | None = None, retest_path: str | None = None) -> dict[str, Any]:
     """Build the whole validation document from saved files (zero judge calls)."""
     root = Path(root)
     rubric = load_rubric()
@@ -535,7 +533,6 @@ def run_validation(*, root: str | Path = ".", labels_path: str | None = None, re
         human_report(entries, load_human_labels(lp), rubric) if lp.exists()
         else {"status": "labels file not found", "path": str(lp), "n_labelled": 0, "format": LABEL_FORMAT}
     )
-    cp = root / (claude_path or CLAUDE_LABELS_PATH)
     rp = root / (retest_path or "results/test_retest.json")
     retest = _load(rp) if rp.exists() else {"status": "not run (judge retest)", "n_cases": 0}
     return {
@@ -545,7 +542,6 @@ def run_validation(*, root: str | Path = ".", labels_path: str | None = None, re
         "by_construction": construction_report(entries, rubric),
         "dedupe_conflicts": dedupe([e for e in entries if e.origin.startswith("suite:")])[1],
         "caveats": CAVEATS, "human": human, "test_retest": retest,
-        **({"claude_labelled": human_report(entries, load_human_labels(cp), rubric)} if cp.exists() else {}),
         "adversarial": adversarial_table(_load(root / "results/probes.json"), _load(root / "results/probes_hard.json"),
                                          _load(root / "results/sensitivity.json"), rubric),
     }
@@ -589,10 +585,8 @@ def render_markdown(doc: Mapping[str, Any]) -> str:
         if s["mitigated"]["negative_controls"]:
             L.append(f"- {name} (N={s['mitigated']['n']})")
             L += ["  " + x for x in _controls_md(s["mitigated"]["negative_controls"])]
-    for key, who in (("human", "human"), ("claude_labelled", "Claude (an LLM rater, NOT human)")):
-        h = doc.get(key)
-        if h is None:
-            continue
+    for key, who in (("human", "human"),):
+        h = doc[key]
         L += ["", f"## Agreement and kappa vs {who} labels", ""]
         if h["n_labelled"] == 0:
             L.append(f"N=0: {h['status']}" + (f" ({h['path']}). Format: {h['format']}" if "path" in h else "") + f". No {who}-label number is reported.")
