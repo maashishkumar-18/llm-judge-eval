@@ -13,7 +13,8 @@
 | J6 / J6b probes, sensitivity, hard probes | done | `j6`, `j6b` | (fill in) |
 | J7 family guard, self-preference, score clustering | done | `j7` | (fill in) |
 | J8 validate: kappa, test-retest, adversarial table | done except human-label kappa (labels file not written yet) | `j8` | (fill in) |
-| J9–J10 | todo | | |
+| J9 README, pipeline diagram, generated tables, clean-clone test, answers draft | done | `j9` | (fill in) |
+| J10 | todo | | |
 
 ## J0 — public interfaces
 - `judge.config.Settings` (pydantic-settings, `.env`): GEN_PROVIDER/GEN_MODEL/GEN_TEMPERATURE/GEN_CONCURRENCY/GEN_REASONING_EFFORT/GEN_STRIP_REASONING, JUDGE_PROVIDER/JUDGE_MODEL/JUDGE_TEMPERATURE/JUDGE_CONCURRENCY/JUDGE_JSON_MODE (changed in j0b), GEMINI_API_KEY, GROQ_API_KEY, ALLOW_SAME_FAMILY, MAX_RETRIES, BACKOFF_BASE_SECONDS, BACKOFF_MAX_SECONDS, REQUEST_TIMEOUT_SECONDS, CACHE_DIR, LOG_DIR. `load_settings()`, `Settings.enforce_family_guard() -> (gen_family, judge_family)`, `family_of(model_id)`, `FamilyGuardError`.
@@ -349,3 +350,11 @@
 | Agreement and kappa vs human labels (N=20; c09, c16 not blind; author-revised) | agreement 0.95 vs always-pass 0.85; kappa 0.77, bootstrap 95% [0.00, 1.00]; one disagreement (c01, missing 'unless reserved' qualifier); exploratory |
 | Test-retest, judge temperature 0.0, N=10 cases x 3 runs (2 nonce reruns) | 0/10 pass/fail flips (95% exact CI up to 0.31); noise in instruction-following; c33 and c39 sit on the IF = 3 boundary, so the zero is partly luck |
 | Adversarial probes, N=6 bases | fooled 0/6 for naive and mitigated (floor effect, no before/after claim); terse-correct accepted naive 4/6, mitigated 6/6 |
+
+
+## J9 - README, generated tables, clean-clone test, answers draft
+- **`scripts/make_report_tables.py`** builds every result table in README.md (between the GENERATED markers) from `results/*.json` only; a missing key raises. `--check` exits 1 if the README is stale, `--stdout` prints. README also has a Mermaid pipeline diagram (not rendered here; GitHub renders it), a "when each judging mode fits" table with the project's own evidence per mode, a bias-at-a-glance table, setup and offline/live command lists.
+- **Clean-clone test** (fresh `git clone`, new venv, `pip install -e ".[dev]"`, README commands in order): 299 tests pass; `budget`, `genreport`, `run --report-only`, `compare`, `validate`, both `replay` (20/20 identical, 0 API calls) and the table generator all exit 0 with no `.env`; regenerating `results/` left `git status` empty, so the committed results reproduce byte-for-byte from the committed data. Live commands were not run (no keys in the clone).
+- **Gaps found and fixed:** (1) missing API keys gave raw tracebacks, and `judge.smoke` died on `Illegal header value b'Bearer '`: new `MissingKeyError` names the `.env` variable, smoke checks keys first, CLI prints `error: ...` and exits 2 (+2 tests, 299 total); (2) README and CLAUDE.md said 250 planned / cap 289 calls, but `budget.yaml` (with the J6b hard probes) is 262 / cap 303 (58% of a day, ~22 min): both corrected, J6b row added to the CLAUDE.md budget table; (3) README now warns that live re-runs overwrite the committed `data/outputs`, `results`, `logs`, and that a fresh clone has no cache or ledger so live runs spend real calls and may differ slightly.
+- **`docs/answers_draft.md`:** bullet notes by design area for the template's design-decision questions; no reflection text. The template's own question wording was not available, so grouping is by area, with 2.3.3 / 2.4 / 2.5 marked.
+- Not checked: Mermaid rendering; the live commands in the README; the PROGRESS J2 table still shows the old 6/13 exact-match (superseded by 3/13 after the c41-c44 swap, which README now shows from `gen_check.json`).
