@@ -52,7 +52,24 @@ Negative controls (per stratum, mitigated judge):
   - PASS inverted judge: expected kappa below the real judge's (sign check); observed -0.9413
   - PASS labels shuffled x10000: expected mean kappa within +-0.1 of 0; observed -0.0004 (permutation p of >= observed: 0.0001)
 
+## Per-criterion agreement with deterministic labels (mitigated judge)
+
+| criterion / outputs | N | agreement (always-pass) | kappa [95% bootstrap] | false pass | false fail | INVALID |
+|---|---|---|---|---|---|---|
+| instruction_following / suite_all_outputs  (judge IF >= 3 vs checks.py compliant) | 40 | 0.93 (37/40; always-pass 0.97) | -0.03 [-0.08, 0.00] | 1/1 | 2/39 | 0 |
+| instruction_following_strict / suite_all_outputs  (judge IF >= 4 vs checks.py compliant) | 40 | 0.93 (37/40; always-pass 0.97) | 0.38 [0.00, 1.00] | 0/1 | 3/39 | 0 |
+| faithfulness / suite_all_outputs  (judge faithfulness >= 4 vs reference-fact support label (reference-based only)) | 26 | 0.92 (24/26; always-pass 0.85) | 0.70 [0.00, 1.00] | 1/4 | 1/22 | 0 |
+| instruction_following / suite_distinct  (judge IF >= 3 vs checks.py compliant) | 34 | 0.94 (32/34; always-pass 0.97) | -0.03 [-0.08, 0.00] | 1/1 | 1/33 | 0 |
+| instruction_following_strict / suite_distinct  (judge IF >= 4 vs checks.py compliant) | 34 | 0.94 (32/34; always-pass 0.97) | 0.48 [0.00, 1.00] | 0/1 | 2/33 | 0 |
+| faithfulness / suite_distinct  (judge faithfulness >= 4 vs reference-fact support label (reference-based only)) | 20 | 0.90 (18/20; always-pass 0.85) | 0.61 [-0.07, 1.00] | 1/3 | 1/17 | 0 |
+
+Disagreements, instruction-following vs checks.py (suite_all_outputs): [('c16', 'A', 'judge IF 2', 'checks ok'), ('c16', 'B', 'judge IF 2', 'checks ok'), ('c23', 'B', 'judge IF 3', 'checks FAIL')]
+Disagreements, faithfulness vs support label (suite_all_outputs): [('c23', 'B', 'judge F 3', 'supported True'), ('c41', 'B', 'judge F 5', 'supported False')]
+
+
 ## Agreement and kappa vs human labels
+
+PROVENANCE NOT VERIFIED: labels/human_labels.jsonl was not produced by this tooling and matches an earlier LLM-rater draft on all 20 items (that draft was not blind either). c09 and c16 are not blind labels: the originals' errors were already known from earlier reports. Do not use this section as the headline; the by-construction rows above are the headline until the author confirms the labels or redoes them from a blind sheet.
 
 N=20 labelled (18 pass / 2 fail; 20 distinct texts; 0 blank skipped; unmatched []).
 

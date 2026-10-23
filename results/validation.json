@@ -725,6 +725,484 @@
       }
     }
   },
+  "criterion_vs_deterministic": {
+    "thresholds": {
+      "instruction_following_min": 3,
+      "faithfulness_min": 4
+    },
+    "suite_all_outputs": {
+      "instruction_following": {
+        "definition": "judge IF >= 3 vs checks.py compliant",
+        "n": 40,
+        "agree": 37,
+        "agreement": 0.925,
+        "agreement_ci95_exact": [
+          0.7961,
+          0.9843
+        ],
+        "kappa": -0.0345,
+        "confusion": {
+          "tp": 37,
+          "fp": 1,
+          "fn": 2,
+          "tn": 0
+        },
+        "label_pass": 39,
+        "judge_pass": 38,
+        "always_pass_agreement": 0.975,
+        "false_pass": {
+          "k": 1,
+          "n": 1
+        },
+        "false_fail": {
+          "k": 2,
+          "n": 39
+        },
+        "kappa_ci95": {
+          "low": -0.0811,
+          "high": 0.0,
+          "undefined_resamples": 425
+        },
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.975,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.025,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": 0.0027,
+            "ok": false
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0001,
+            "ok": true,
+            "p_perm_ge_observed": 1.0
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c16",
+            "origin": "suite:A",
+            "judge_if": 2,
+            "checks_ok": true
+          },
+          {
+            "case_id": "c16",
+            "origin": "suite:B",
+            "judge_if": 2,
+            "checks_ok": true
+          },
+          {
+            "case_id": "c23",
+            "origin": "suite:B",
+            "judge_if": 3,
+            "checks_ok": false
+          }
+        ]
+      },
+      "instruction_following_strict": {
+        "definition": "judge IF >= 4 vs checks.py compliant",
+        "n": 40,
+        "agree": 37,
+        "agreement": 0.925,
+        "agreement_ci95_exact": [
+          0.7961,
+          0.9843
+        ],
+        "kappa": 0.375,
+        "confusion": {
+          "tp": 36,
+          "fp": 0,
+          "fn": 3,
+          "tn": 1
+        },
+        "label_pass": 39,
+        "judge_pass": 36,
+        "always_pass_agreement": 0.975,
+        "false_pass": {
+          "k": 0,
+          "n": 1
+        },
+        "false_fail": {
+          "k": 3,
+          "n": 39
+        },
+        "kappa_ci95": {
+          "low": 0.0,
+          "high": 1.0,
+          "undefined_resamples": 149
+        },
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.975,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.025,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.0511,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0005,
+            "ok": true,
+            "p_perm_ge_observed": 0.0988
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c02",
+            "origin": "suite:A",
+            "judge_if": 3,
+            "checks_ok": true
+          },
+          {
+            "case_id": "c16",
+            "origin": "suite:A",
+            "judge_if": 2,
+            "checks_ok": true
+          },
+          {
+            "case_id": "c16",
+            "origin": "suite:B",
+            "judge_if": 2,
+            "checks_ok": true
+          }
+        ]
+      },
+      "faithfulness": {
+        "definition": "judge faithfulness >= 4 vs reference-fact support label (reference-based only)",
+        "n": 26,
+        "agree": 24,
+        "agreement": 0.9231,
+        "agreement_ci95_exact": [
+          0.7487,
+          0.9905
+        ],
+        "kappa": 0.7045,
+        "confusion": {
+          "tp": 21,
+          "fp": 1,
+          "fn": 1,
+          "tn": 3
+        },
+        "label_pass": 22,
+        "judge_pass": 22,
+        "always_pass_agreement": 0.8462,
+        "false_pass": {
+          "k": 1,
+          "n": 4
+        },
+        "false_fail": {
+          "k": 1,
+          "n": 22
+        },
+        "kappa_ci95": {
+          "low": 0.0,
+          "high": 1.0,
+          "undefined_resamples": 48
+        },
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.8462,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.1538,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.248,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": 0.0036,
+            "ok": true,
+            "p_perm_ge_observed": 0.0054
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c23",
+            "origin": "suite:B",
+            "judge_faithfulness": 3,
+            "supported": true
+          },
+          {
+            "case_id": "c41",
+            "origin": "suite:B",
+            "judge_faithfulness": 5,
+            "supported": false
+          }
+        ]
+      }
+    },
+    "suite_distinct": {
+      "instruction_following": {
+        "definition": "judge IF >= 3 vs checks.py compliant",
+        "n": 34,
+        "agree": 32,
+        "agreement": 0.9412,
+        "agreement_ci95_exact": [
+          0.8032,
+          0.9928
+        ],
+        "kappa": -0.0303,
+        "confusion": {
+          "tp": 32,
+          "fp": 1,
+          "fn": 1,
+          "tn": 0
+        },
+        "label_pass": 33,
+        "judge_pass": 33,
+        "always_pass_agreement": 0.9706,
+        "false_pass": {
+          "k": 1,
+          "n": 1
+        },
+        "false_fail": {
+          "k": 1,
+          "n": 33
+        },
+        "kappa_ci95": {
+          "low": -0.0759,
+          "high": 0.0,
+          "undefined_resamples": 1227
+        },
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.9706,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.0294,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": 0.0018,
+            "ok": false
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": 0.0002,
+            "ok": true,
+            "p_perm_ge_observed": 1.0
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c16",
+            "origin": "suite:A",
+            "judge_if": 2,
+            "checks_ok": true
+          },
+          {
+            "case_id": "c23",
+            "origin": "suite:B",
+            "judge_if": 3,
+            "checks_ok": false
+          }
+        ]
+      },
+      "instruction_following_strict": {
+        "definition": "judge IF >= 4 vs checks.py compliant",
+        "n": 34,
+        "agree": 32,
+        "agreement": 0.9412,
+        "agreement_ci95_exact": [
+          0.8032,
+          0.9928
+        ],
+        "kappa": 0.4769,
+        "confusion": {
+          "tp": 31,
+          "fp": 0,
+          "fn": 2,
+          "tn": 1
+        },
+        "label_pass": 33,
+        "judge_pass": 31,
+        "always_pass_agreement": 0.9706,
+        "false_pass": {
+          "k": 0,
+          "n": 1
+        },
+        "false_fail": {
+          "k": 2,
+          "n": 33
+        },
+        "kappa_ci95": {
+          "low": 0.0,
+          "high": 1.0,
+          "undefined_resamples": 404
+        },
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.9706,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.0294,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.0604,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0005,
+            "ok": true,
+            "p_perm_ge_observed": 0.0873
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c02",
+            "origin": "suite:A",
+            "judge_if": 3,
+            "checks_ok": true
+          },
+          {
+            "case_id": "c16",
+            "origin": "suite:A",
+            "judge_if": 2,
+            "checks_ok": true
+          }
+        ]
+      },
+      "faithfulness": {
+        "definition": "judge faithfulness >= 4 vs reference-fact support label (reference-based only)",
+        "n": 20,
+        "agree": 18,
+        "agreement": 0.9,
+        "agreement_ci95_exact": [
+          0.683,
+          0.9877
+        ],
+        "kappa": 0.6078,
+        "confusion": {
+          "tp": 16,
+          "fp": 1,
+          "fn": 1,
+          "tn": 2
+        },
+        "label_pass": 17,
+        "judge_pass": 17,
+        "always_pass_agreement": 0.85,
+        "false_pass": {
+          "k": 1,
+          "n": 3
+        },
+        "false_fail": {
+          "k": 1,
+          "n": 17
+        },
+        "kappa_ci95": {
+          "low": -0.0714,
+          "high": 1.0,
+          "undefined_resamples": 147
+        },
+        "negative_controls": [
+          {
+            "name": "always-pass judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.85,
+            "ok": true
+          },
+          {
+            "name": "always-fail judge",
+            "expect": "kappa = 0 (no information)",
+            "observed": 0.0,
+            "agreement": 0.15,
+            "ok": true
+          },
+          {
+            "name": "inverted judge",
+            "expect": "kappa below the real judge's (sign check)",
+            "observed": -0.2081,
+            "ok": true
+          },
+          {
+            "name": "labels shuffled x10000",
+            "expect": "mean kappa within +-0.1 of 0",
+            "observed": -0.0017,
+            "ok": true,
+            "p_perm_ge_observed": 0.0434
+          }
+        ],
+        "disagreements": [
+          {
+            "case_id": "c23",
+            "origin": "suite:B",
+            "judge_faithfulness": 3,
+            "supported": true
+          },
+          {
+            "case_id": "c41",
+            "origin": "suite:B",
+            "judge_faithfulness": 5,
+            "supported": false
+          }
+        ]
+      }
+    }
+  },
   "dedupe_conflicts": 0,
   "caveats": [
     "By-construction labels for the reference-free suite cases check the case's own constraints only, so they cannot see a faithfulness failure; a judge that flags one will look like a disagreement.",

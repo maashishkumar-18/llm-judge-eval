@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 import statistics
 import unicodedata
 from collections import Counter
@@ -30,11 +31,12 @@ from pathlib import Path
 from typing import Any, Hashable, Mapping, Sequence
 
 from judge.aggregate import BOOTSTRAP_RESAMPLES, BOOTSTRAP_SEED, percentile
+from judge.checks import complies
 from judge.clustering import suite_label
 from judge.pointwise import judge_suite
 from judge.probes import BASES, NAIVE_FOOLED_MIN, is_correct, length_checks_pass, overall_noif
 from judge.schemas import CRITERIA, Case, Rubric, load_rubric
-from judge.selfpref import clopper_pearson
+from judge.selfpref import FACTS, clopper_pearson, normalize
 
 PERMUTATIONS = 10_000
 PERM_SEED = 8
@@ -193,10 +195,21 @@ class Entry:
     mit_seen: bool = False  # a mitigated verdict row exists (usable or INVALID)
     naive_score: float | None = None
     naive_seen: bool = False
+    constraints_ok: bool | None = None  # checks.py result on the case's own countable constraints (suite only)
+    supported: bool | None = None  # reference facts present and no forbidden fact (reference-based suite only)
 
     @property
     def key(self) -> tuple[str, str, str]:
         return (self.case_id, _norm(self.text), self.mode)
+
+
+def facts_supported(case: Case) -> bool:
+    """Support label for faithfulness: every required reference fact present and no forbidden (contradicting) fact.
+    The required facts also encode correctness, so this is a coarser label than 'every claim is supported'."""
+    required, forbidden = FACTS[case.id]
+    t = normalize(case.model_output)
+    return bool(case.model_output.strip()) and all(re.search(p, t, re.DOTALL) for p in required) and not any(
+        re.search(p, t, re.DOTALL) for p in forbidden)
 
 
 def mit_pass(e: Entry, rubric: Rubric) -> bool:
@@ -229,6 +242,8 @@ def build_entries(
             why = ("reference facts + the case's own constraints" if c.reference_based
                    else "the case's own constraints only (no fact check: reference-free)")
             e = Entry(f"suite:{cfg}", c.id, c.model_output, "reference" if c.reference_based else "free", suite_label(c), why)
+            e.constraints_ok = complies(c.model_output, c.meta.get("checks", []))
+            e.supported = facts_supported(c) if c.reference_based else None
             _attach(e, "mitigated", res.get(c.id))
             if cfg == "A":
                 _attach(e, "naive", naive_suite.get(c.id) or probes["results"].get(f"ref|naive|original|{c.id}"))
@@ -302,6 +317,35 @@ def construction_report(entries: Sequence[Entry], rubric: Rubric) -> dict[str, A
     for name, es in strata(entries).items():
         out[name] = {"n_items": len(es), "label_pass": sum(e.label for e in es), "label_fail": sum(not e.label for e in es),
                      "mitigated": judge_report(es, "mitigated", rubric), "naive": judge_report(es, "naive", rubric)}
+    return out
+
+
+def criterion_report(entries: Sequence[Entry], rubric: Rubric) -> dict[str, Any]:
+    """Per-criterion agreement of the mitigated judge with deterministic labels over the suite outputs.
+    instruction_following: judge score >= the pass-rule minimum (and, as a stricter reading, >= 4) vs checks.py compliance
+    with the case's countable constraints (every suite output with a mitigated verdict). faithfulness: judge score >= the
+    pass-rule minimum vs the fact-support label (reference-based outputs only; reference-free cases have none)."""
+    pr = rubric.pass_rule
+    suite = [e for e in entries if e.origin.startswith("suite:") and e.mit_scores]
+    groups = {"suite_all_outputs": suite, "suite_distinct": dedupe(suite)[0]}
+    out: dict[str, Any] = {"thresholds": {"instruction_following_min": pr.instruction_following_min, "faithfulness_min": pr.faithfulness_min}}
+    for name, es in groups.items():
+        rows: dict[str, Any] = {}
+        for tag, thr in (("instruction_following", pr.instruction_following_min), ("instruction_following_strict", 4)):
+            pred = [e.mit_scores["instruction_following"] >= thr for e in es]  # type: ignore[index]
+            lab = [bool(e.constraints_ok) for e in es]
+            rows[tag] = {"definition": f"judge IF >= {thr} vs checks.py compliant", **agreement_stats(pred, lab),
+                         "negative_controls": kappa_controls(pred, lab),
+                         "disagreements": [{"case_id": e.case_id, "origin": e.origin, "judge_if": e.mit_scores["instruction_following"], "checks_ok": e.constraints_ok}  # type: ignore[index]
+                                           for e, p, l in zip(es, pred, lab) if p != l]}
+        fs = [e for e in es if e.supported is not None]
+        pred = [e.mit_scores["faithfulness"] >= pr.faithfulness_min for e in fs]  # type: ignore[index]
+        lab = [bool(e.supported) for e in fs]
+        rows["faithfulness"] = {"definition": f"judge faithfulness >= {pr.faithfulness_min} vs reference-fact support label (reference-based only)",
+                                **agreement_stats(pred, lab), "negative_controls": kappa_controls(pred, lab),
+                                "disagreements": [{"case_id": e.case_id, "origin": e.origin, "judge_faithfulness": e.mit_scores["faithfulness"], "supported": e.supported}  # type: ignore[index]
+                                                  for e, p, l in zip(fs, pred, lab) if p != l]}
+        out[name] = rows
     return out
 
 
@@ -505,6 +549,10 @@ def adversarial_table(
 
 # ---------------------------------------------------------------- assembly and rendering
 
+HUMAN_LABEL_NOTE = ("PROVENANCE NOT VERIFIED: labels/human_labels.jsonl was not produced by this tooling and matches an earlier LLM-rater draft on all 20 items "
+                    "(that draft was not blind either). c09 and c16 are not blind labels: the originals' errors were already known from earlier reports. "
+                    "Do not use this section as the headline; the by-construction rows above are the headline until the author confirms the labels or redoes them from a blind sheet.")
+
 CAVEATS = (
     "By-construction labels for the reference-free suite cases check the case's own constraints only, so they cannot see a faithfulness failure; a judge that flags one will look like a disagreement.",
     "By-construction labels for reference-based cases also require the reference's key facts (a completeness matter), but the pass rule has no completeness threshold, so a terse-but-faithful answer can be label-fail and judge-pass.",
@@ -540,6 +588,7 @@ def run_validation(*, root: str | Path = ".", labels_path: str | None = None, re
         "rubric_version": rubric.version, "exploratory": True,
         "pass_rule": "mitigated = rubric pass rule recomputed from stored scores; naive = score >= %d of 10" % NAIVE_FOOLED_MIN,
         "by_construction": construction_report(entries, rubric),
+        "criterion_vs_deterministic": criterion_report(entries, rubric),
         "dedupe_conflicts": dedupe([e for e in entries if e.origin.startswith("suite:")])[1],
         "caveats": CAVEATS, "human": human, "test_retest": retest,
         "adversarial": adversarial_table(_load(root / "results/probes.json"), _load(root / "results/probes_hard.json"),
@@ -585,9 +634,22 @@ def render_markdown(doc: Mapping[str, Any]) -> str:
         if s["mitigated"]["negative_controls"]:
             L.append(f"- {name} (N={s['mitigated']['n']})")
             L += ["  " + x for x in _controls_md(s["mitigated"]["negative_controls"])]
+    L += ["", "## Per-criterion agreement with deterministic labels (mitigated judge)", "",
+          "| criterion / outputs | N | agreement (always-pass) | kappa [95% bootstrap] | false pass | false fail | INVALID |", "|---|---|---|---|---|---|---|"]
+    for grp, rows in doc["criterion_vs_deterministic"].items():
+        if grp == "thresholds":
+            continue
+        for tag, r in rows.items():
+            L.append(_kappa_line(f"{tag} / {grp}  ({r['definition']})", r))
+    L += ["", "Disagreements, instruction-following vs checks.py (suite_all_outputs): "
+          + str([(d["case_id"], d["origin"][-1], f"judge IF {d['judge_if']}", f"checks {'ok' if d['checks_ok'] else 'FAIL'}")
+                 for d in doc["criterion_vs_deterministic"]["suite_all_outputs"]["instruction_following"]["disagreements"]]),
+          "Disagreements, faithfulness vs support label (suite_all_outputs): "
+          + str([(d["case_id"], d["origin"][-1], f"judge F {d['judge_faithfulness']}", f"supported {d['supported']}")
+                 for d in doc["criterion_vs_deterministic"]["suite_all_outputs"]["faithfulness"]["disagreements"]]), ""]
     for key, who in (("human", "human"),):
         h = doc[key]
-        L += ["", f"## Agreement and kappa vs {who} labels", ""]
+        L += ["", f"## Agreement and kappa vs {who} labels", "", HUMAN_LABEL_NOTE, ""]
         if h["n_labelled"] == 0:
             L.append(f"N=0: {h['status']}" + (f" ({h['path']}). Format: {h['format']}" if "path" in h else "") + f". No {who}-label number is reported.")
             continue

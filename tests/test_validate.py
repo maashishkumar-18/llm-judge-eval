@@ -248,3 +248,15 @@ def test_full_validation_on_saved_files_makes_no_judge_call_and_states_n():
             assert s[j]["n"] <= s["n_items"] and s[j]["n_invalid"] == 0
             assert all(c["ok"] for c in s[j]["negative_controls"])
     assert d["human"]["n_labelled"] == 0 and d["test_retest"]["n_cases"] == 0 and d["caveats"]
+
+
+def test_criterion_report_hand():
+    rows = [
+        Entry("suite:A", "c01", "a", "reference", True, "t", mit_scores={"faithfulness": 5, "instruction_following": 5, "completeness": 5}, mit_seen=True, constraints_ok=True, supported=True),
+        Entry("suite:A", "c02", "b", "reference", True, "t", mit_scores={"faithfulness": 1, "instruction_following": 4, "completeness": 5}, mit_seen=True, constraints_ok=False, supported=True),
+        Entry("suite:A", "c03", "c", "free", True, "t", mit_scores={"faithfulness": 5, "instruction_following": 2, "completeness": 5}, mit_seen=True, constraints_ok=True, supported=None),
+    ]
+    from judge.validate import criterion_report
+    r = criterion_report(rows, RUBRIC)["suite_all_outputs"]
+    assert r["instruction_following"]["confusion"] == {"tp": 1, "fp": 1, "fn": 1, "tn": 0}  # IF >= 3 vs checks: c01 tp, c02 fp, c03 fn
+    assert r["faithfulness"]["n"] == 2 and r["faithfulness"]["confusion"] == {"tp": 1, "fp": 0, "fn": 1, "tn": 0}  # reference-free c03 has no support label
