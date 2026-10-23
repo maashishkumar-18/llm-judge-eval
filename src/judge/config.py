@@ -48,7 +48,7 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     groq_api_key: str = ""
 
-    # generator: Groq-hosted gpt-oss (OpenAI family). Roles were swapped in j0b; see CLAUDE.md A1/A8.
+    # generator: Groq-hosted gpt-oss (OpenAI family). Generator and judge are always different model families (see enforce_family_guard).
     gen_provider: str = "groq"
     gen_model: str = "openai/gpt-oss-20b"
     gen_temperature: float = 0.0

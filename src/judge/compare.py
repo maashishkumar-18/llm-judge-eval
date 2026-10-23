@@ -1,11 +1,11 @@
-"""A/B comparison of two configs (J5): paired bootstrap on per-case differences, win rate from order-swapped
+"""A/B comparison of two configs: paired bootstrap on per-case differences, win rate from order-swapped
 pairs, and a pre-registered decision rule.
 
 Convention: every difference is A minus B (positive favours A) and the win rate is A over B, so both point the
 same way. Pairing is by case id; a case enters the paired analysis only if BOTH configs were scored for it
 (dropped ids are listed, never silently ignored).
 
-Decision rule (CLAUDE.md section 3, "A/B winner"):
+Decision rule (README, "Metric definitions", A/B winner):
   1. the 95% bootstrap CI of the mean paired overall difference must EXCLUDE 0, else "no significant difference";
   2. the pairwise win rate must lean the same way (> 0.5 for A, < 0.5 for B); a win rate of exactly 0.5 or the
      opposite lean contradicts the pointwise result -> "no significant difference";

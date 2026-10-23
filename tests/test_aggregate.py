@@ -1,4 +1,4 @@
-"""Hand-computed tests for aggregate.py and compare.py (J5). Weights .40/.35/.25 from rubric.yaml:
+"""Hand-computed tests for aggregate.py and compare.py. Weights .40/.35/.25 from rubric.yaml:
 (5,5,5)=5.00 pass | (4,4,4)=4.00 pass | (3,5,5)=1.2+1.75+1.25=4.20 FAIL (faithfulness 3 < 4)
 (5,2,5)=2.0+0.7+1.25=3.95 FAIL (instruction-following 2 < 3) | (4,3,2)=1.6+1.05+0.5=3.15 FAIL (overall < 3.5)."""
 

@@ -1,4 +1,4 @@
-"""Judge validation (J8): agreement / Cohen's kappa against labels, test-retest, adversarial summary.
+"""Judge validation: agreement / Cohen's kappa against labels, test-retest, adversarial summary.
 
 Everything except `run_retest` works on saved results and makes ZERO judge calls (`judge validate`).
 
@@ -12,7 +12,7 @@ Labels (positive class = "pass"):
   pass/fail (also true/false/1/0); null or blank labels are skipped and counted. Duplicates and unknown ids are errors.
 
 Judge predictions: mitigated = the rubric pass rule recomputed from the stored criterion scores; naive = score >=
-probes.NAIVE_FOOLED_MIN (the acceptance threshold fixed in J6; the naive judge has no pass rule of its own).
+probes.NAIVE_FOOLED_MIN (the acceptance threshold fixed with the probes; the naive judge has no pass rule of its own).
 
 Kappa is implemented here with integer arithmetic (unit-tested on a hand-computed example). It is undefined (None,
 with a reason) when chance agreement is 1, i.e. both raters constant and equal. Every number carries its N, every
@@ -234,7 +234,7 @@ def build_entries(
     hard: Mapping[str, Any], naive_suite: Mapping[str, Mapping[str, Any]],
 ) -> list[Entry]:
     """Every labelled, judged answer. `suite`/`pointwise` are keyed by generator config ("A", "B"); `naive_suite`
-    holds the naive verdicts on config A's cases (J7 clustering). Probe 'original' rows attach to the suite:A entry."""
+    holds the naive verdicts on config A's cases (clustering run). Probe 'original' rows attach to the suite:A entry."""
     entries: list[Entry] = []
     for cfg, cases in suite.items():
         res = {r["case_id"]: r for r in pointwise[cfg]["results"]}

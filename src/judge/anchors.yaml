@@ -1,5 +1,5 @@
 # Few-shot calibration anchors for the MITIGATED pointwise prompts (score-clustering mitigation).
-# Rules: (1) these passages/questions must never appear in the eval suite (J2 must not reuse them);
+# Rules: (1) these passages/questions must never appear in the eval suite (the suite must not reuse them);
 # (2) every evidence span must be a verbatim span of the answer (enforced by schemas.Anchor);
 # (3) six anchors, listed in a deliberately mixed order (not sorted by score, to avoid a recency pull).
 #

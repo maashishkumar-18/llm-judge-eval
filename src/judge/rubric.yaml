@@ -1,5 +1,5 @@
-# Rubric v1 (J1). Weights, level descriptors and the pass rule are pre-registered here;
-# change them only before the A/B run and label any later change post-hoc in PROGRESS.md.
+# Rubric v1. Weights, level descriptors and the pass rule are pre-registered here;
+# change them only before the A/B run and label any later change as post-hoc wherever results are reported.
 # Criterion names are fixed by judge.schemas.CRITERIA; scores are integers 1-5.
 version: rubric-v1
 

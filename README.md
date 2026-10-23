@@ -16,8 +16,8 @@ naive-judge number next to a mitigated-judge number.
   accepted, so no verbosity or sycophancy improvement is claimed. All small-N results are exploratory and carry their N.
   The tables are [below](#results).
 
-`CLAUDE.md` holds the locked design decisions, metric definitions and call budget; `PROGRESS.md` is the session log with
-the per-experiment detail, caveats and bugs found.
+The metric definitions, the pre-registered rules and the call budget (`src/judge/budget.yaml`, printed by
+`python -m judge.cli budget`) are stated in this README; the caveats are under [Known limitations](#known-limitations).
 
 ## Pipeline
 
@@ -148,6 +148,39 @@ instruction-following >= 3 and overall >= 3.5. In the mitigated prompts every cr
 the answer before its score, a 4 or 5 without a verifiable quote is flagged, and the rubric states that length and a
 confident tone earn no credit. Malformed replies go down the parse ladder (strict, extract, repair, one re-ask, INVALID);
 an INVALID verdict is counted, never dropped.
+
+## Metric definitions
+
+Defined before any experiment; `N` is always stated next to a result, and every small-N probe is exploratory.
+
+| Quantity | Definition |
+|---|---|
+| Overall score | weighted mean of the three criterion scores (1-5), recomputed in code; the judge's own arithmetic is never trusted |
+| Pass rule | faithfulness >= 4 and instruction-following >= 3 and overall >= 3.5; fixed before the A/B run (`src/judge/rubric.yaml`) |
+| Pair verdict | both orders are judged; if the winners agree that is the verdict, otherwise TIE and the pair is flagged as an order flip |
+| Win rate (A over B) | (wins of A + 0.5 x ties) / N pairs, after the order-swap rule |
+| Flip rate | share of pairs whose winner changes when the order is swapped, counted before the tie rule; reported for the naive and the mitigated judge |
+| Position preference | on identical-answer control pairs (A = B), 6 pairs judged in one order each per judge: share that picks the first-listed answer; unbiased is about 50% or a tie (exploratory, N=6) |
+| Length bias | Spearman(length, overall) within a quality group, plus the pointwise score delta between a padded answer and its original (exploratory, N=6 base cases) |
+| Self-preference | 6 pairs where both answers are correct by a deterministic check, one authored by gpt-oss-20b and one by Gemini; judged in both orders. Own-family win rate = (pairs won by the Gemini answer + 0.5 x ties) / N pairs, 50% = no preference; 95% exact binomial CI on the decisive pairs only. N=6 can show a large effect at most, never absence of one |
+| Fooled rate | share of adversarial probes where a confidently-wrong answer gets faithfulness >= 4, or a verbose-wrong answer scores at or above the terse-correct answer on the same base case (exploratory, N=6) |
+| Score spread | standard deviation, number of distinct values used, share at the modal value; clustering means narrow spread |
+| Agreement, kappa | agreement rate and Cohen's kappa on pass/fail against human labels and against by-construction labels; kappa is implemented in this repo and checked by a hand-computed unit test |
+| Test-retest | the suite is re-run with the cache bypassed (nonce): share of cases whose pass/fail flips, and score standard deviation |
+
+**Main A/B decision rule (pre-registered before any judge call).** Three generator configs were produced without
+judge calls: A = gpt-oss-20b with prompt v1, B = gpt-oss-20b with prompt v2, C = qwen3.8-27b with prompt v1. Two cheap
+checks are compared (`judge genreport`): the deterministic constraint pass rate over the 20 cases, and the strict
+exact-match rate over the 13 reference-based cases. If C differs from A by 10 percentage points or more on either check,
+the main A/B is model A against model C with the same prompt; otherwise it is prompt v1 against prompt v2 on
+gpt-oss-20b (A against B) and C is dropped. The outcome is in the results below.
+
+**Declaring a winner.** Comparisons are paired per case. A config wins only if the bootstrap 95% CI of the mean overall
+difference excludes 0 and the order-swapped pairwise win rate leans the same way; otherwise the report says "no
+significant difference" and states N.
+
+**Human labels.** How they were produced, and why two of them are not blind, is under
+[Known limitations](#known-limitations).
 
 ## Bias handling at a glance
 
@@ -280,7 +313,6 @@ Actual cost $0.00 (free tier). List price $0.3/1M in, $2.5/1M out (`standard` ti
 | `logs/` | JSONL call logs: every judge prompt and raw reply |
 | `labels/human_labels.jsonl` | the author's pass/fail labels for the 20 config-A answers |
 | `scripts/make_report_tables.py` | builds the README tables from `results/` |
-| `docs/answers_draft.md` | bullet-point notes for the design-decision questions (no reflection text) |
 | `tests/` | unit tests, including hand-computed metric checks |
 
 ## Known limitations
@@ -293,7 +325,7 @@ Actual cost $0.00 (free tier). List price $0.3/1M in, $2.5/1M out (`standard` ti
   reference-free ones. Their effect is measured in the clustering experiment (naive vs mitigated spread), not
   assumed.
 - **The lower parse-ladder rungs are proven by tests, not by live use.** The ladder is strict -> extract -> repair ->
-  one re-ask -> INVALID (`src/judge/parse.py`). In the J3 live check (5 cases) Gemini returned bare JSON every time,
+  one re-ask -> INVALID (`src/judge/parse.py`). In the 5-case live check Gemini returned bare JSON every time,
   so only `strict` was exercised against the real judge; `extract`, `repair` and `reask` are covered by a 46-reply
   malformed corpus and mock-transport tests (some samples, such as gpt-oss-style reasoning before the JSON, are
   synthetic). The real INVALID and re-ask counts come from the full run and are reported in the results, not assumed.
@@ -304,7 +336,7 @@ Actual cost $0.00 (free tier). List price $0.3/1M in, $2.5/1M out (`standard` ti
 - **The generator decision rule is a coarse screen.** Whether the main A/B contrasts models (gpt-oss-20b vs qwen) or
   prompts (v1 vs v2) is decided by a 10-percentage-point threshold on two cheap checks (constraint pass rate over 20
   cases, strict exact-match over 13). One case is worth 5 and 7.7 points, so two cases flip it; it is not a
-  significance test. It was fixed before any judge call (CLAUDE.md section 2b).
+  significance test. It was fixed before any judge call.
 - **The suite contains deliberate temptation cases (c41-c44) that favour prompt v2 by construction.** Their system
   prompts do not tell the model to abstain, and v2's preamble does. That is a designed probe of grounding, chosen
   before judging because A and B were both at the ceiling on hard constraints; it is not a neutral sample of tasks.

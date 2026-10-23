@@ -1,4 +1,4 @@
-"""Self-preference probe (J7, exploratory): does the Gemini judge favour Gemini-authored answers?
+"""Self-preference probe (exploratory): does the Gemini judge favour Gemini-authored answers?
 
 Design (fixed before any Gemini answer was generated):
 * Cases: the reference-based suite cases. The gpt-oss answer is config A's output; the Gemini answer is produced by a

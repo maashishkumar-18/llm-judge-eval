@@ -1,10 +1,10 @@
-# Lean judge-call budget (j0c). One judge call returns ALL criteria in one JSON.
+# Lean judge-call budget. One judge call returns ALL criteria in one JSON.
 # planned = sum over `terms` of the product of each term's factors.
 # cap     = planned + ~15% headroom for parse-ladder re-asks (a re-ask is a real judge call).
 # `judge budget` prints this table; ledger.py enforces each cap at run time (non-cached calls only).
 # All small-N probe results (probes, controls, self_preference, test_retest, clustering) are EXPLORATORY:
 # report N next to every number.
-suite_cases: 20   # roadmap J2 said ~30; lean plan uses 20
+suite_cases: 20   # lean suite size the budget is computed for
 experiments:
   pointwise_mitigated:
     desc: mitigated pointwise, 20 cases x configs A,B
@@ -27,15 +27,15 @@ experiments:
     terms: [[6, 4, 2], [6]]
     cap: 62
   probes_ref_free:
-    desc: J6 reference-free re-judging of the 6 confidently-wrong answers (expected_output hidden) x (naive, mitigated)
+    desc: reference-free re-judging of the 6 confidently-wrong answers (expected_output hidden) x (naive, mitigated)
     terms: [[6, 2]]
     cap: 14
   probes_hard:
-    desc: J6b hard probes, 6 right-answer-with-fabricated-reasoning answers (reference shown) x (naive, mitigated) pointwise
+    desc: hard probes, 6 right-answer-with-fabricated-reasoning answers (reference shown) x (naive, mitigated) pointwise
     terms: [[6, 2]]
     cap: 14
   sensitivity:
-    desc: J6 sensitivity check, 6 probe bases (correct answer vs its confidently-wrong version) x both orders x (mitigated, naive); needs the J6 confidently-wrong answers
+    desc: sensitivity check, 6 probe bases (correct answer vs its confidently-wrong version) x both orders x (mitigated, naive); needs the confidently-wrong probe answers
     terms: [[6, 2, 2]]
     cap: 28
   clustering_naive:

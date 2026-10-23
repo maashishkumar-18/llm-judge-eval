@@ -1,4 +1,4 @@
-"""Pairwise judging with order-swap, and the position-bias measurements built on it (J4).
+"""Pairwise judging with order-swap, and the position-bias measurements built on it.
 
 Two configs, both judged by the same code path:
 * mitigated: every pair is judged in BOTH orders, each verdict is mapped back to the underlying answers

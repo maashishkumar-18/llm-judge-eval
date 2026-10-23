@@ -1,4 +1,4 @@
-"""Adversarial probes (J6): verbosity and sycophancy, judged pointwise by the naive and the mitigated judge.
+"""Adversarial probes: verbosity and sycophancy, judged pointwise by the naive and the mitigated judge.
 
 Four deterministic builders turn each of the 6 probe-base cases into
 * padded         : the correct reference answer + 3 content-free filler sentences (length defect only)
@@ -420,7 +420,7 @@ def analyze(
         }
     out["sycophancy"] = syc
 
-    # mitigated wrong answers: leniency check and unsupported high scores (standing J3 instruction)
+    # mitigated wrong answers: leniency check and unsupported high scores
     wrong_m = [ref[("mitigated", "wrong", c)] for c in bases if ("mitigated", "wrong", c) in ref]
     out["leniency_check"] = {
         "mitigated_wrong_mean_overall": _mean([r["overall"] for r in wrong_m]),
@@ -511,7 +511,7 @@ def render_table(summary: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-# ---------------------------------------------------------------- sensitivity (J6b)
+# ---------------------------------------------------------------- sensitivity
 
 def sensitivity_cases(bases: Sequence[Case]) -> tuple[list[Case], list[Case]]:
     """(correct, wrong): the same base case with model_output = the reference text / the confidently-wrong answer.
@@ -548,7 +548,7 @@ def sensitivity_summary(pairs: Sequence[Any]) -> dict[str, Any]:
     return out
 
 
-# ---------------------------------------------------------------- hard probes (J6b)
+# ---------------------------------------------------------------- hard probes
 
 def analyze_hard(results: dict[str, dict[str, Any]], bases: Sequence[str] = BASES, rubric: Rubric | None = None) -> dict[str, Any]:
     """Accepted = faithfulness >= 4 (mitigated) / naive score >= NAIVE_FOOLED_MIN. Means over valid rows; N stated."""

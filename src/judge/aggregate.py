@@ -1,4 +1,4 @@
-"""Suite-level aggregation (J5): per-case pass/fail, pass rate, per-criterion means with bootstrap CIs,
+"""Suite-level aggregation: per-case pass/fail, pass rate, per-criterion means with bootstrap CIs,
 win rate from order-swapped pairs, and call / token / cost tracking.
 
 Everything here works on the saved results documents (results/pointwise_<label>.json, the `pairs` block of

@@ -1,4 +1,4 @@
-"""Score clustering (J7, exploratory): naive holistic 1-10 judge vs the anchored per-criterion 1-5 judge.
+"""Score clustering (exploratory): naive holistic 1-10 judge vs the anchored per-criterion 1-5 judge.
 
 Part 1, spread on the same 12 suite cases (config A outputs, the first 12 in suite order; fixed before the run):
   naive score (1-10) vs mitigated overall (1-5, recomputed) and mitigated faithfulness (integers 1-5).
@@ -6,8 +6,8 @@ Part 1, spread on the same 12 suite cases (config A outputs, the first 12 in sui
   share, share at the scale maximum. A narrow spread = clustering. The mitigated overall is a weighted mean of three
   integers, so its distinct-value count is inflated relative to an integer scale; faithfulness is the like-for-like row.
 Part 2, separation of good vs corrupted outputs, from verdicts already on disk (no new judge calls):
-  good = terse-correct answers (J6), corrupted = confidently wrong, verbose wrong (J6) and right-answer-with-invented-reasoning
-  (J6b), each by construction. Measures: AUC = P(good scores above corrupted) with ties counted half (scale-free, so 1-10
+  good = terse-correct answers (probes), corrupted = confidently wrong, verbose wrong (probes) and right-answer-with-invented-reasoning
+  (hard probes), each by construction. Measures: AUC = P(good scores above corrupted) with ties counted half (scale-free, so 1-10
   and 1-5 compare), mean gap / scale width, perfect separation (lowest good above highest corrupted).
   Also on the 12 suite cases: good = passes the deterministic check (reference facts + the case's own constraints).
 All of it is exploratory: N is 6 per probe group and 12 suite cases.

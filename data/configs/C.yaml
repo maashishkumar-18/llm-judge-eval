@@ -1,5 +1,5 @@
 # Config C: qwen/qwen3.8-27b (Alibaba) with EXACTLY config A's prompt (v1 preamble). Used only to decide whether the
-# main A/B contrast is a model contrast or a prompt contrast (rule in CLAUDE.md section 2b). Thinking is dropped
+# main A/B contrast is a model contrast or a prompt contrast (pre-registered rule in the README, "Generator check and the pre-registered A/B rule"). Thinking is dropped
 # server-side (reasoning_format=hidden) and defensively client-side; reasoning_effort follows GEN_REASONING_EFFORT (low).
 # max_tokens 600, concurrency 1: this model has an output-tokens-per-minute limit of 1000 (OTPM), so parallel requests collide on 429s.
 name: C

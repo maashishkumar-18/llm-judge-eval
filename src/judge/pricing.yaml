@@ -1,4 +1,4 @@
-# Judge list price, recorded in J5b from the official page (not from memory). Edit only by re-fetching the page.
+# Judge list price, recorded from the official page (not from memory). Edit only by re-fetching the page.
 model: gemini-3.5-flash-lite
 source_url: https://ai.google.dev/gemini-api/docs/pricing
 retrieved: 2026-10-23

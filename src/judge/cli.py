@@ -1,4 +1,4 @@
-"""judge CLI: `budget` (j0c), `generate`/`genreport` (j2), `pointwise`/`replay` (j3), `position` (j4), `run`/`compare` (j5), `probes` (j6); later sessions add validate."""
+"""judge CLI: `budget`, `generate`/`genreport`, `pointwise`/`replay`, `position`, `run`/`compare`, `probes`, `selfpref`, `clustering`, `retest`, `validate`."""
 
 from __future__ import annotations
 
@@ -557,7 +557,7 @@ def cmd_clustering(args: argparse.Namespace) -> int:
     ids = cluster_ids(cases)
     budget = load_budget()
     ledger = JudgeLedger(s.ledger_path, s.judge_daily_cap, budget.caps)
-    try:  # upper bound: probe-base cases were already judged naive in J6 and hit the cache
+    try:  # upper bound: probe-base cases were already judged naive by the probes run and hit the cache
         budget.check_run("clustering_naive", len(ids), spent=ledger.used_experiment("clustering_naive"))
     except BudgetExceeded as e:
         print(e)

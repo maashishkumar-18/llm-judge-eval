@@ -1,5 +1,5 @@
-# J2 candidate pool (CURATED: meta.drop marks the 20 removed cases; the locked suite is data/suite.yaml).
-# Originally: 40 cases for hand curation down to 20 (CLAUDE.md: lean suite, budget.yaml is sized for 20).
+# Candidate pool (CURATED: meta.drop marks the 20 removed cases; the locked suite is data/suite.yaml).
+# Originally: 40 cases for hand curation down to 20 (a lean suite; budget.yaml is sized for 20).
 # 27 have expected_output (reference-based), 13 do not (reference-free).
 #
 # How to curate: set `meta.drop: true` on a case you do not want (or delete it). Keep roughly 13 reference-based and
@@ -323,7 +323,7 @@ cases:
     meta: {kind: write, checks: [{type: starts_with, text: "Thanks for reaching out."}, {type: max_words, n: 50}]}
 
   # ---------------------------------------------------------------- temptation cases (c41-c44)
-  # Added in j2 BEFORE any judge call, as a design decision (not result-driven): A and B were both at the ceiling on
+  # Added BEFORE any judge call, as a design decision (not result-driven): A and B were both at the ceiling on
   # hard constraints, so these give the faithfulness criterion something to detect. Each notice/passage lacks the asked-for
   # fact (c41-c43) or holds a near-fact (c44) that tempts outside knowledge or a wrong sum. The system_prompt deliberately
   # does NOT say "reply 'not stated'": whether the model abstains on its own is what prompt v2's grounding line changes.

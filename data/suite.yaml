@@ -1,6 +1,6 @@
-# LOCKED eval suite (J2): 20 cases curated by the user from data/suite/candidates.yaml (13 reference-based,
+# LOCKED eval suite: 20 cases curated from data/suite/candidates.yaml (13 reference-based,
 # 7 reference-free), then c03/c05/c26/c27 swapped for temptation cases c41-c44 BEFORE any judge call (design decision,
-# see CLAUDE.md section 2b). 6 probe base cases (meta.probe_base). Do not edit after the A/B run starts.
+# see the README, "Generator check and the pre-registered A/B rule"). 6 probe base cases (meta.probe_base). Do not edit after the A/B run starts.
 # model_output is not stored here: generate.py fills it per config into data/outputs/<config>.json.
 cases:
 - id: c01

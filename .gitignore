@@ -1,5 +1,7 @@
 # secrets
 .env
+.env.*
+!.env.example
 
 # caches / scratch (results/ and logs/ ARE committed: graders have no API keys)
 .cache/
@@ -7,6 +9,25 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+.ruff_cache/
+.mypy_cache/
 *.egg-info/
+build/
+dist/
 scratch/
+*.orig
+*.bak
+*.tmp
 data/outputs/.*.checkpoint.jsonl
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# assistant / workflow files (kept locally, not published)
+.claude/
+CLAUDE.md
+PROGRESS.md
+docs/answers_draft.md
