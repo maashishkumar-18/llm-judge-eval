@@ -1218,38 +1218,38 @@
     "n_skipped_blank": 0,
     "unmatched": [],
     "n_distinct_texts": 20,
-    "human_label_pass": 18,
-    "human_label_fail": 2,
+    "human_label_pass": 17,
+    "human_label_fail": 3,
     "mitigated": {
       "n": 20,
-      "agree": 20,
-      "agreement": 1.0,
+      "agree": 19,
+      "agreement": 0.95,
       "agreement_ci95_exact": [
-        0.8316,
-        1.0
+        0.7513,
+        0.9987
       ],
-      "kappa": 1.0,
+      "kappa": 0.7727,
       "confusion": {
-        "tp": 18,
-        "fp": 0,
+        "tp": 17,
+        "fp": 1,
         "fn": 0,
         "tn": 2
       },
-      "label_pass": 18,
+      "label_pass": 17,
       "judge_pass": 18,
-      "always_pass_agreement": 0.9,
+      "always_pass_agreement": 0.85,
       "false_pass": {
-        "k": 0,
-        "n": 2
+        "k": 1,
+        "n": 3
       },
       "false_fail": {
         "k": 0,
-        "n": 18
+        "n": 17
       },
       "kappa_ci95": {
-        "low": 1.0,
+        "low": 0.0,
         "high": 1.0,
-        "undefined_resamples": 1239
+        "undefined_resamples": 377
       },
       "n_invalid": 0,
       "negative_controls": [
@@ -1257,62 +1257,74 @@
           "name": "always-pass judge",
           "expect": "kappa = 0 (no information)",
           "observed": 0.0,
-          "agreement": 0.9,
+          "agreement": 0.85,
           "ok": true
         },
         {
           "name": "always-fail judge",
           "expect": "kappa = 0 (no information)",
           "observed": 0.0,
-          "agreement": 0.1,
+          "agreement": 0.15,
           "ok": true
         },
         {
           "name": "inverted judge",
           "expect": "kappa below the real judge's (sign check)",
-          "observed": -0.2195,
+          "observed": -0.2179,
           "ok": true
         },
         {
           "name": "labels shuffled x10000",
           "expect": "mean kappa within +-0.1 of 0",
-          "observed": 0.0008,
+          "observed": 0.0033,
           "ok": true,
-          "p_perm_ge_observed": 0.0045
+          "p_perm_ge_observed": 0.0171
         }
       ],
-      "disagreements": []
+      "disagreements": [
+        {
+          "case_id": "c01",
+          "origin": "suite:A",
+          "label": false,
+          "judge_pass": true,
+          "scores": {
+            "faithfulness": 5,
+            "instruction_following": 5,
+            "completeness": 4
+          }
+        }
+      ]
     },
     "naive": {
       "n": 13,
-      "agree": 13,
-      "agreement": 1.0,
+      "agree": 12,
+      "agreement": 0.9231,
       "agreement_ci95_exact": [
-        0.7529,
-        1.0
+        0.6397,
+        0.9981
       ],
-      "kappa": 1.0,
+      "kappa": 0.7547,
       "confusion": {
-        "tp": 11,
-        "fp": 0,
+        "tp": 10,
+        "fp": 1,
         "fn": 0,
         "tn": 2
       },
-      "label_pass": 11,
+      "label_pass": 10,
       "judge_pass": 11,
-      "always_pass_agreement": 0.8462,
+      "always_pass_agreement": 0.7692,
       "false_pass": {
-        "k": 0,
-        "n": 2
+        "k": 1,
+        "n": 3
       },
       "false_fail": {
         "k": 0,
-        "n": 11
+        "n": 10
       },
       "kappa_ci95": {
-        "low": 1.0,
+        "low": 0.0,
         "high": 1.0,
-        "undefined_resamples": 1210
+        "undefined_resamples": 315
       },
       "n_invalid": 0,
       "negative_controls": [
@@ -1320,64 +1332,79 @@
           "name": "always-pass judge",
           "expect": "kappa = 0 (no information)",
           "observed": 0.0,
-          "agreement": 0.8462,
+          "agreement": 0.7692,
           "ok": true
         },
         {
           "name": "always-fail judge",
           "expect": "kappa = 0 (no information)",
           "observed": 0.0,
-          "agreement": 0.1538,
+          "agreement": 0.2308,
           "ok": true
         },
         {
           "name": "inverted judge",
           "expect": "kappa below the real judge's (sign check)",
-          "observed": -0.352,
+          "observed": -0.3448,
           "ok": true
         },
         {
           "name": "labels shuffled x10000",
           "expect": "mean kappa within +-0.1 of 0",
-          "observed": -0.0006,
+          "observed": 0.0009,
           "ok": true,
-          "p_perm_ge_observed": 0.0138
+          "p_perm_ge_observed": 0.0419
         }
       ],
-      "disagreements": []
+      "disagreements": [
+        {
+          "case_id": "c01",
+          "origin": "suite:A",
+          "label": false,
+          "judge_pass": true,
+          "scores": 9
+        }
+      ]
     },
     "by_construction_vs_human": {
       "n": 20,
-      "agree": 20,
-      "agreement": 1.0,
+      "agree": 19,
+      "agreement": 0.95,
       "agreement_ci95_exact": [
-        0.8316,
-        1.0
+        0.7513,
+        0.9987
       ],
-      "kappa": 1.0,
+      "kappa": 0.7727,
       "confusion": {
-        "tp": 18,
-        "fp": 0,
+        "tp": 17,
+        "fp": 1,
         "fn": 0,
         "tn": 2
       },
-      "label_pass": 18,
+      "label_pass": 17,
       "judge_pass": 18,
-      "always_pass_agreement": 0.9,
+      "always_pass_agreement": 0.85,
       "false_pass": {
-        "k": 0,
-        "n": 2
+        "k": 1,
+        "n": 3
       },
       "false_fail": {
         "k": 0,
-        "n": 18
+        "n": 17
       },
       "kappa_ci95": {
-        "low": 1.0,
+        "low": 0.0,
         "high": 1.0,
-        "undefined_resamples": 1239
+        "undefined_resamples": 377
       },
-      "disagreements": []
+      "disagreements": [
+        {
+          "case_id": "c01",
+          "config": "A",
+          "human": false,
+          "by_construction": true
+        }
+      ]
     }
   },
   "test_retest": {

@@ -69,21 +69,21 @@ Disagreements, faithfulness vs support label (suite_all_outputs): [('c23', 'B', 
 
 ## Agreement and kappa vs human labels
 
-PROVENANCE NOT VERIFIED: labels/human_labels.jsonl was not produced by this tooling and matches an earlier LLM-rater draft on all 20 items (that draft was not blind either). c09 and c16 are not blind labels: the originals' errors were already known from earlier reports. Do not use this section as the headline; the by-construction rows above are the headline until the author confirms the labels or redoes them from a blind sheet.
+Labels were revised by their author after a second review (reported by the author; not verifiable from the repository). They differ from an earlier LLM-rater draft on c01 (pass -> fail: the answer drops the 'unless reserved' qualifier) and agree with it on the other 19. c09 and c16 are not blind labels: the originals' errors were already known from earlier reports. N=20 with 3 label-fail, so every number here is exploratory; the by-construction rows remain the headline.
 
-N=20 labelled (18 pass / 2 fail; 20 distinct texts; 0 blank skipped; unmatched []).
+N=20 labelled (17 pass / 3 fail; 20 distinct texts; 0 blank skipped; unmatched []).
 
 | pair | N | agreement | kappa [95% bootstrap] | false pass | false fail | INVALID |
 |---|---|---|---|---|---|---|
-| mitigated judge vs human | 20 | 1.00 (20/20; always-pass 0.90) | 1.00 [CI degenerate] | 0/2 | 0/18 | 0 |
-| naive judge vs human | 13 | 1.00 (13/13; always-pass 0.85) | 1.00 [CI degenerate] | 0/2 | 0/11 | 0 |
-| by-construction vs human | 20 | 1.00 (20/20; always-pass 0.90) | 1.00 [CI degenerate] | 0/2 | 0/18 | 0 |
+| mitigated judge vs human | 20 | 0.95 (19/20; always-pass 0.85) | 0.77 [0.00, 1.00] | 1/3 | 0/17 | 0 |
+| naive judge vs human | 13 | 0.92 (12/13; always-pass 0.77) | 0.75 [0.00, 1.00] | 1/3 | 0/10 | 0 |
+| by-construction vs human | 20 | 0.95 (19/20; always-pass 0.85) | 0.77 [0.00, 1.00] | 1/3 | 0/17 | 0 |
 
 - PASS always-pass judge: expected kappa = 0 (no information); observed 0.0
 - PASS always-fail judge: expected kappa = 0 (no information); observed 0.0
-- PASS inverted judge: expected kappa below the real judge's (sign check); observed -0.2195
-- PASS labels shuffled x10000: expected mean kappa within +-0.1 of 0; observed 0.0008 (permutation p of >= observed: 0.0045)
-- disagreements (mitigated vs human): []
+- PASS inverted judge: expected kappa below the real judge's (sign check); observed -0.2179
+- PASS labels shuffled x10000: expected mean kappa within +-0.1 of 0; observed 0.0033 (permutation p of >= observed: 0.0171)
+- disagreements (mitigated vs human): [('c01', False)]
 
 ## Test-retest (cache bypassed by nonce)
 

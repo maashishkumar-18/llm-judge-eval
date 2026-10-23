@@ -28,13 +28,13 @@ status and `CLAUDE.md` for the locked design decisions, metric definitions and c
 - **The suite contains deliberate temptation cases (c41-c44) that favour prompt v2 by construction.** Their system
   prompts do not tell the model to abstain, and v2's preamble does. That is a designed probe of grounding, chosen
   before judging because A and B were both at the ceiling on hard constraints; it is not a neutral sample of tasks.
-- **Human-label provenance is unverified, and two labels are not blind.** `labels/human_labels.jsonl` (20 config-A
-  answers) was not produced by the project tooling; the tooling only generated the blank template. Its labels are
-  identical on all 20 items to an LLM-rater draft that has since been removed from the tree (still in git history,
-  commit 567bfd8), and that draft was not blind either. For c09 and c16 the labels are certainly not blind: the
-  original answers' errors were already known from earlier reports. Treat judge-vs-human agreement as unusable
-  until the author confirms who wrote the labels or relabels from a blind sheet. The headline agreement is against
-  the deterministic by-construction labels (suite, N=34).
+- **Human labels: revised by the author, two not blind.** `labels/human_labels.jsonl` (20 config-A answers) was
+  filled in outside the project tooling (the tooling only generated the blank template) and revised by the author after
+  a second review; that is the author's report, not something the repository can verify. The first version equalled an
+  LLM-rater draft (removed from the tree, commit 567bfd8) on all 20 items; the revised version differs on c01 only
+  (pass -> fail, dropped 'unless reserved' qualifier). For c09 and c16 the labels are not blind: the original answers'
+  errors were already known from earlier reports. N=20 with 3 label-fail, so judge-vs-human agreement is exploratory.
+  The headline agreement is against the deterministic by-construction labels (suite, N=34).
 - **The instruction-following check has almost no negatives.** Only 1 of the 40 suite outputs (c23 under config B)
   violates a countable constraint in `checks.py`, so judge-vs-checks agreement (0.93) is below the always-pass
   baseline (0.97) and its kappa is not interpretable. The adversarial probes are a floor effect: both judges are

@@ -549,9 +549,9 @@ def adversarial_table(
 
 # ---------------------------------------------------------------- assembly and rendering
 
-HUMAN_LABEL_NOTE = ("PROVENANCE NOT VERIFIED: labels/human_labels.jsonl was not produced by this tooling and matches an earlier LLM-rater draft on all 20 items "
-                    "(that draft was not blind either). c09 and c16 are not blind labels: the originals' errors were already known from earlier reports. "
-                    "Do not use this section as the headline; the by-construction rows above are the headline until the author confirms the labels or redoes them from a blind sheet.")
+HUMAN_LABEL_NOTE = ("Labels were revised by their author after a second review (reported by the author; not verifiable from the repository). They differ from an earlier "
+                    "LLM-rater draft on c01 (pass -> fail: the answer drops the 'unless reserved' qualifier) and agree with it on the other 19. c09 and c16 are not blind labels: "
+                    "the originals' errors were already known from earlier reports. N=20 with 3 label-fail, so every number here is exploratory; the by-construction rows remain the headline.")
 
 CAVEATS = (
     "By-construction labels for the reference-free suite cases check the case's own constraints only, so they cannot see a faithfulness failure; a judge that flags one will look like a disagreement.",
